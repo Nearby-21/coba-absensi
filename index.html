@@ -121,7 +121,7 @@
         </div>
     </div>
 
-    <!-- MODAL: SCAN QR / INPUT NIS -->
+    <!-- MODAL: SCAN QR / INPUT NIS DENGAN KETERANGAN & PILIHAN MASUK/PULANG -->
     <div id="modalScan" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl space-y-4">
             <div class="flex justify-between items-center">
@@ -129,7 +129,7 @@
                 <button onclick="closeModal('modalScan')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             
-            <div id="reader" class="w-full rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 min-h-[200px]"></div>
+            <div id="reader" class="w-full rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 min-h-[180px]"></div>
 
             <div class="relative flex py-1 items-center">
                 <div class="flex-grow border-t border-slate-200"></div>
@@ -139,7 +139,26 @@
 
             <div class="flex space-x-2">
                 <input type="text" id="inputNisScan" placeholder="Masukkan NIS" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
-                <button type="button" onclick="submitAbsenHadirByNis()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl font-medium text-sm transition cursor-pointer">Hadir</button>
+                <button type="button" onclick="checkNisAndShowPreview()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl font-medium text-sm transition cursor-pointer">Cek</button>
+            </div>
+
+            <!-- BOX KETERANGAN SANTRI & PILIHAN MASUK / PULANG -->
+            <div id="santriPreviewBox" class="hidden bg-slate-50 border border-slate-200 rounded-2xl p-3.5 space-y-3 text-left">
+                <div class="text-xs text-indigo-600 font-bold uppercase tracking-wider flex items-center space-x-1.5">
+                    <i class="fa-solid fa-circle-check"></i> <span>Santri Ditemukan:</span>
+                </div>
+                <div>
+                    <div id="previewNama" class="font-bold text-slate-800 text-base">-</div>
+                    <div class="text-xs text-slate-500 mt-0.5">NIS: <span id="previewNis" class="font-medium text-slate-700">-</span> | Kelas: <span id="previewKet" class="font-medium text-slate-700">-</span></div>
+                </div>
+                <div class="grid grid-cols-2 gap-2 pt-1">
+                    <button type="button" onclick="submitAbsenFinal('Masuk')" class="bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-medium text-xs transition shadow-md shadow-emerald-500/20 flex items-center justify-center space-x-1.5">
+                        <i class="fa-solid fa-right-to-bracket"></i> <span>Absen Masuk</span>
+                    </button>
+                    <button type="button" onclick="submitAbsenFinal('Pulang')" class="bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl font-medium text-xs transition shadow-md shadow-blue-500/20 flex items-center justify-center space-x-1.5">
+                        <i class="fa-solid fa-right-from-bracket"></i> <span>Absen Pulang</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -148,7 +167,7 @@
     <div id="modalHadirHariIni" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center">
-                <h3 class="font-bold text-slate-800"><i class="fa-solid fa-user-check text-emerald-600 mr-2"></i> Daftar Hadir Hari Ini</h3>
+                <h3 class="font-bold text-slate-800"><i class="fa-solid fa-user-check text-emerald-600 mr-2"></i> Daftar Hadir (Masuk) Hari Ini</h3>
                 <button onclick="closeModal('modalHadirHariIni')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             <div id="hadirHariIniList" class="overflow-y-auto space-y-2 flex-1 pr-1"></div>
@@ -183,7 +202,8 @@
                 <div>
                     <label class="text-xs font-semibold text-slate-600 mb-1 block">Status Kehadiran</label>
                     <select id="editStatusAbsen" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
-                        <option value="Hadir">Hadir</option>
+                        <option value="Masuk">Masuk</option>
+                        <option value="Pulang">Pulang</option>
                         <option value="Sakit">Sakit</option>
                         <option value="Izin">Izin</option>
                         <option value="Alpa">Alpa</option>
@@ -211,6 +231,8 @@
                 <div>
                     <label class="text-xs font-semibold text-slate-600 mb-1 block">Status Keterangan</label>
                     <select id="selectStatusManual" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+                        <option value="Masuk">Masuk</option>
+                        <option value="Pulang">Pulang</option>
                         <option value="Sakit">Sakit</option>
                         <option value="Izin">Izin</option>
                         <option value="Alpa">Alpa</option>
@@ -286,6 +308,7 @@
         let allSantri = [];
         let allAbsensi = [];
         let html5QrCode = null;
+        let activeScannedNis = null;
 
         function getLocalDateString() {
             let d = new Date();
@@ -363,42 +386,49 @@
             select.innerHTML = html;
         }
 
-        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+        function openModal(id) { 
+            document.getElementById(id).classList.remove('hidden'); 
+        }
         
         function closeModal(id) { 
             document.getElementById(id).classList.add('hidden'); 
-            if(id === 'modalScan' && html5QrCode) {
-                html5QrCode.stop().then(() => {
-                    html5QrCode.clear();
-                    html5QrCode = null;
-                }).catch(() => {
-                    html5QrCode = null;
-                });
+            if(id === 'modalScan') {
+                document.getElementById('santriPreviewBox').classList.add('hidden');
+                document.getElementById('inputNisScan').value = "";
+                activeScannedNis = null;
+                if(html5QrCode) {
+                    html5QrCode.stop().then(() => {
+                        html5QrCode.clear();
+                        html5QrCode = null;
+                    }).catch(() => {
+                        html5QrCode = null;
+                    });
+                }
             }
         }
 
         function openScanModal() {
             openModal('modalScan');
+            document.getElementById('santriPreviewBox').classList.add('hidden');
             setTimeout(() => {
                 if (!html5QrCode) {
                     html5QrCode = new Html5Qrcode("reader");
                 }
                 html5QrCode.start(
                     { facingMode: "environment" },
-                    { fps: 10, qrbox: { width: 200, height: 200 } },
+                    { fps: 10, qrbox: { width: 180, height: 180 } },
                     (decodedText) => {
                         handleScanResult(decodedText);
                     },
                     () => {}
                 ).catch(err => {
-                    console.log("Kamera tidak aktif atau tidak ditemukan:", err);
-                    document.getElementById('reader').innerHTML = `<div class="p-6 text-center text-xs text-slate-400 flex flex-col items-center justify-center h-full"><i class="fa-solid fa-camera-slash text-xl mb-1 text-slate-300"></i>Kamera tidak tersedia.<br>Silakan gunakan input NIS manual di bawah.</div>`;
+                    console.log("Kamera tidak aktif:", err);
+                    document.getElementById('reader').innerHTML = `<div class="p-4 text-center text-xs text-slate-400 flex flex-col items-center justify-center h-full"><i class="fa-solid fa-camera-slash text-lg mb-1 text-slate-300"></i>Kamera tidak tersedia. Gunakan input NIS manual.</div>`;
                 });
             }, 300);
         }
 
         async function handleScanResult(nis) {
-            closeModal('modalScan');
             let cleanNis = String(nis).trim();
             if(!allSantri || allSantri.length === 0) {
                 allSantri = await callApi('getSantri');
@@ -408,10 +438,10 @@
                 alert("Santri dengan NIS " + cleanNis + " tidak ditemukan di database!");
                 return;
             }
-            await recordAbsen(santri.NIS, santri.Nama, "Hadir", "-");
+            showSantriPreview(santri);
         }
 
-        async function submitAbsenHadirByNis() {
+        async function checkNisAndShowPreview() {
             let inputEl = document.getElementById('inputNisScan');
             let nis = inputEl ? inputEl.value.trim() : "";
             
@@ -428,13 +458,29 @@
             let santri = allSantri.find(s => String(s.NIS).trim() === cleanNis);
             
             if(!santri) {
-                alert("Santri dengan NIS " + cleanNis + " tidak ditemukan di database! Pastikan santri sudah didaftarkan.");
+                alert("Santri dengan NIS " + cleanNis + " tidak ditemukan di database!");
+                document.getElementById('santriPreviewBox').classList.add('hidden');
                 return;
             }
 
+            showSantriPreview(santri);
+        }
+
+        function showSantriPreview(santri) {
+            activeScannedNis = santri.NIS;
+            document.getElementById('previewNama').innerText = santri.Nama;
+            document.getElementById('previewNis').innerText = santri.NIS;
+            document.getElementById('previewKet').innerText = santri.Keterangan || '-';
+            document.getElementById('santriPreviewBox').classList.remove('hidden');
+        }
+
+        async function submitAbsenFinal(status) {
+            if(!activeScannedNis) return alert("Pilih santri terlebih dahulu!");
+            let santri = allSantri.find(s => String(s.NIS).trim() === String(activeScannedNis).trim());
+            if(!santri) return alert("Data santri tidak valid!");
+
             closeModal('modalScan');
-            inputEl.value = "";
-            await recordAbsen(santri.NIS, santri.Nama, "Hadir", "-");
+            await recordAbsen(santri.NIS, santri.Nama, status, status);
         }
 
         async function submitAbsenManualData() {
@@ -484,7 +530,7 @@
             try {
                 let res = await callApi('absen', { tanggal: today, nis, nama, status, keterangan });
                 if (res && res.status === "success") {
-                    alert(`Berhasil mencatat: ${nama} (${status})`);
+                    alert(`Berhasil mencatat absen ${status}: ${nama}`);
                     await fetchData();
                 } else {
                     alert("Gagal mencatat ke Sheet: " + (res ? res.message : "Kesalahan server"));
@@ -502,11 +548,11 @@
             let todayHadir = allAbsensi.filter(a => {
                 if(!a.Tanggal) return false;
                 let t = String(a.Tanggal).substring(0, 10);
-                return t === today && String(a.Status).trim() === 'Hadir';
+                return t === today && String(a.Status).trim() === 'Masuk';
             });
 
             if(todayHadir.length === 0) {
-                container.innerHTML = `<div class="p-4 text-center text-xs text-slate-400">Belum ada santri yang hadir hari ini.</div>`;
+                container.innerHTML = `<div class="p-4 text-center text-xs text-slate-400">Belum ada santri yang absen masuk hari ini.</div>`;
                 return;
             }
 
@@ -516,9 +562,9 @@
                 <div class="bg-white p-3 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm">
                     <div>
                         <div class="font-bold text-slate-700 text-sm">${a.Nama} <span class="text-xs text-slate-400">(${a.NIS})</span></div>
-                        <div class="text-xs text-emerald-600 font-medium mt-0.5">Hadir</div>
+                        <div class="text-xs text-emerald-600 font-medium mt-0.5">Absen Masuk</div>
                     </div>
-                    <span class="bg-emerald-50 text-emerald-600 text-xs px-2.5 py-1 rounded-full font-medium border border-emerald-200">Hadir</span>
+                    <span class="bg-emerald-50 text-emerald-600 text-xs px-2.5 py-1 rounded-full font-medium border border-emerald-200">Masuk</span>
                 </div>`;
             });
             container.innerHTML = html;
@@ -541,7 +587,7 @@
 
             let html = '';
             todayAbsen.forEach(a => {
-                let badgeColor = String(a.Status).trim() === 'Hadir' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-amber-50 text-amber-600 border-amber-200';
+                let badgeColor = String(a.Status).trim() === 'Masuk' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-blue-50 text-blue-600 border-blue-200';
                 html += `
                 <div class="bg-white p-3 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm">
                     <div>
