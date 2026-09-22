@@ -135,8 +135,8 @@
                 <div class="flex-grow border-t border-slate-200"></div>
             </div>
             <div class="flex space-x-2">
-                <input type="number" id="inputNisScan" placeholder="Masukkan NIS" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
-                <button onclick="submitAbsenHadirByNis()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl font-medium text-sm transition">Hadir</button>
+                <input type="text" id="inputNisScan" placeholder="Masukkan NIS" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+                <button type="button" onclick="submitAbsenHadirByNis()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl font-medium text-sm transition cursor-pointer">Hadir</button>
             </div>
         </div>
     </div>
@@ -278,7 +278,8 @@
 
     <!-- LOGIKA JAVASCRIPT FETCH API -->
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbxSRVrPXVHXdsO44VeQfMz_Kv9cQqEW73aOFdEmBHBkIrD-feetqTt2Ace1v4_n_ywYdA/exec";
+        // Masukkan URL Web App Google Apps Script Anda di dalam tanda kutip di bawah ini
+        const GAS_URL = "MASUKKAN_URL_WEB_APP_GAS_ANDA_DISINI";
 
         let allSantri = [];
         let allAbsensi = [];
@@ -394,6 +395,9 @@
         async function handleScanResult(nis) {
             closeModal('modalScan');
             let cleanNis = String(nis).trim();
+            if(!allSantri || allSantri.length === 0) {
+                allSantri = await callApi('getSantri');
+            }
             let santri = allSantri.find(s => String(s.NIS).trim() === cleanNis);
             if(!santri) {
                 alert("Santri dengan NIS " + cleanNis + " tidak ditemukan di database!");
@@ -403,17 +407,28 @@
         }
 
         async function submitAbsenHadirByNis() {
-            let nis = document.getElementById('inputNisScan').value.trim();
-            if(!nis) return alert("Masukkan NIS terlebih dahulu!");
-            closeModal('modalScan');
-            document.getElementById('inputNisScan').value = "";
+            let inputEl = document.getElementById('inputNisScan');
+            let nis = inputEl ? inputEl.value.trim() : "";
             
-            let cleanNis = String(nis).trim();
-            let santri = allSantri.find(s => String(s.NIS).trim() === cleanNis);
-            if(!santri) {
-                alert("Santri dengan NIS " + cleanNis + " tidak ditemukan di database!");
+            if(!nis) {
+                alert("Masukkan NIS terlebih dahulu!");
                 return;
             }
+
+            if(!allSantri || allSantri.length === 0) {
+                allSantri = await callApi('getSantri');
+            }
+
+            let cleanNis = String(nis).trim();
+            let santri = allSantri.find(s => String(s.NIS).trim() === cleanNis);
+            
+            if(!santri) {
+                alert("Santri dengan NIS " + cleanNis + " tidak ditemukan di database! Pastikan santri sudah didaftarkan.");
+                return;
+            }
+
+            closeModal('modalScan');
+            inputEl.value = "";
             await recordAbsen(santri.NIS, santri.Nama, "Hadir", "-");
         }
 
@@ -422,6 +437,10 @@
             let status = document.getElementById('selectStatusManual').value;
             if(!nis) return alert("Pilih santri terlebih dahulu!");
             
+            if(!allSantri || allSantri.length === 0) {
+                allSantri = await callApi('getSantri');
+            }
+
             let cleanNis = String(nis).trim();
             let santri = allSantri.find(s => String(s.NIS).trim() === cleanNis);
             if(!santri) {
