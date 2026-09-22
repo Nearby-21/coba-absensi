@@ -34,7 +34,7 @@
                     <i class="fa-regular fa-calendar-days"></i> <span>Memuat tanggal...</span>
                 </div>
                 <div class="text-blue-100 font-medium">
-                    <i class="fa-solid cloud mr-1"></i> Realtime Sheets API
+                    <i class="fa-solid fa-database mr-1"></i> Realtime Sheets API
                 </div>
             </div>
         </div>
@@ -278,8 +278,7 @@
 
     <!-- LOGIKA JAVASCRIPT FETCH API -->
     <script>
-        // Ganti URL di bawah ini dengan URL Web App Google Apps Script Anda
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbzH8ciCygoXlRqPEl0hyJ5PqO0hU6Z2V77PAbLA27d6_Hq2snZO4LSmAZeNx6kzyRwcJw/exec";
+        const GAS_URL = "https://script.google.com/macros/s/AKfycbxSRVrPXVHXdsO44VeQfMz_Kv9cQqEW73aOFdEmBHBkIrD-feetqTt2Ace1v4_n_ywYdA/exec";
 
         let allSantri = [];
         let allAbsensi = [];
@@ -293,21 +292,14 @@
             return `${year}-${month}-${day}`;
         }
 
-        async function callApi(action, data = {}, method = "GET") {
+        async function callApi(action, data = {}) {
             try {
                 let url = GAS_URL + "?action=" + action;
-                let options = { method: method };
-
-                if (method === "POST") {
-                    options.body = JSON.stringify({ action: action, ...data });
-                    options.headers = { "Content-Type": "text/plain;charset=utf-8" };
-                } else {
-                    if (data.clientDate) {
-                        url += "&clientDate=" + encodeURIComponent(data.clientDate);
-                    }
+                for (let key in data) {
+                    url += `&${key}=` + encodeURIComponent(data[key]);
                 }
 
-                let response = await fetch(url, options);
+                let response = await fetch(url);
                 let result = await response.json();
                 return result;
             } catch (err) {
@@ -415,9 +407,11 @@
             if(!nis) return alert("Masukkan NIS terlebih dahulu!");
             closeModal('modalScan');
             document.getElementById('inputNisScan').value = "";
-            let santri = allSantri.find(s => String(s.NIS).trim() === String(nis).trim());
+            
+            let cleanNis = String(nis).trim();
+            let santri = allSantri.find(s => String(s.NIS).trim() === cleanNis);
             if(!santri) {
-                alert("Santri dengan NIS " + nis + " tidak ditemukan di database!");
+                alert("Santri dengan NIS " + cleanNis + " tidak ditemukan di database!");
                 return;
             }
             await recordAbsen(santri.NIS, santri.Nama, "Hadir", "-");
@@ -427,7 +421,13 @@
             let nis = document.getElementById('selectSantriManual').value;
             let status = document.getElementById('selectStatusManual').value;
             if(!nis) return alert("Pilih santri terlebih dahulu!");
-            let santri = allSantri.find(s => String(s.NIS).trim() === String(nis).trim());
+            
+            let cleanNis = String(nis).trim();
+            let santri = allSantri.find(s => String(s.NIS).trim() === cleanNis);
+            if(!santri) {
+                alert("Santri tidak ditemukan!");
+                return;
+            }
             closeModal('modalAbsenManual');
             await recordAbsen(santri.NIS, santri.Nama, status, status);
         }
@@ -439,7 +439,7 @@
             if(!nis || !nama) return alert("NIS dan Nama wajib diisi!");
 
             try {
-                let result = await callApi('addSantri', { nis, nama, keterangan: ket }, 'POST');
+                let result = await callApi('addSantri', { nis, nama, keterangan: ket });
                 if(result.status === "success") {
                     alert("Santri berhasil ditambahkan!");
                     closeModal('modalTambahSantri');
@@ -458,7 +458,7 @@
         async function recordAbsen(nis, nama, status, keterangan) {
             let today = getLocalDateString();
             try {
-                await callApi('absen', { tanggal: today, nis, nama, status, keterangan }, 'POST');
+                let res = await callApi('absen', { tanggal: today, nis, nama, status, keterangan });
                 alert(`Berhasil mencatat: ${nama} (${status})`);
                 await fetchData();
             } catch(err) {
@@ -546,7 +546,7 @@
             let id = document.getElementById('editIdAbsen').value;
             let status = document.getElementById('editStatusAbsen').value;
             try {
-                await callApi('updateAbsen', { idAbsen: id, status, keterangan: status }, 'POST');
+                let res = await callApi('updateAbsen', { idAbsen: id, status, keterangan: status });
                 alert("Absen berhasil diperbarui!");
                 closeModal('modalEditAbsen');
                 await fetchData();
@@ -559,7 +559,7 @@
         async function deleteAbsen(idAbsen) {
             if(!confirm("Yakin ingin menghapus data absen ini?")) return;
             try {
-                await callApi('deleteAbsen', { idAbsen }, 'POST');
+                let res = await callApi('deleteAbsen', { idAbsen });
                 alert("Data berhasil dihapus!");
                 await fetchData();
                 openRekapModal();
@@ -608,7 +608,7 @@
             let nama = document.getElementById('editNamaSantri').value;
             let ket = document.getElementById('editKetSantri').value;
             try {
-                await callApi('updateSantri', { nis, nama, keterangan: ket }, 'POST');
+                let res = await callApi('updateSantri', { nis, nama, keterangan: ket });
                 alert("Data santri berhasil diperbarui!");
                 closeModal('modalEditSantri');
                 await fetchData();
@@ -621,7 +621,7 @@
         async function deleteSantri(nis) {
             if(!confirm("Yakin ingin menghapus santri ini dari database?")) return;
             try {
-                await callApi('deleteSantri', { nis }, 'POST');
+                let res = await callApi('deleteSantri', { nis });
                 alert("Santri berhasil dihapus!");
                 await fetchData();
                 openDataSantriModal();
