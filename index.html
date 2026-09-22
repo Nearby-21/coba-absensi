@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iMTQL - Sistem Absensi & Manajemen Santri</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Pustaka QR Code Scanner dipasang kembali -->
     <script src="https://unpkg.com/html5-qrcode"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -130,7 +129,6 @@
                 <button onclick="closeModal('modalScan')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
             
-            <!-- Area Kamera Scanner -->
             <div id="reader" class="w-full rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 min-h-[200px]"></div>
 
             <div class="relative flex py-1 items-center">
@@ -283,7 +281,6 @@
 
     <!-- LOGIKA JAVASCRIPT FETCH API -->
     <script>
-        // Masukkan URL Web App Google Apps Script Anda di dalam tanda kutip di bawah ini
         const GAS_URL = "https://script.google.com/macros/s/AKfycbxSRVrPXVHXdsO44VeQfMz_Kv9cQqEW73aOFdEmBHBkIrD-feetqTt2Ace1v4_n_ywYdA/exec";
 
         let allSantri = [];
@@ -374,7 +371,7 @@
                 html5QrCode.stop().then(() => {
                     html5QrCode.clear();
                     html5QrCode = null;
-                }).catch(err => {
+                }).catch(() => {
                     html5QrCode = null;
                 });
             }
@@ -392,10 +389,10 @@
                     (decodedText) => {
                         handleScanResult(decodedText);
                     },
-                    (error) => {}
+                    () => {}
                 ).catch(err => {
                     console.log("Kamera tidak aktif atau tidak ditemukan:", err);
-                    document.getElementById('reader').innerHTML = `<div class="p-6 text-center text-xs text-slate-400 flex flex-col items-center justify-center h-full"><i class="fa-solid fa-camera-slash text-xl mb-1 text-slate-300"></i>Kamera tidak tersedia.<br>Gunakan input NIS manual di bawah.</div>`;
+                    document.getElementById('reader').innerHTML = `<div class="p-6 text-center text-xs text-slate-400 flex flex-col items-center justify-center h-full"><i class="fa-solid fa-camera-slash text-xl mb-1 text-slate-300"></i>Kamera tidak tersedia.<br>Silakan gunakan input NIS manual di bawah.</div>`;
                 });
             }, 300);
         }
@@ -486,10 +483,14 @@
             let today = getLocalDateString();
             try {
                 let res = await callApi('absen', { tanggal: today, nis, nama, status, keterangan });
-                alert(`Berhasil mencatat: ${nama} (${status})`);
-                await fetchData();
+                if (res && res.status === "success") {
+                    alert(`Berhasil mencatat: ${nama} (${status})`);
+                    await fetchData();
+                } else {
+                    alert("Gagal mencatat ke Sheet: " + (res ? res.message : "Kesalahan server"));
+                }
             } catch(err) {
-                alert("Gagal mencatat absen: " + err);
+                alert("Gagal terhubung ke server: " + err);
             }
         }
 
