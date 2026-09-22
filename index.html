@@ -5,6 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iMTQL - Sistem Absensi & Manajemen Santri</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Pustaka QR Code Scanner dipasang kembali -->
+    <script src="https://unpkg.com/html5-qrcode"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans antialiased pb-12">
@@ -67,8 +69,8 @@
                 <div class="bg-purple-50 w-10 h-10 rounded-xl flex items-center justify-center text-purple-600 mb-3 group-hover:bg-purple-600 group-hover:text-white transition">
                     <i class="fa-solid fa-qrcode text-lg"></i>
                 </div>
-                <div class="font-bold text-slate-700 text-sm">Input Absen NIS</div>
-                <div class="text-xs text-slate-400 mt-0.5">Masukkan NIS Kehadiran</div>
+                <div class="font-bold text-slate-700 text-sm">Scan QR / Absen</div>
+                <div class="text-xs text-slate-400 mt-0.5">Scan kamera atau NIS</div>
             </button>
 
             <button onclick="openAbsenManualModal()" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 hover:border-indigo-500 hover:shadow-md transition text-left group">
@@ -120,19 +122,26 @@
         </div>
     </div>
 
-    <!-- MODAL: INPUT NIS / ABSEN HADIR -->
+    <!-- MODAL: SCAN QR / INPUT NIS -->
     <div id="modalScan" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl space-y-4">
             <div class="flex justify-between items-center">
-                <h3 class="font-bold text-slate-800"><i class="fa-solid fa-qrcode text-indigo-600 mr-2"></i> Input Kehadiran NIS</h3>
+                <h3 class="font-bold text-slate-800"><i class="fa-solid fa-qrcode text-indigo-600 mr-2"></i> Scan QR / Input NIS</h3>
                 <button onclick="closeModal('modalScan')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
             </div>
-            <div class="bg-slate-50 p-4 rounded-2xl border border-slate-200 text-center space-y-2">
-                <p class="text-xs text-slate-500">Masukkan Nomor Induk Santri (NIS) untuk mencatat kehadiran Hadir hari ini.</p>
-                <div class="flex space-x-2 pt-2">
-                    <input type="text" id="inputNisScan" placeholder="Masukkan NIS" class="flex-1 bg-white border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
-                    <button type="button" onclick="submitAbsenHadirByNis()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl font-medium text-sm transition cursor-pointer">Hadir</button>
-                </div>
+            
+            <!-- Area Kamera Scanner -->
+            <div id="reader" class="w-full rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 min-h-[200px]"></div>
+
+            <div class="relative flex py-1 items-center">
+                <div class="flex-grow border-t border-slate-200"></div>
+                <span class="flex-shrink mx-4 text-slate-400 text-xs">Atau Input NIS Manual</span>
+                <div class="flex-grow border-t border-slate-200"></div>
+            </div>
+
+            <div class="flex space-x-2">
+                <input type="text" id="inputNisScan" placeholder="Masukkan NIS" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+                <button type="button" onclick="submitAbsenHadirByNis()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl font-medium text-sm transition cursor-pointer">Hadir</button>
             </div>
         </div>
     </div>
@@ -279,6 +288,7 @@
 
         let allSantri = [];
         let allAbsensi = [];
+        let html5QrCode = null;
 
         function getLocalDateString() {
             let d = new Date();
@@ -360,10 +370,48 @@
         
         function closeModal(id) { 
             document.getElementById(id).classList.add('hidden'); 
+            if(id === 'modalScan' && html5QrCode) {
+                html5QrCode.stop().then(() => {
+                    html5QrCode.clear();
+                    html5QrCode = null;
+                }).catch(err => {
+                    html5QrCode = null;
+                });
+            }
         }
 
         function openScanModal() {
             openModal('modalScan');
+            setTimeout(() => {
+                if (!html5QrCode) {
+                    html5QrCode = new Html5Qrcode("reader");
+                }
+                html5QrCode.start(
+                    { facingMode: "environment" },
+                    { fps: 10, qrbox: { width: 200, height: 200 } },
+                    (decodedText) => {
+                        handleScanResult(decodedText);
+                    },
+                    (error) => {}
+                ).catch(err => {
+                    console.log("Kamera tidak aktif atau tidak ditemukan:", err);
+                    document.getElementById('reader').innerHTML = `<div class="p-6 text-center text-xs text-slate-400 flex flex-col items-center justify-center h-full"><i class="fa-solid fa-camera-slash text-xl mb-1 text-slate-300"></i>Kamera tidak tersedia.<br>Gunakan input NIS manual di bawah.</div>`;
+                });
+            }, 300);
+        }
+
+        async function handleScanResult(nis) {
+            closeModal('modalScan');
+            let cleanNis = String(nis).trim();
+            if(!allSantri || allSantri.length === 0) {
+                allSantri = await callApi('getSantri');
+            }
+            let santri = allSantri.find(s => String(s.NIS).trim() === cleanNis);
+            if(!santri) {
+                alert("Santri dengan NIS " + cleanNis + " tidak ditemukan di database!");
+                return;
+            }
+            await recordAbsen(santri.NIS, santri.Nama, "Hadir", "-");
         }
 
         async function submitAbsenHadirByNis() {
