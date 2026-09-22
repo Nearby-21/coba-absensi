@@ -121,7 +121,7 @@
         </div>
     </div>
 
-    <!-- MODAL: SCAN QR / INPUT NIS DENGAN KETERANGAN & PILIHAN MASUK/PULANG -->
+    <!-- MODAL: SCAN QR / INPUT NIS DENGAN PREVIEW & PILIHAN MASUK/PULANG -->
     <div id="modalScan" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl space-y-4">
             <div class="flex justify-between items-center">
@@ -152,10 +152,10 @@
                     <div class="text-xs text-slate-500 mt-0.5">NIS: <span id="previewNis" class="font-medium text-slate-700">-</span> | Kelas: <span id="previewKet" class="font-medium text-slate-700">-</span></div>
                 </div>
                 <div class="grid grid-cols-2 gap-2 pt-1">
-                    <button type="button" onclick="submitAbsenFinal('Masuk')" class="bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-medium text-xs transition shadow-md shadow-emerald-500/20 flex items-center justify-center space-x-1.5">
+                    <button type="button" onclick="submitAbsenFinal('Masuk')" class="bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-medium text-xs transition shadow-md shadow-emerald-500/20 flex items-center justify-center space-x-1.5 cursor-pointer">
                         <i class="fa-solid fa-right-to-bracket"></i> <span>Absen Masuk</span>
                     </button>
-                    <button type="button" onclick="submitAbsenFinal('Pulang')" class="bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl font-medium text-xs transition shadow-md shadow-blue-500/20 flex items-center justify-center space-x-1.5">
+                    <button type="button" onclick="submitAbsenFinal('Pulang')" class="bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl font-medium text-xs transition shadow-md shadow-blue-500/20 flex items-center justify-center space-x-1.5 cursor-pointer">
                         <i class="fa-solid fa-right-from-bracket"></i> <span>Absen Pulang</span>
                     </button>
                 </div>
@@ -209,7 +209,7 @@
                         <option value="Alpa">Alpa</option>
                     </select>
                 </div>
-                <button onclick="submitEditAbsen()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-medium text-sm transition shadow-lg shadow-indigo-500/20">Simpan Perubahan</button>
+                <button onclick="submitEditAbsen()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-medium text-sm transition shadow-lg shadow-indigo-500/20 cursor-pointer">Simpan Perubahan</button>
             </div>
         </div>
     </div>
@@ -238,7 +238,7 @@
                         <option value="Alpa">Alpa</option>
                     </select>
                 </div>
-                <button onclick="submitAbsenManualData()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-medium text-sm transition shadow-lg shadow-blue-500/20">Simpan Absen</button>
+                <button onclick="submitAbsenManualData()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-medium text-sm transition shadow-lg shadow-blue-500/20 cursor-pointer">Simpan Absen</button>
             </div>
         </div>
     </div>
@@ -263,7 +263,7 @@
                     <label class="text-xs font-semibold text-slate-600 mb-1 block">Kelas / Keterangan</label>
                     <input type="text" id="addKeterangan" placeholder="Contoh: 'Aaliy" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
                 </div>
-                <button onclick="submitTambahSantri()" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-xl font-medium text-sm transition shadow-lg shadow-amber-500/20">Tambah Santri</button>
+                <button onclick="submitTambahSantri()" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-xl font-medium text-sm transition shadow-lg shadow-amber-500/20 cursor-pointer">Tambah Santri</button>
             </div>
         </div>
     </div>
@@ -296,7 +296,7 @@
                     <label class="text-xs font-semibold text-slate-600 mb-1 block">Kelas / Keterangan</label>
                     <input type="text" id="editKetSantri" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
                 </div>
-                <button onclick="submitEditSantri()" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-xl font-medium text-sm transition shadow-lg shadow-amber-500/20">Simpan Perubahan</button>
+                <button onclick="submitEditSantri()" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-xl font-medium text-sm transition shadow-lg shadow-amber-500/20 cursor-pointer">Simpan Perubahan</button>
             </div>
         </div>
     </div>
@@ -386,9 +386,7 @@
             select.innerHTML = html;
         }
 
-        function openModal(id) { 
-            document.getElementById(id).classList.remove('hidden'); 
-        }
+        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
         
         function closeModal(id) { 
             document.getElementById(id).classList.add('hidden'); 
@@ -531,7 +529,9 @@
                 let res = await callApi('absen', { tanggal: today, nis, nama, status, keterangan });
                 if (res && res.status === "success") {
                     alert(`Berhasil mencatat absen ${status}: ${nama}`);
-                    await fetchData();
+                    setTimeout(async () => {
+                        await fetchData();
+                    }, 1000);
                 } else {
                     alert("Gagal mencatat ke Sheet: " + (res ? res.message : "Kesalahan server"));
                 }
@@ -546,9 +546,10 @@
             let today = getLocalDateString();
             
             let todayHadir = allAbsensi.filter(a => {
-                if(!a.Tanggal) return false;
+                if(!a.Tanggal || !a.Status) return false;
                 let t = String(a.Tanggal).substring(0, 10);
-                return t === today && String(a.Status).trim() === 'Masuk';
+                let statusClean = String(a.Status).trim().toLowerCase();
+                return t === today && (statusClean === 'masuk' || statusClean === 'hadir');
             });
 
             if(todayHadir.length === 0) {
@@ -562,9 +563,9 @@
                 <div class="bg-white p-3 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm">
                     <div>
                         <div class="font-bold text-slate-700 text-sm">${a.Nama} <span class="text-xs text-slate-400">(${a.NIS})</span></div>
-                        <div class="text-xs text-emerald-600 font-medium mt-0.5">Absen Masuk</div>
+                        <div class="text-xs text-emerald-600 font-medium mt-0.5">Absen ${a.Status}</div>
                     </div>
-                    <span class="bg-emerald-50 text-emerald-600 text-xs px-2.5 py-1 rounded-full font-medium border border-emerald-200">Masuk</span>
+                    <span class="bg-emerald-50 text-emerald-600 text-xs px-2.5 py-1 rounded-full font-medium border border-emerald-200">${a.Status}</span>
                 </div>`;
             });
             container.innerHTML = html;
@@ -587,7 +588,7 @@
 
             let html = '';
             todayAbsen.forEach(a => {
-                let badgeColor = String(a.Status).trim() === 'Masuk' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-blue-50 text-blue-600 border-blue-200';
+                let badgeColor = String(a.Status).trim().toLowerCase() === 'masuk' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-blue-50 text-blue-600 border-blue-200';
                 html += `
                 <div class="bg-white p-3 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm">
                     <div>
