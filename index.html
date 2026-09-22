@@ -320,7 +320,8 @@
 
         async function callApi(action, data = {}) {
             try {
-                let url = GAS_URL + "?action=" + action;
+                // Menambahkan parameter &t= untuk mencegah browser melakukan cache pada GET request
+                let url = GAS_URL + "?action=" + action + "&t=" + new Date().getTime();
                 for (let key in data) {
                     url += `&${key}=` + encodeURIComponent(data[key]);
                 }
