@@ -206,7 +206,7 @@
     <!-- JavaScript App Logic -->
     <script>
         // URL Web App Google Apps Script terbaru Anda yang baru:
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzpNRleLLzV7jB1kXO5quWjHTpJY4GHo_rlnb5QkhsoS_NvQ1wIGk4uq8Ln9dssy34/exec";
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxse8PdjNpx4QRMYlbv1l_AeYoC-_TtKE5yDYwYLGO6oFf0fPCjZYmMM6aZcCgeBIXK/exec";
 
         let globalData = { totalSantri: 0, hadirHariIni: 0, tidakHadirHariIni: 0, students: [], absenHistory: [], hadirTodayList: [], tidakHadirTodayList: [] };
         let html5QrCode = null;
@@ -942,8 +942,7 @@
             m.classList.add('hidden');
         }
         function showAlert(msg, type) {
-            const box = document.getElementById('callBackend') || document.getElementById('alertBox');
-            // Fallback safety if alertBox is missing
+            const box = document.getElementById('alertBox');
             if (!box) return;
             box.className = `p-3 rounded-2xl text-xs font-medium transition-all shadow-sm ${type === 'success' ? 'bg-emerald-950/80 text-emerald-200 border border-emerald-800' : 'bg-rose-950/80 text-rose-200 border border-rose-800'}`;
             box.innerText = msg;
