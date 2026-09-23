@@ -104,23 +104,37 @@
                     </div>
                 </div>
 
-                <!-- Kartu Hadir Hari Ini -->
-                <div onclick="openRekapModal()" class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md transition cursor-pointer flex flex-col justify-between">
-                    <div>
-                        <div class="flex justify-between items-start mb-2">
-                            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Hadir Hari Ini</span>
-                            <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
-                                <i class="fa-solid fa-user-check text-xs"></i>
-                            </div>
-                        </div>
-                        <div class="flex items-baseline space-x-2">
-                            <span id="stat-hadir-hari-ini" class="text-3xl font-extrabold text-slate-900">0</span>
-                            <span class="text-[10px] text-emerald-600 font-bold">Santri</span>
+                <!-- Kartu Hadir Hari Ini (Serupa Total Santri + Rincian Hadir per Kelas & Tidak Hadir) -->
+                <div onclick="openHadirBreakdownModal()" class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md transition cursor-pointer relative group">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Hadir Hari Ini</span>
+                        <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
+                            <i class="fa-solid fa-user-check text-xs"></i>
                         </div>
                     </div>
-                    <div class="mt-3 pt-2 text-[11px] font-semibold text-indigo-600 flex items-center justify-between">
-                        <span>Lihat Detail</span>
-                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    <div class="flex items-baseline space-x-2">
+                        <span id="stat-hadir-hari-ini" class="text-3xl font-extrabold text-slate-900">0</span>
+                        <span class="text-[10px] text-emerald-600 font-bold">Santri</span>
+                    </div>
+
+                    <!-- Rincian Hadir Per Kelas & Tidak Hadir -->
+                    <div class="mt-3 pt-2.5 border-t border-slate-100 grid grid-cols-4 gap-1 text-center">
+                        <div class="bg-slate-50 rounded-lg p-1">
+                            <div class="text-[9px] text-slate-400 font-semibold">Ibtida</div>
+                            <div id="stat-hadir-ibtida" class="text-xs font-bold text-emerald-600">0</div>
+                        </div>
+                        <div class="bg-slate-50 rounded-lg p-1">
+                            <div class="text-[9px] text-slate-400 font-semibold">Tsanawi</div>
+                            <div id="stat-hadir-tsanawi" class="text-xs font-bold text-emerald-600">0</div>
+                        </div>
+                        <div class="bg-slate-50 rounded-lg p-1">
+                            <div class="text-[9px] text-slate-400 font-semibold">'Aaliy</div>
+                            <div id="stat-hadir-aaliy" class="text-xs font-bold text-emerald-600">0</div>
+                        </div>
+                        <div class="bg-rose-50 rounded-lg p-1">
+                            <div class="text-[9px] text-rose-400 font-semibold">Absen</div>
+                            <div id="stat-tidak-hadir" class="text-xs font-bold text-rose-600">0</div>
+                        </div>
                     </div>
                 </div>
 
@@ -221,7 +235,7 @@
 
     </div>
 
-    <!-- MODAL: RINCIAN KELAS -->
+    <!-- MODAL: RINCIAN KELAS (TOTAL SANTRI) -->
     <div id="modal-class-breakdown" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
         <div class="bg-white w-full max-w-sm rounded-[2rem] p-6 shadow-2xl">
             <div class="flex justify-between items-center mb-4">
@@ -276,6 +290,76 @@
 
             <button onclick="closeModal('modal-class-breakdown'); openDataSantriModal();" class="w-full bg-indigo-600 text-white py-3 rounded-2xl font-bold text-sm hover:bg-indigo-700 transition shadow-lg shadow-indigo-500/25">
                 Kelola Seluruh Data Santri
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL: RINCIAN HADIR HARI INI -->
+    <div id="modal-hadir-breakdown" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-[2rem] p-6 shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                        <i class="fa-solid fa-user-check"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900">Rincian Hadir Hari Ini</h3>
+                        <p class="text-xs text-slate-400">Berdasarkan Kelas & Tidak Hadir</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('modal-hadir-breakdown')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <div class="space-y-3 my-4">
+                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs">IB</div>
+                        <div>
+                            <div class="font-bold text-sm text-slate-800">Hadir Ibtida</div>
+                            <div class="text-[11px] text-slate-400">Tingkat Dasar</div>
+                        </div>
+                    </div>
+                    <span id="modal-hadir-ibtida" class="font-extrabold text-emerald-600 text-base">0 Santri</span>
+                </div>
+
+                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs">TS</div>
+                        <div>
+                            <div class="font-bold text-sm text-slate-800">Hadir Tsanawi</div>
+                            <div class="text-[11px] text-slate-400">Tingkat Menengah</div>
+                        </div>
+                    </div>
+                    <span id="modal-hadir-tsanawi" class="font-extrabold text-emerald-600 text-base">0 Santri</span>
+                </div>
+
+                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs">AL</div>
+                        <div>
+                            <div class="font-bold text-sm text-slate-800">Hadir 'Aaliy</div>
+                            <div class="text-[11px] text-slate-400">Tingkat Lanjutan / Atas</div>
+                        </div>
+                    </div>
+                    <span id="modal-hadir-aaliy" class="font-extrabold text-emerald-600 text-base">0 Santri</span>
+                </div>
+
+                <div class="bg-rose-50 p-3.5 rounded-2xl border border-rose-100 flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center font-bold text-xs">TH</div>
+                        <div>
+                            <div class="font-bold text-sm text-slate-800">Total Tidak Hadir</div>
+                            <div class="text-[11px] text-rose-400">Belum Absen / Alpa / Sakit / Izin</div>
+                        </div>
+                    </div>
+                    <span id="modal-tidak-hadir" class="font-extrabold text-rose-600 text-base">0 Santri</span>
+                </div>
+            </div>
+
+            <button onclick="closeModal('modal-hadir-breakdown'); openRekapModal();" class="w-full bg-emerald-600 text-white py-3 rounded-2xl font-bold text-sm hover:bg-emerald-700 transition shadow-lg shadow-emerald-500/25">
+                Kelola Rekap Absen
             </button>
         </div>
     </div>
@@ -519,12 +603,16 @@
         }
 
         function updateDashboard() {
-            const total = santriList.length;
-            const ibtidaCount = santriList.filter(s => s.kelas === 'Ibtida').length;
-            const tsanawiCount = santriList.filter(s => s.kelas === 'Tsanawi').length;
-            const aaliyCount = santriList.filter(s => s.kelas === "'Aaliy" || s.kelas === 'Aaliy').length;
+            const totalSantri = santriList.length;
+            const ibtidaSantri = santriList.filter(s => s.kelas === 'Ibtida');
+            const tsanawiSantri = santriList.filter(s => s.kelas === 'Tsanawi');
+            const aaliySantri = santriList.filter(s => s.kelas === "'Aaliy" || s.kelas === 'Aaliy');
 
-            document.getElementById('stat-total-santri').innerText = total;
+            const ibtidaCount = ibtidaSantri.length;
+            const tsanawiCount = tsanawiSantri.length;
+            const aaliyCount = aaliySantri.length;
+
+            document.getElementById('stat-total-santri').innerText = totalSantri;
             document.getElementById('stat-ibtida').innerText = ibtidaCount;
             document.getElementById('stat-tsanawi').innerText = tsanawiCount;
             document.getElementById('stat-aaliy').innerText = aaliyCount;
@@ -533,8 +621,24 @@
             document.getElementById('modal-count-tsanawi').innerText = tsanawiCount + ' Santri';
             document.getElementById('modal-count-aaliy').innerText = aaliyCount + ' Santri';
 
-            const hadirHariIni = absensiList.filter(a => a.status === 'Hadir').length;
-            document.getElementById('stat-hadir-hari-ini').innerText = hadirHariIni;
+            // Hadir breakdown
+            const hadirList = absensiList.filter(a => a.status === 'Hadir');
+            const hadirIbtida = hadirList.filter(a => ibtidaSantri.some(s => s.nis === a.nis)).length;
+            const hadirTsanawi = hadirList.filter(a => tsanawiSantri.some(s => s.nis === a.nis)).length;
+            const hadirAaliy = hadirList.filter(a => aaliySantri.some(s => s.nis === a.nis)).length;
+            const totalHadir = hadirList.length;
+            const tidakHadir = totalSantri - totalHadir;
+
+            document.getElementById('stat-hadir-hari-ini').innerText = totalHadir;
+            document.getElementById('stat-hadir-ibtida').innerText = hadirIbtida;
+            document.getElementById('stat-hadir-tsanawi').innerText = hadirTsanawi;
+            document.getElementById('stat-hadir-aaliy').innerText = hadirAaliy;
+            document.getElementById('stat-tidak-hadir').innerText = tidakHadir;
+
+            document.getElementById('modal-hadir-ibtida').innerText = hadirIbtida + ' Santri';
+            document.getElementById('modal-hadir-tsanawi').innerText = hadirTsanawi + ' Santri';
+            document.getElementById('modal-hadir-aaliy').innerText = hadirAaliy + ' Santri';
+            document.getElementById('modal-tidak-hadir').innerText = tidakHadir + ' Santri';
 
             const recentContainer = document.getElementById('recent-santri-list');
             if (santriList.length === 0) {
@@ -561,6 +665,7 @@
         function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
         function openClassBreakdownModal() { openModal('modal-class-breakdown'); }
+        function openHadirBreakdownModal() { openModal('modal-hadir-breakdown'); }
         function openAddSantriModal() { openModal('modal-add-santri'); }
         function openScanModal() { openModal('modal-scan'); }
         function openManualModal() { 
