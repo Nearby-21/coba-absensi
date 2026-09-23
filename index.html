@@ -55,12 +55,12 @@
                     </div>
                     <div>
                         <h1 class="text-xl font-extrabold tracking-tight text-white">E-FIll Baph</h1>
-                        <p class="text-xs text-zinc-400 font-medium">Absensi Pengikut</p>
+                        <p class="text-xs text-zinc-400 font-medium">Dark Gothic Edition</p>
                     </div>
                 </div>
                 <div class="flex items-center space-x-2 bg-zinc-900/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-zinc-800/50">
-                    <span class="w-2 h-2 rounded-full bg-zinc-400 animate-pulse"></span>
-                    <span class="text-[11px] font-semibold tracking-wide text-zinc-300">Active</span>
+                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                    <span class="text-[11px] font-semibold tracking-wide text-zinc-300">Online Sync</span>
                 </div>
             </div>
 
@@ -68,11 +68,11 @@
             <div class="flex justify-between items-center bg-zinc-900/30 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-zinc-800/50 text-xs">
                 <div class="flex items-center space-x-2">
                     <i class="fa-regular fa-calendar-days text-zinc-400"></i>
-                    <span id="current-date" class="font-medium text-zinc-200">Rabu, 23 Sep 2026</span>
+                    <span id="current-date" class="font-medium text-zinc-200">-</span>
                 </div>
                 <div class="flex items-center space-x-1.5 text-zinc-400">
                     <i class="fa-solid fa-cloud-arrow-up text-[11px]"></i>
-                    <span class="text-[11px]">Sync Active</span>
+                    <span class="text-[11px]">Google Sheets Connected</span>
                 </div>
             </div>
         </div>
@@ -175,7 +175,7 @@
                             <i class="fa-solid fa-clipboard-user text-base"></i>
                         </div>
                         <h3 class="font-bold text-zinc-100 text-sm">Rekap Absen</h3>
-                        <p class="text-[11px] text-zinc-400 mt-0.5">Tabel & Hapus Double</p>
+                        <p class="text-[11px] text-zinc-400 mt-0.5">Tabel & Kelola Data</p>
                     </button>
 
                     <button onclick="openAddSantriModal()" class="bg-zinc-950/40 backdrop-blur-sm p-4 rounded-3xl shadow-lg border border-zinc-800/50 hover:border-zinc-700 text-left transition group">
@@ -212,7 +212,7 @@
 
                 <div id="recent-santri-list" class="space-y-2">
                     <div class="bg-zinc-950/40 backdrop-blur-sm p-4 rounded-2xl border border-zinc-800/50 text-center text-zinc-400 text-xs py-6">
-                        Memuat data pengikut...
+                        Memuat data pengikut online...
                     </div>
                 </div>
             </div>
@@ -383,7 +383,7 @@
                     </div>
                     <div>
                         <h3 class="font-bold text-white">Tambah Pengikut Baru</h3>
-                        <p class="text-xs text-zinc-400">Daftarkan pengikut ke database</p>
+                        <p class="text-xs text-zinc-400">Daftarkan pengikut ke database online</p>
                     </div>
                 </div>
                 <button onclick="closeModal('modal-add-santri')" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-zinc-700">
@@ -414,7 +414,7 @@
                 </div>
 
                 <button type="submit" class="w-full bg-zinc-100 text-zinc-950 py-3 rounded-2xl font-bold text-sm hover:bg-white transition shadow-lg mt-2">
-                    Simpan Pengikut Baru
+                    Simpan ke Google Sheets
                 </button>
             </form>
         </div>
@@ -430,7 +430,7 @@
                     </div>
                     <div>
                         <h3 class="font-bold text-white">Scan QR / Absen</h3>
-                        <p class="text-xs text-zinc-400">Arahkan kamera ke kartu pengikut</p>
+                        <p class="text-xs text-zinc-400">Arahkan kamera atau ketik NIP</p>
                     </div>
                 </div>
                 <button onclick="closeModal('modal-scan')" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-zinc-700">
@@ -449,7 +449,7 @@
 
             <div class="space-y-3">
                 <div class="relative">
-                    <input type="text" id="scan-nis-input" placeholder="Atau ketik NIP & Nomor Induk Pengikut..." class="w-full pl-4 pr-12 py-2.5 rounded-2xl bg-zinc-950/50 border border-zinc-800 text-sm text-white focus:outline-none focus:border-zinc-500">
+                    <input type="text" id="scan-nis-input" placeholder="Ketik NIP & Nomor Induk Pengikut..." class="w-full pl-4 pr-12 py-2.5 rounded-2xl bg-zinc-950/50 border border-zinc-800 text-sm text-white focus:outline-none focus:border-zinc-500">
                     <button onclick="prosesAbsenNIS()" class="absolute right-1.5 top-1.5 bg-zinc-100 text-zinc-950 px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-white transition">
                         Absen
                     </button>
@@ -481,7 +481,7 @@
                     <label class="block text-xs font-bold text-zinc-400 mb-1">Cari Nama / NIP & Nomor Induk Pengikut</label>
                     <input type="text" id="manual-input-search" autocomplete="off" oninput="filterAutocomplete()" placeholder="Ketik nama, NIP, atau Nomor Induk..." class="w-full px-4 py-2.5 rounded-2xl bg-zinc-950/50 border border-zinc-800 text-sm text-white focus:outline-none focus:border-zinc-500">
                     
-                    <!-- Custom Dropdown (Hanya Muncul Saat Diketik) -->
+                    <!-- Custom Dropdown -->
                     <div id="autocomplete-list" class="absolute left-0 right-0 mt-1 bg-zinc-950/90 backdrop-blur-md border border-zinc-800 rounded-2xl shadow-xl max-h-48 overflow-y-auto z-30 hidden">
                         <!-- Populated by JS -->
                     </div>
@@ -501,7 +501,7 @@
                 </div>
 
                 <button type="submit" class="w-full bg-zinc-100 text-zinc-950 py-3 rounded-2xl font-bold text-sm hover:bg-white transition shadow-lg mt-2">
-                    Simpan Absen
+                    Simpan Absen Online
                 </button>
             </form>
         </div>
@@ -516,8 +516,8 @@
                         <i class="fa-solid fa-clipboard-user"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-white">Rekap Absen Hari Ini</h3>
-                        <p class="text-xs text-zinc-400">Kelola & Bersihkan Absen Double</p>
+                        <h3 class="font-bold text-white">Rekap Absen Online</h3>
+                        <p class="text-xs text-zinc-400">Data sinkron dari Google Sheet</p>
                     </div>
                 </div>
                 <button onclick="closeModal('modal-rekap')" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-zinc-700">
@@ -527,15 +527,11 @@
 
             <div class="flex justify-between items-center mb-3">
                 <span id="rekap-count-info" class="text-xs font-bold text-zinc-400">Total Absen: 0</span>
-                <button onclick="hapusAbsenDouble()" class="bg-rose-950/80 text-rose-400 border border-rose-900 px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-rose-900 transition flex items-center space-x-1.5">
-                    <i class="fa-solid fa-broom"></i>
-                    <span>Hapus Double</span>
-                </button>
             </div>
 
             <!-- Tabel Rekap Absen -->
             <div id="rekap-list-container" class="overflow-y-auto flex-1 pr-1">
-                <div class="text-center text-zinc-400 text-xs py-8">Belum ada data absensi hari ini.</div>
+                <div class="text-center text-zinc-400 text-xs py-8">Memuat rekap absensi...</div>
             </div>
 
             <button onclick="closeModal('modal-rekap')" class="w-full bg-zinc-800 text-zinc-200 py-3 rounded-2xl font-bold text-sm hover:bg-zinc-700 transition mt-4">
@@ -586,28 +582,50 @@
         </div>
     </div>
 
-    <!-- JavaScript Logika Aplikasi -->
+    <!-- JavaScript Logika Aplikasi dengan API Google Sheet -->
     <script>
-        let santriList = JSON.parse(localStorage.getItem('imtql_santri')) || [];
-        let absensiList = JSON.parse(localStorage.getItem('imtql_absensi')) || [];
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbxVI_oq-rgkhyZbsAA4KGBXWIWtGfhIyolCJnPKiqsUSiRW_H91OgpEQfYRQf9EW0w2/exec";
 
+        let santriList = [];
+        let absensiList = [];
         let currentFilterKelas = 'Semua';
 
         document.getElementById('current-date').innerText = new Date().toLocaleDateString('id-ID', {
             weekday: 'long', day: 'numeric', month: 'short', year: 'numeric'
         });
 
-        function saveData() {
-            localStorage.setItem('imtql_santri', JSON.stringify(santriList));
-            localStorage.setItem('imtql_absensi', JSON.stringify(absensiList));
-            updateDashboard();
+        // 1. Ambil data dari Google Sheets secara berkala (Auto-Sync)
+        async function fetchDatabases() {
+            try {
+                let response = await fetch(`${WEB_APP_URL}?action=getData`);
+                let result = await response.json();
+                
+                santriList = result.santri || [];
+                absensiList = result.absensi || [];
+                
+                updateDashboard();
+                
+                // Update modal view if opened
+                if(document.getElementById('modal-data-santri') && !document.getElementById('modal-data-santri').classList.contains('hidden')) {
+                    renderDatabaseSantri();
+                }
+                if(document.getElementById('modal-rekap') && !document.getElementById('modal-rekap').classList.contains('hidden')) {
+                    renderRekapAbsen();
+                }
+            } catch (error) {
+                console.error("Gagal menyinkronkan data:", error);
+            }
         }
+
+        // Panggil pertama kali & set sinkronisasi otomatis tiap 5 detik
+        fetchDatabases();
+        setInterval(fetchDatabases, 5000);
 
         function updateDashboard() {
             const totalSantri = santriList.length;
             const NewbieSantri = santriList.filter(s => s.kelas === 'Newbie');
             const AdvanceSantri = santriList.filter(s => s.kelas === 'Advance');
-            const ProSantri = santriList.filter(s => s.kelas === "Pro" || s.kelas === 'Pro');
+            const ProSantri = santriList.filter(s => s.kelas === 'Pro');
 
             const NewbieCount = NewbieSantri.length;
             const AdvanceCount = AdvanceSantri.length;
@@ -624,9 +642,9 @@
 
             // Hadir breakdown
             const hadirList = absensiList.filter(a => a.status === 'Hadir');
-            const hadirNewbie = hadirList.filter(a => NewbieSantri.some(s => s.nis === a.nis)).length;
-            const hadirAdvance = hadirList.filter(a => AdvanceSantri.some(s => s.nis === a.nis)).length;
-            const hadirPro = hadirList.filter(a => ProSantri.some(s => s.nis === a.nis)).length;
+            const hadirNewbie = hadirList.filter(a => NewbieSantri.some(s => s.nip.toString() === a.nip.toString())).length;
+            const hadirAdvance = hadirList.filter(a => AdvanceSantri.some(s => s.nip.toString() === a.nip.toString())).length;
+            const hadirPro = hadirList.filter(a => ProSantri.some(s => s.nip.toString() === a.nip.toString())).length;
             const totalHadir = hadirList.length;
             const tidakHadir = totalSantri - totalHadir;
 
@@ -634,16 +652,16 @@
             document.getElementById('stat-hadir-Newbie').innerText = hadirNewbie;
             document.getElementById('stat-hadir-Advance').innerText = hadirAdvance;
             document.getElementById('stat-hadir-Pro').innerText = hadirPro;
-            document.getElementById('stat-tidak-hadir').innerText = tidakHadir;
+            document.getElementById('stat-tidak-hadir').innerText = tidakHadir < 0 ? 0 : tidakHadir;
 
             document.getElementById('modal-hadir-Newbie').innerText = hadirNewbie + ' Pengikut';
             document.getElementById('modal-hadir-Advance').innerText = hadirAdvance + ' Pengikut';
             document.getElementById('modal-hadir-Pro').innerText = hadirPro + ' Pengikut';
-            document.getElementById('modal-tidak-hadir').innerText = tidakHadir + ' Pengikut';
+            document.getElementById('modal-tidak-hadir').innerText = (tidakHadir < 0 ? 0 : tidakHadir) + ' Pengikut';
 
             const recentContainer = document.getElementById('recent-santri-list');
             if (santriList.length === 0) {
-                recentContainer.innerHTML = '<div class="bg-zinc-950/40 backdrop-blur-sm p-4 rounded-2xl border border-zinc-800/50 text-center text-zinc-400 text-xs py-6">Belum ada pengikut terdaftar.</div>';
+                recentContainer.innerHTML = '<div class="bg-zinc-950/40 backdrop-blur-sm p-4 rounded-2xl border border-zinc-800/50 text-center text-zinc-400 text-xs py-6">Belum ada pengikut terdaftar di Google Sheet.</div>';
             } else {
                 recentContainer.innerHTML = santriList.slice(-3).reverse().map(s => `
                     <div class="bg-zinc-950/40 backdrop-blur-sm p-3.5 rounded-2xl border border-zinc-800/50 flex justify-between items-center">
@@ -653,7 +671,7 @@
                             </div>
                             <div>
                                 <h4 class="font-bold text-xs text-white">${s.nama}</h4>
-                                <p class="text-[10px] text-zinc-400">NIP & Nomor Induk: ${s.nis} • Kelas: ${s.kelas}</p>
+                                <p class="text-[10px] text-zinc-400">NIP: ${s.nip} • Kelas: ${s.kelas}</p>
                             </div>
                         </div>
                         <span class="px-2.5 py-1 bg-zinc-800 text-zinc-300 rounded-lg text-[10px] font-bold">${s.kelas}</span>
@@ -674,12 +692,11 @@
             document.getElementById('manual-keterangan').value = '';
             document.getElementById('autocomplete-list').classList.add('hidden');
             openModal('modal-manual'); 
-            updateDashboard(); 
         }
         function openRekapModal() { renderRekapAbsen(); openModal('modal-rekap'); }
         function openDataSantriModal() { renderDatabaseSantri(); openModal('modal-data-santri'); }
 
-        // Autocomplete hanya muncul saat diketik
+        // Autocomplete pencarian anggota
         function filterAutocomplete() {
             const keyword = document.getElementById('manual-input-search').value.toLowerCase().trim();
             const container = document.getElementById('autocomplete-list');
@@ -689,12 +706,12 @@
                 return;
             }
 
-            const filtered = santriList.filter(s => s.nama.toLowerCase().includes(keyword) || s.nis.includes(keyword) || s.kelas.toLowerCase().includes(keyword));
+            const filtered = santriList.filter(s => s.nama.toLowerCase().includes(keyword) || s.nip.toString().includes(keyword) || s.kelas.toLowerCase().includes(keyword));
             
             if (filtered.length > 0) {
                 container.innerHTML = filtered.map(s => `
-                    <div onclick="selectSantri('${s.nis}', '${s.nama}', '${s.kelas}')" class="p-3 hover:bg-zinc-900 cursor-pointer text-xs border-b border-zinc-800 last:border-none">
-                        <div class="font-bold text-white">${s.nis} - ${s.nama}</div>
+                    <div onclick="selectSantri('${s.nip}', '${s.nama}', '${s.kelas}')" class="p-3 hover:bg-zinc-900 cursor-pointer text-xs border-b border-zinc-800 last:border-none">
+                        <div class="font-bold text-white">${s.nip} - ${s.nama}</div>
                         <div class="text-[10px] text-zinc-400">Kelas: ${s.kelas} • WA: ${s.whatsapp}</div>
                     </div>
                 `).join('');
@@ -705,8 +722,8 @@
             }
         }
 
-        function selectSantri(nis, nama, kelas) {
-            document.getElementById('manual-input-search').value = `${nis} - ${nama} (${kelas})`;
+        function selectSantri(nip, nama, kelas) {
+            document.getElementById('manual-input-search').value = `${nip} - ${nama} (${kelas})`;
             document.getElementById('autocomplete-list').classList.add('hidden');
         }
 
@@ -719,92 +736,96 @@
             }
         });
 
-        function handleTambahSantri(e) {
+        // Tambah Pengikut ke Google Sheet
+        async function handleTambahSantri(e) {
             e.preventDefault();
-            const nis = document.getElementById('input-nis').value.trim();
+            const nip = document.getElementById('input-nis').value.trim();
             const nama = document.getElementById('input-nama').value.trim();
             const kelas = document.getElementById('input-kelas').value;
             const whatsapp = document.getElementById('input-whatsapp').value.trim();
 
-            if (santriList.some(s => s.nis === nis)) {
-                alert('NIP & Nomor Induk Pengikut sudah terdaftar dalam sistem!');
+            if (santriList.some(s => s.nip.toString() === nip)) {
+                alert('NIP & Nomor Induk Pengikut sudah terdaftar!');
                 return;
             }
 
-            santriList.push({ nis, nama, kelas, whatsapp });
-            saveData();
-            closeModal('modal-add-santri');
-            document.getElementById('form-add-santri').reset();
-            alert('Pengikut berhasil didaftarkan!');
+            try {
+                await fetch(WEB_APP_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ action: 'tambahPengikut', nip, nama, kelas, whatsapp })
+                });
+
+                closeModal('modal-add-santri');
+                document.getElementById('form-add-santri').reset();
+                setTimeout(fetchDatabases, 1500);
+                alert('Pengikut berhasil didaftarkan ke Google Sheet!');
+            } catch (err) {
+                alert('Gagal terhubung ke Google Sheet.');
+            }
         }
 
-        function prosesAbsenNIS() {
-            const nis = document.getElementById('scan-nis-input').value.trim();
-            if (!nis) return;
+        // Proses Absen via Input NIP / Scan
+        async function prosesAbsenNIS() {
+            const nip = document.getElementById('scan-nis-input').value.trim();
+            if (!nip) return;
 
-            const santri = santriList.find(s => s.nis === nis);
+            const santri = santriList.find(s => s.nip.toString() === nip);
             if (!santri) {
-                alert('Pengikut dengan NIP atau Nomor Induk tersebut tidak ditemukan!');
+                alert('Pengikut dengan NIP tersebut tidak ditemukan di database online!');
                 return;
             }
 
-            const alreadyAbsen = absensiList.find(a => a.nis === nis);
             const waktuSekarang = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
 
-            if (alreadyAbsen) {
-                alreadyAbsen.status = 'Hadir';
-                alreadyAbsen.waktu = waktuSekarang;
-            } else {
-                absensiList.push({
-                    nis: santri.nis,
-                    nama: santri.nama,
-                    kelas: santri.kelas,
-                    status: 'Hadir',
-                    waktu: waktuSekarang,
-                    keterangan: 'Scan QR / NIP'
+            try {
+                await fetch(WEB_APP_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ action: 'simpanAbsen', nip: santri.nip, nama: santri.nama, kelas: santri.kelas, status: 'Hadir', waktu: waktuSekarang, keterangan: 'Scan QR / NIP' })
                 });
-            }
 
-            saveData();
-            document.getElementById('scan-nis-input').value = '';
-            closeModal('modal-scan');
-            alert(`Absensi Berhasil: ${santri.nama} (Hadir)`);
+                document.getElementById('scan-nis-input').value = '';
+                closeModal('modal-scan');
+                setTimeout(fetchDatabases, 1500);
+                alert(`Absensi Berhasil Dicatat: ${santri.nama} (Hadir)`);
+            } catch (err) {
+                alert('Gagal mengirim data absensi.');
+            }
         }
 
-        function handleAbsenManual(e) {
+        // Proses Absen Manual
+        async function handleAbsenManual(e) {
             e.preventDefault();
             const inputVal = document.getElementById('manual-input-search').value.trim();
             const status = document.getElementById('manual-status').value;
             const keterangan = document.getElementById('manual-keterangan').value.trim();
 
-            let santri = santriList.find(s => inputVal.includes(s.nis) || s.nama.toLowerCase() === inputVal.toLowerCase() || s.nis === inputVal);
+            let santri = santriList.find(s => inputVal.includes(s.nip) || s.nama.toLowerCase() === inputVal.toLowerCase() || s.nip.toString() === inputVal);
 
             if (!santri) {
-                alert('Pengikut tidak ditemukan! Silakan pilih dari daftar atau pastikan NIP / Nomor Induk / Nama benar.');
+                alert('Pengikut tidak ditemukan!');
                 return;
             }
 
             const waktuSekarang = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-            const existing = absensiList.find(a => a.nis === santri.nis);
 
-            if (existing) {
-                existing.status = status;
-                existing.waktu = waktuSekarang;
-                existing.keterangan = keterangan;
-            } else {
-                absensiList.push({
-                    nis: santri.nis,
-                    nama: santri.nama,
-                    kelas: santri.kelas,
-                    status,
-                    waktu: waktuSekarang,
-                    keterangan
+            try {
+                await fetch(WEB_APP_URL, {
+                    method: "POST",
+                    mode: "no-cors",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ action: 'simpanAbsen', nip: santri.nip, nama: santri.nama, kelas: santri.kelas, status, waktu: waktuSekarang, keterangan })
                 });
-            }
 
-            saveData();
-            closeModal('modal-manual');
-            alert(`Absen ${status} untuk ${santri.nama} berhasil dicatat!`);
+                closeModal('modal-manual');
+                setTimeout(fetchDatabases, 1500);
+                alert(`Absen ${status} untuk ${santri.nama} berhasil dicatat online!`);
+            } catch (err) {
+                alert('Gagal mengirim data absensi.');
+            }
         }
 
         function renderRekapAbsen() {
@@ -821,7 +842,7 @@
                     <table class="w-full text-left border-collapse">
                         <thead>
                             <tr class="bg-zinc-900/70 text-[10px] font-bold text-zinc-400 uppercase tracking-wider border-b border-zinc-800/50">
-                                <th class="py-3 px-3">Pengikut & NIP / No. Induk</th>
+                                <th class="py-3 px-3">Pengikut & NIP</th>
                                 <th class="py-3 px-3">Kelas</th>
                                 <th class="py-3 px-3">Status</th>
                                 <th class="py-3 px-3">Waktu</th>
@@ -831,7 +852,7 @@
                         <tbody class="text-xs divide-y divide-zinc-900/50">
             `;
 
-            tableHTML += absensiList.map((a, index) => {
+            tableHTML += absensiList.map((a) => {
                 let badgeColor = 'bg-zinc-800 text-zinc-300';
                 if (a.status === 'Sakit') badgeColor = 'bg-amber-950/80 text-amber-400 border border-amber-900/50';
                 else if (a.status === 'Izin') badgeColor = 'bg-blue-950/80 text-blue-400 border border-blue-900/50';
@@ -842,7 +863,7 @@
                     <tr class="hover:bg-zinc-900/30 transition">
                         <td class="py-3 px-3">
                             <div class="font-bold text-white">${a.nama}</div>
-                            <div class="text-[10px] text-zinc-400">NIP & No. Induk: ${a.nis}</div>
+                            <div class="text-[10px] text-zinc-400">NIP: ${a.nip}</div>
                             ${a.keterangan ? `<div class="text-[9px] text-zinc-300 italic mt-0.5">${a.keterangan}</div>` : ''}
                         </td>
                         <td class="py-3 px-3 font-medium text-zinc-300">${a.kelas}</td>
@@ -851,7 +872,7 @@
                         </td>
                         <td class="py-3 px-3 text-zinc-300 font-medium">${a.waktu}</td>
                         <td class="py-3 px-3 text-center">
-                            <button onclick="hapusAbsenItem(${index})" class="text-zinc-400 hover:text-rose-400 p-1.5 transition">
+                            <button onclick="hapusAbsen('${a.nip}')" class="text-zinc-400 hover:text-rose-400 p-1.5 transition">
                                 <i class="fa-solid fa-trash-can text-xs"></i>
                             </button>
                         </td>
@@ -868,21 +889,20 @@
             container.innerHTML = tableHTML;
         }
 
-        function hapusAbsenItem(index) {
-            absensiList.splice(index, 1);
-            saveData();
-            renderRekapAbsen();
-        }
-
-        function hapusAbsenDouble() {
-            const uniqueMap = new Map();
-            absensiList.forEach(item => {
-                uniqueMap.set(item.nis, item);
-            });
-            absensiList = Array.from(uniqueMap.values());
-            saveData();
-            renderRekapAbsen();
-            alert('Data absen double berhasil dibersihkan!');
+        async function hapusAbsen(nip) {
+            if (confirm('Hapus data absen ini?')) {
+                try {
+                    await fetch(WEB_APP_URL, {
+                        method: "POST",
+                        mode: "no-cors",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ action: 'hapusAbsen', nip })
+                    });
+                    setTimeout(fetchDatabases, 1500);
+                } catch(err) {
+                    alert('Gagal menghapus absen.');
+                }
+            }
         }
 
         function filterDatabase(kelas) {
@@ -906,7 +926,7 @@
 
             let filtered = santriList.filter(s => {
                 const matchClass = currentFilterKelas === 'Semua' || s.kelas.toLowerCase() === currentFilterKelas.toLowerCase();
-                const matchSearch = s.nama.toLowerCase().includes(searchKeyword) || s.nis.includes(searchKeyword) || s.whatsapp.includes(searchKeyword);
+                const matchSearch = s.nama.toLowerCase().includes(searchKeyword) || s.nip.toString().includes(searchKeyword) || s.whatsapp.toString().includes(searchKeyword);
                 return matchClass && matchSearch;
             });
 
@@ -921,24 +941,31 @@
                 <div class="bg-zinc-950/50 backdrop-blur-sm p-3.5 rounded-2xl border border-zinc-800/50 flex justify-between items-center">
                     <div>
                         <h4 class="font-bold text-xs text-white">${s.nama}</h4>
-                        <p class="text-[10px] text-zinc-400 mt-0.5">NIP & No. Induk: ${s.nis} • Kelas: ${s.kelas} • WA: ${s.whatsapp}</p>
+                        <p class="text-[10px] text-zinc-400 mt-0.5">NIP: ${s.nip} • Kelas: ${s.kelas} • WA: ${s.whatsapp}</p>
                     </div>
-                    <button onclick="hapusSantri('${s.nis}')" class="text-zinc-400 hover:text-rose-400 p-2">
+                    <button onclick="hapusSantri('${s.nip}')" class="text-zinc-400 hover:text-rose-400 p-2">
                         <i class="fa-solid fa-trash-can text-xs"></i>
                     </button>
                 </div>
             `).join('');
         }
 
-        function hapusSantri(nis) {
-            if (confirm('Yakin ingin menghapus pengikut ini dari database?')) {
-                santriList = santriList.filter(s => s.nis !== nis);
-                saveData();
-                renderDatabaseSantri();
+        async function hapusSantri(nip) {
+            if (confirm('Yakin ingin menghapus pengikut ini dari database online?')) {
+                try {
+                    await fetch(WEB_APP_URL, {
+                        method: "POST",
+                        mode: "no-cors",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({ action: 'hapusPengikut', nip })
+                    });
+                    setTimeout(fetchDatabases, 1500);
+                    alert('Pengikut berhasil dihapus dari Google Sheet.');
+                } catch(err) {
+                    alert('Gagal menghapus data.');
+                }
             }
         }
-
-        updateDashboard();
     </script>
 </body>
 </html>
