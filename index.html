@@ -2,969 +2,746 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>E-FIll Baph - Sistem Absensi & Manajemen Pengikut</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>iMTQL - Sistem Absensi & Manajemen Santri</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
-                }
-            }
-        }
-    </script>
+    <!-- Html5-QRCode Scanner Library -->
+    <script src="https://unpkg.com/html5-qrcode" type="text/javascript"></script>
     <style>
-        body { background: #050505; }
-        .mobile-container {
-            max-width: 440px;
-            margin: 0 auto;
-            min-height: 100vh;
-            background: #0f1115;
-            color: #e2e8f0;
-            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9);
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+        body { 
+            /* Menggunakan direct link gambar dari Google Drive */
+            background-image: url('https://lh3.googleusercontent.com/d/1nGMk9tfcLQ3y59mm3i0_b-hvB_y6Brv_'); 
+            background-size: cover; 
+            background-position: center; 
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            margin: 0; 
+            padding: 0; 
+            background-color: #0f172a;
         }
+        .bg-overlay {
+            /* Overlay transparan agar background terlihat jelas dan teks tetap terbaca */
+            background-color: rgba(15, 23, 42, 0.45);
+        }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.3); border-radius: 4px; }
     </style>
 </head>
-<body class="text-slate-200 antialiased flex justify-center items-center min-h-screen">
+<body class="w-full min-h-screen text-slate-100 font-sans antialiased flex flex-col items-center justify-start m-0 p-0 select-none">
 
-    <!-- Container Utama Seluler -->
-    <div class="mobile-container w-full border-x border-zinc-800">
-        
-        <!-- Background Image dengan Transparansi Tinggi -->
-        <div class="absolute inset-0 z-0 pointer-events-none opacity-60 overflow-hidden">
-            <img src="banner.jpeg" class="w-full h-full object-cover filter grayscale contrast-125" alt="Background Theme">
-        </div>
-        <div class="absolute inset-0 z-0 bg-gradient-to-b from-zinc-950/40 via-zinc-950/60 to-zinc-950/80 pointer-events-none"></div>
+    <!-- Mobile Container -->
+    <div class="w-full max-w-md min-h-screen bg-overlay backdrop-blur-[2px] flex flex-col relative pb-12 shadow-2xl border-x border-white/10">
 
-        <!-- Header / Top Bar -->
-        <div class="relative z-10 bg-zinc-950/50 backdrop-blur-md text-slate-100 px-5 pt-6 pb-6 rounded-b-[2.5rem] shadow-2xl border-b border-zinc-800/50">
-            <div class="flex justify-between items-center mb-4">
-                <div class="flex items-center space-x-3">
-                    <!-- Logo Satanic (Pentagram SVG) -->
-                    <div class="w-11 h-11 bg-zinc-900/50 backdrop-blur-md rounded-2xl flex items-center justify-center border border-zinc-700/50 shadow-inner text-zinc-300">
-                        <svg class="w-6 h-6 text-zinc-200" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                        </svg>
-                    </div>
-                    <div>
-                        <h1 class="text-xl font-extrabold tracking-tight text-white">E-FIll Baph</h1>
-                        <p class="text-xs text-zinc-400 font-medium">Dark Gothic Edition</p>
-                    </div>
-                </div>
-                <div class="flex items-center space-x-2 bg-zinc-900/50 backdrop-blur-md px-3 py-1.5 rounded-full border border-zinc-800/50">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span class="text-[11px] font-semibold tracking-wide text-zinc-300">Online Sync</span>
-                </div>
-            </div>
-
-            <!-- Tanggal & Info Live -->
-            <div class="flex justify-between items-center bg-zinc-900/30 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-zinc-800/50 text-xs">
-                <div class="flex items-center space-x-2">
-                    <i class="fa-regular fa-calendar-days text-zinc-400"></i>
-                    <span id="current-date" class="font-medium text-zinc-200">-</span>
-                </div>
-                <div class="flex items-center space-x-1.5 text-zinc-400">
-                    <i class="fa-solid fa-cloud-arrow-up text-[11px]"></i>
-                    <span class="text-[11px]">Google Sheets Connected</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Konten Utama -->
-        <div class="relative z-10 px-5 mt-4 pb-28 flex-1 space-y-4">
-
-            <!-- Statistik Kartu -->
-            <div class="grid grid-cols-2 gap-3.5">
-                
-                <!-- Kartu Total Pengikut -->
-                <div onclick="openClassBreakdownModal()" class="bg-zinc-950/40 backdrop-blur-sm p-4 rounded-3xl shadow-lg border border-zinc-800/50 hover:border-zinc-700 transition cursor-pointer relative group">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Total Pengikut</span>
-                        <div class="w-8 h-8 rounded-xl bg-zinc-900/70 text-zinc-300 flex items-center justify-center group-hover:bg-zinc-800 transition">
-                            <i class="fa-solid fa-users text-xs"></i>
-                        </div>
-                    </div>
-                    <div class="flex items-baseline space-x-2">
-                        <span id="stat-total-santri" class="text-3xl font-extrabold text-white">0</span>
-                        <span class="text-[10px] text-zinc-400 font-semibold">Pengikut</span>
-                    </div>
-
-                    <!-- Rincian 3 Kelas -->
-                    <div class="mt-3 pt-2.5 border-t border-zinc-800/50 grid grid-cols-3 gap-1 text-center">
-                        <div class="bg-zinc-900/30 rounded-lg p-1">
-                            <div class="text-[9px] text-zinc-500 font-semibold">Newbie</div>
-                            <div id="stat-Newbie" class="text-xs font-bold text-zinc-300">0</div>
-                        </div>
-                        <div class="bg-zinc-900/30 rounded-lg p-1">
-                            <div class="text-[9px] text-zinc-500 font-semibold">Advance</div>
-                            <div id="stat-Advance" class="text-xs font-bold text-zinc-300">0</div>
-                        </div>
-                        <div class="bg-zinc-900/30 rounded-lg p-1">
-                            <div class="text-[9px] text-zinc-500 font-semibold">Pro</div>
-                            <div id="stat-Pro" class="text-xs font-bold text-zinc-300">0</div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Kartu Hadir Hari Ini -->
-                <div onclick="openHadirBreakdownModal()" class="bg-zinc-950/40 backdrop-blur-sm p-4 rounded-3xl shadow-lg border border-zinc-800/50 hover:border-zinc-700 transition cursor-pointer relative group">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Hadir Hari Ini</span>
-                        <div class="w-8 h-8 rounded-xl bg-zinc-900/70 text-zinc-300 flex items-center justify-center group-hover:bg-zinc-800 transition">
-                            <i class="fa-solid fa-user-check text-xs"></i>
-                        </div>
-                    </div>
-                    <div class="flex items-baseline space-x-2">
-                        <span id="stat-hadir-hari-ini" class="text-3xl font-extrabold text-white">0</span>
-                        <span class="text-[10px] text-zinc-400 font-bold">Pengikut</span>
-                    </div>
-
-                    <!-- Rincian Hadir & Tidak Hadir -->
-                    <div class="mt-3 pt-2.5 border-t border-zinc-800/50 grid grid-cols-4 gap-1 text-center">
-                        <div class="bg-zinc-900/30 rounded-lg p-1">
-                            <div class="text-[9px] text-zinc-500 font-semibold">Newbie</div>
-                            <div id="stat-hadir-Newbie" class="text-xs font-bold text-zinc-300">0</div>
-                        </div>
-                        <div class="bg-zinc-900/30 rounded-lg p-1">
-                            <div class="text-[9px] text-zinc-500 font-semibold">Advance</div>
-                            <div id="stat-hadir-Advance" class="text-xs font-bold text-zinc-300">0</div>
-                        </div>
-                        <div class="bg-zinc-900/30 rounded-lg p-1">
-                            <div class="text-[9px] text-zinc-500 font-semibold">Pro</div>
-                            <div id="stat-hadir-Pro" class="text-xs font-bold text-zinc-300">0</div>
-                        </div>
-                        <div class="bg-rose-950/30 rounded-lg p-1">
-                            <div class="text-[9px] text-rose-400 font-semibold">Absen</div>
-                            <div id="stat-tidak-hadir" class="text-xs font-bold text-rose-400">0</div>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <!-- Menu Navigasi -->
-            <div class="space-y-2.5">
-                <h2 class="text-xs font-bold uppercase tracking-wider text-zinc-400 px-1">Menu Navigasi</h2>
-
-                <div class="grid grid-cols-2 gap-3.5">
-                    <button onclick="openScanModal()" class="bg-zinc-950/40 backdrop-blur-sm p-4 rounded-3xl shadow-lg border border-zinc-800/50 hover:border-zinc-700 text-left transition group">
-                        <div class="w-10 h-10 rounded-2xl bg-zinc-900/70 text-zinc-300 flex items-center justify-center mb-3 group-hover:scale-110 transition duration-300">
-                            <i class="fa-solid fa-qrcode text-base"></i>
-                        </div>
-                        <h3 class="font-bold text-zinc-100 text-sm">Scan QR / Absen</h3>
-                        <p class="text-[11px] text-zinc-400 mt-0.5">Kamera atau NIP & Nomor Induk Pengikut</p>
-                    </button>
-
-                    <button onclick="openManualModal()" class="bg-zinc-950/40 backdrop-blur-sm p-4 rounded-3xl shadow-lg border border-zinc-800/50 hover:border-zinc-700 text-left transition group">
-                        <div class="w-10 h-10 rounded-2xl bg-zinc-900/70 text-zinc-300 flex items-center justify-center mb-3 group-hover:scale-110 transition duration-300">
-                            <i class="fa-solid fa-pen-to-square text-base"></i>
-                        </div>
-                        <h3 class="font-bold text-zinc-100 text-sm">Absen Manual</h3>
-                        <p class="text-[11px] text-zinc-400 mt-0.5">Sakit, Izin, atau Alpa</p>
-                    </button>
-
-                    <button onclick="openRekapModal()" class="bg-zinc-950/40 backdrop-blur-sm p-4 rounded-3xl shadow-lg border border-zinc-800/50 hover:border-zinc-700 text-left transition group">
-                        <div class="w-10 h-10 rounded-2xl bg-zinc-900/70 text-zinc-300 flex items-center justify-center mb-3 group-hover:scale-110 transition duration-300">
-                            <i class="fa-solid fa-clipboard-user text-base"></i>
-                        </div>
-                        <h3 class="font-bold text-zinc-100 text-sm">Rekap Absen</h3>
-                        <p class="text-[11px] text-zinc-400 mt-0.5">Tabel & Kelola Data</p>
-                    </button>
-
-                    <button onclick="openAddSantriModal()" class="bg-zinc-950/40 backdrop-blur-sm p-4 rounded-3xl shadow-lg border border-zinc-800/50 hover:border-zinc-700 text-left transition group">
-                        <div class="w-10 h-10 rounded-2xl bg-zinc-900/70 text-zinc-300 flex items-center justify-center mb-3 group-hover:scale-110 transition duration-300">
-                            <i class="fa-solid fa-user-plus text-base"></i>
-                        </div>
-                        <h3 class="font-bold text-zinc-100 text-sm">Tambah Pengikut</h3>
-                        <p class="text-[11px] text-zinc-400 mt-0.5">Daftarkan pengikut baru</p>
-                    </button>
-                </div>
-
-                <button onclick="openDataSantriModal()" class="w-full bg-zinc-950/40 backdrop-blur-sm p-4 rounded-3xl shadow-lg border border-zinc-800/50 hover:border-zinc-700 flex items-center justify-between transition group text-left">
-                    <div class="flex items-center space-x-3.5">
-                        <div class="w-11 h-11 rounded-2xl bg-zinc-900/70 text-zinc-300 flex items-center justify-center group-hover:bg-zinc-800 transition duration-300">
-                            <i class="fa-solid fa-database text-base"></i>
-                        </div>
-                        <div>
-                            <h3 class="font-bold text-zinc-100 text-sm">Data Pengikut & Rekap Total</h3>
-                            <p class="text-[11px] text-zinc-400 mt-0.5">Kelola database lengkap Newbie, Advance, & Pro</p>
-                        </div>
-                    </div>
-                    <div class="w-8 h-8 rounded-full bg-zinc-900/70 flex items-center justify-center text-zinc-400 group-hover:bg-zinc-800 transition">
-                        <i class="fa-solid fa-chevron-right text-xs"></i>
-                    </div>
-                </button>
-            </div>
-
-            <!-- Pengikut Terbaru -->
-            <div class="space-y-2.5">
-                <div class="flex justify-between items-center px-1">
-                    <h2 class="text-xs font-bold uppercase tracking-wider text-zinc-400">Pengikut Terbaru</h2>
-                    <button onclick="openDataSantriModal()" class="text-xs font-bold text-zinc-300 hover:underline">Lihat Semua →</button>
-                </div>
-
-                <div id="recent-santri-list" class="space-y-2">
-                    <div class="bg-zinc-950/40 backdrop-blur-sm p-4 rounded-2xl border border-zinc-800/50 text-center text-zinc-400 text-xs py-6">
-                        Memuat data pengikut online...
-                    </div>
-                </div>
-            </div>
-
-        </div>
-
-        <!-- Bottom Navigation Bar -->
-        <div class="relative z-20 bg-zinc-950/60 backdrop-blur-md border-t border-zinc-800/50 px-6 py-3 flex justify-around items-center">
-            <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="flex flex-col items-center text-zinc-200 space-y-1">
-                <i class="fa-solid fa-house text-lg"></i>
-                <span class="text-[10px] font-bold">Beranda</span>
-            </button>
-            <button onclick="openScanModal()" class="flex flex-col items-center text-zinc-400 hover:text-zinc-200 space-y-1 transition">
-                <i class="fa-solid fa-qrcode text-lg"></i>
-                <span class="text-[10px] font-medium">Scan</span>
-            </button>
-            <button onclick="openAddSantriModal()" class="w-12 h-12 bg-zinc-200 text-zinc-950 rounded-full flex items-center justify-center shadow-lg shadow-zinc-900/50 -mt-5 hover:scale-105 transition">
-                <i class="fa-solid fa-plus text-lg font-bold"></i>
-            </button>
-            <button onclick="openRekapModal()" class="flex flex-col items-center text-zinc-400 hover:text-zinc-200 space-y-1 transition">
-                <i class="fa-solid fa-clipboard-user text-lg"></i>
-                <span class="text-[10px] font-medium">Rekap</span>
-            </button>
-            <button onclick="openDataSantriModal()" class="flex flex-col items-center text-zinc-400 hover:text-zinc-200 space-y-1 transition">
-                <i class="fa-solid fa-database text-lg"></i>
-                <span class="text-[10px] font-medium">Data</span>
-            </button>
-        </div>
-
-    </div>
-
-    <!-- MODAL: RINCIAN KELAS (TOTAL PENGIKUT) -->
-    <div id="modal-class-breakdown" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-zinc-900/80 backdrop-blur-md border border-zinc-800/70 w-full max-w-sm rounded-[2rem] p-6 shadow-2xl text-slate-200">
-            <div class="flex justify-between items-center mb-4">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center">
-                        <i class="fa-solid fa-graduation-cap"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-white">Rincian Total Pengikut</h3>
-                        <p class="text-xs text-zinc-400">Berdasarkan Jenjang Kelas</p>
-                    </div>
-                </div>
-                <button onclick="closeModal('modal-class-breakdown')" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-zinc-700">
-                    <i class="fa-solid fa-xmark text-sm"></i>
-                </button>
-            </div>
-
-            <div class="space-y-3 my-4">
-                <div class="bg-zinc-950/50 p-3.5 rounded-2xl border border-zinc-800/50 flex justify-between items-center">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-xl bg-zinc-800 text-zinc-300 flex items-center justify-center font-bold text-xs">NW</div>
-                        <div>
-                            <div class="font-bold text-sm text-white">Kelas Newbie</div>
-                            <div class="text-[11px] text-zinc-400">Tingkat Dasar</div>
-                        </div>
-                    </div>
-                    <span id="modal-count-Newbie" class="font-extrabold text-zinc-200 text-base">0 Pengikut</span>
-                </div>
-
-                <div class="bg-zinc-950/50 p-3.5 rounded-2xl border border-zinc-800/50 flex justify-between items-center">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-xl bg-zinc-800 text-zinc-300 flex items-center justify-center font-bold text-xs">AD</div>
-                        <div>
-                            <div class="font-bold text-sm text-white">Kelas Advance</div>
-                            <div class="text-[11px] text-zinc-400">Tingkat Menengah</div>
-                        </div>
-                    </div>
-                    <span id="modal-count-Advance" class="font-extrabold text-zinc-200 text-base">0 Pengikut</span>
-                </div>
-
-                <div class="bg-zinc-950/50 p-3.5 rounded-2xl border border-zinc-800/50 flex justify-between items-center">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-xl bg-zinc-800 text-zinc-300 flex items-center justify-center font-bold text-xs">PR</div>
-                        <div>
-                            <div class="font-bold text-sm text-white">Kelas Pro</div>
-                            <div class="text-[11px] text-zinc-400">Tingkat Lanjutan / Atas</div>
-                        </div>
-                    </div>
-                    <span id="modal-count-Pro" class="font-extrabold text-zinc-200 text-base">0 Pengikut</span>
-                </div>
-            </div>
-
-            <button onclick="closeModal('modal-class-breakdown'); openDataSantriModal();" class="w-full bg-zinc-100 text-zinc-950 py-3 rounded-2xl font-bold text-sm hover:bg-white transition shadow-lg">
-                Kelola Seluruh Data Pengikut
-            </button>
-        </div>
-    </div>
-
-    <!-- MODAL: RINCIAN HADIR HARI INI -->
-    <div id="modal-hadir-breakdown" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-zinc-900/80 backdrop-blur-md border border-zinc-800/70 w-full max-w-sm rounded-[2rem] p-6 shadow-2xl text-slate-200">
-            <div class="flex justify-between items-center mb-4">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center">
-                        <i class="fa-solid fa-user-check"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-white">Rincian Hadir Hari Ini</h3>
-                        <p class="text-xs text-zinc-400">Berdasarkan Kelas & Tidak Hadir</p>
-                    </div>
-                </div>
-                <button onclick="closeModal('modal-hadir-breakdown')" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-zinc-700">
-                    <i class="fa-solid fa-xmark text-sm"></i>
-                </button>
-            </div>
-
-            <div class="space-y-3 my-4">
-                <div class="bg-zinc-950/50 p-3.5 rounded-2xl border border-zinc-800/50 flex justify-between items-center">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-xl bg-zinc-800 text-zinc-300 flex items-center justify-center font-bold text-xs">NW</div>
-                        <div>
-                            <div class="font-bold text-sm text-white">Hadir Newbie</div>
-                            <div class="text-[11px] text-zinc-400">Tingkat Dasar</div>
-                        </div>
-                    </div>
-                    <span id="modal-hadir-Newbie" class="font-extrabold text-zinc-200 text-base">0 Pengikut</span>
-                </div>
-
-                <div class="bg-zinc-950/50 p-3.5 rounded-2xl border border-zinc-800/50 flex justify-between items-center">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-xl bg-zinc-800 text-zinc-300 flex items-center justify-center font-bold text-xs">AD</div>
-                        <div>
-                            <div class="font-bold text-sm text-white">Hadir Advance</div>
-                            <div class="text-[11px] text-zinc-400">Tingkat Menengah</div>
-                        </div>
-                    </div>
-                    <span id="modal-hadir-Advance" class="font-extrabold text-zinc-200 text-base">0 Pengikut</span>
-                </div>
-
-                <div class="bg-zinc-950/50 p-3.5 rounded-2xl border border-zinc-800/50 flex justify-between items-center">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-xl bg-zinc-800 text-zinc-300 flex items-center justify-center font-bold text-xs">PR</div>
-                        <div>
-                            <div class="font-bold text-sm text-white">Hadir Pro</div>
-                            <div class="text-[11px] text-zinc-400">Tingkat Lanjutan / Atas</div>
-                        </div>
-                    </div>
-                    <span id="modal-hadir-Pro" class="font-extrabold text-zinc-200 text-base">0 Pengikut</span>
-                </div>
-
-                <div class="bg-zinc-950/50 p-3.5 rounded-2xl border border-zinc-800/50 flex justify-between items-center">
-                    <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-xl bg-rose-950 text-rose-400 flex items-center justify-center font-bold text-xs">TH</div>
-                        <div>
-                            <div class="font-bold text-sm text-white">Total Tidak Hadir</div>
-                            <div class="text-[11px] text-zinc-400">Belum Absen / Alpa / Sakit</div>
-                        </div>
-                    </div>
-                    <span id="modal-tidak-hadir" class="font-extrabold text-rose-400 text-base">0 Pengikut</span>
-                </div>
-            </div>
-
-            <button onclick="closeModal('modal-hadir-breakdown'); openRekapModal();" class="w-full bg-zinc-100 text-zinc-950 py-3 rounded-2xl font-bold text-sm hover:bg-white transition shadow-lg">
-                Kelola Rekap Absen
-            </button>
-        </div>
-    </div>
-
-    <!-- MODAL: TAMBAH PENGIKUT -->
-    <div id="modal-add-santri" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-zinc-900/80 backdrop-blur-md border border-zinc-800/70 w-full max-w-sm rounded-[2rem] p-6 shadow-2xl text-slate-200">
-            <div class="flex justify-between items-center mb-4">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center">
-                        <i class="fa-solid fa-user-plus"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-white">Tambah Pengikut Baru</h3>
-                        <p class="text-xs text-zinc-400">Daftarkan pengikut ke database online</p>
-                    </div>
-                </div>
-                <button onclick="closeModal('modal-add-santri')" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-zinc-700">
-                    <i class="fa-solid fa-xmark text-sm"></i>
-                </button>
-            </div>
-
-            <form id="form-add-santri" onsubmit="handleTambahSantri(event)" class="space-y-3.5">
-                <div>
-                    <label class="block text-xs font-bold text-zinc-400 mb-1">NIP & Nomor Induk Pengikut</label>
-                    <input type="text" id="input-nis" required placeholder="Contoh: 2026001" class="w-full px-4 py-2.5 rounded-2xl bg-zinc-950/50 border border-zinc-800 text-sm text-white focus:outline-none focus:border-zinc-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-zinc-400 mb-1">Nama Lengkap Pengikut</label>
-                    <input type="text" id="input-nama" required placeholder="Contoh: Ahmad Fauzan" class="w-full px-4 py-2.5 rounded-2xl bg-zinc-950/50 border border-zinc-800 text-sm text-white focus:outline-none focus:border-zinc-500">
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-zinc-400 mb-1">Jenjang Kelas</label>
-                    <select id="input-kelas" required class="w-full px-4 py-2.5 rounded-2xl bg-zinc-950/50 border border-zinc-800 text-sm text-white focus:outline-none focus:border-zinc-500">
-                        <option value="Newbie" class="bg-zinc-900">Newbie (Dasar)</option>
-                        <option value="Advance" class="bg-zinc-900">Advance (Menengah)</option>
-                        <option value="Pro" class="bg-zinc-900">Pro (Lanjutan)</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-zinc-400 mb-1">Nomor WhatsApp</label>
-                    <input type="text" id="input-whatsapp" required placeholder="Contoh: 081234567890" class="w-full px-4 py-2.5 rounded-2xl bg-zinc-950/50 border border-zinc-800 text-sm text-white focus:outline-none focus:border-zinc-500">
-                </div>
-
-                <button type="submit" class="w-full bg-zinc-100 text-zinc-950 py-3 rounded-2xl font-bold text-sm hover:bg-white transition shadow-lg mt-2">
-                    Simpan ke Google Sheets
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL: SCAN QR / ABSEN -->
-    <div id="modal-scan" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-zinc-900/80 backdrop-blur-md border border-zinc-800/70 w-full max-w-sm rounded-[2rem] p-6 shadow-2xl text-slate-200">
-            <div class="flex justify-between items-center mb-4">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center">
-                        <i class="fa-solid fa-qrcode"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-white">Scan QR / Absen</h3>
-                        <p class="text-xs text-zinc-400">Arahkan kamera atau ketik NIP</p>
-                    </div>
-                </div>
-                <button onclick="closeModal('modal-scan')" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-zinc-700">
-                    <i class="fa-solid fa-xmark text-sm"></i>
-                </button>
-            </div>
-
-            <div class="bg-black/50 rounded-2xl h-48 flex flex-col items-center justify-center relative overflow-hidden mb-4 border border-zinc-800">
-                <div class="absolute inset-0 bg-[linear-gradient(to_right,#18181b_1px,transparent_1px),linear-gradient(to_bottom,#18181b_1px,transparent_1px)] bg-[size:2rem_2rem] opacity-35"></div>
-                <div class="w-32 h-32 border-2 border-zinc-600 rounded-2xl relative flex items-center justify-center animate-pulse">
-                    <div class="absolute w-full h-0.5 bg-zinc-300 shadow-[0_0_10px_#ffffff] animate-bounce"></div>
-                    <i class="fa-solid fa-camera text-zinc-600 text-3xl"></i>
-                </div>
-                <span class="text-[11px] text-zinc-400 mt-3 font-medium z-10">Kamera Scanner Aktif...</span>
-            </div>
-
-            <div class="space-y-3">
-                <div class="relative">
-                    <input type="text" id="scan-nis-input" placeholder="Ketik NIP & Nomor Induk Pengikut..." class="w-full pl-4 pr-12 py-2.5 rounded-2xl bg-zinc-950/50 border border-zinc-800 text-sm text-white focus:outline-none focus:border-zinc-500">
-                    <button onclick="prosesAbsenNIS()" class="absolute right-1.5 top-1.5 bg-zinc-100 text-zinc-950 px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-white transition">
-                        Absen
-                    </button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- MODAL: ABSEN MANUAL -->
-    <div id="modal-manual" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-zinc-900/80 backdrop-blur-md border border-zinc-800/70 w-full max-w-sm rounded-[2rem] p-6 shadow-2xl text-slate-200">
-            <div class="flex justify-between items-center mb-4">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center">
-                        <i class="fa-solid fa-pen-to-square"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-white">Absen Manual</h3>
-                        <p class="text-xs text-zinc-400">Sakit, Izin, atau Alpa</p>
-                    </div>
-                </div>
-                <button onclick="closeModal('modal-manual')" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-zinc-700">
-                    <i class="fa-solid fa-xmark text-sm"></i>
-                </button>
-            </div>
-
-            <form onsubmit="handleAbsenManual(event)" class="space-y-3.5">
-                <div class="relative">
-                    <label class="block text-xs font-bold text-zinc-400 mb-1">Cari Nama / NIP & Nomor Induk Pengikut</label>
-                    <input type="text" id="manual-input-search" autocomplete="off" oninput="filterAutocomplete()" placeholder="Ketik nama, NIP, atau Nomor Induk..." class="w-full px-4 py-2.5 rounded-2xl bg-zinc-950/50 border border-zinc-800 text-sm text-white focus:outline-none focus:border-zinc-500">
-                    
-                    <!-- Custom Dropdown -->
-                    <div id="autocomplete-list" class="absolute left-0 right-0 mt-1 bg-zinc-950/90 backdrop-blur-md border border-zinc-800 rounded-2xl shadow-xl max-h-48 overflow-y-auto z-30 hidden">
-                        <!-- Populated by JS -->
-                    </div>
-                </div>
-
-                <div>
-                    <label class="block text-xs font-bold text-zinc-400 mb-1">Status Kehadiran</label>
-                    <select id="manual-status" required class="w-full px-4 py-2.5 rounded-2xl bg-zinc-950/50 border border-zinc-800 text-sm text-white focus:outline-none focus:border-zinc-500">
-                        <option value="Sakit" class="bg-zinc-900">Sakit</option>
-                        <option value="Izin" class="bg-zinc-900">Izin</option>
-                        <option value="Alpa" class="bg-zinc-900">Alpa</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-xs font-bold text-zinc-400 mb-1">Keterangan / Catatan</label>
-                    <input type="text" id="manual-keterangan" placeholder="Contoh: Surat dokter terlampir" class="w-full px-4 py-2.5 rounded-2xl bg-zinc-950/50 border border-zinc-800 text-sm text-white focus:outline-none focus:border-zinc-500">
-                </div>
-
-                <button type="submit" class="w-full bg-zinc-100 text-zinc-950 py-3 rounded-2xl font-bold text-sm hover:bg-white transition shadow-lg mt-2">
-                    Simpan Absen Online
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <!-- MODAL: REKAP ABSEN (Tabel) -->
-    <div id="modal-rekap" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-zinc-900/80 backdrop-blur-md border border-zinc-800/70 w-full max-w-lg rounded-[2rem] p-6 shadow-2xl max-h-[85vh] flex flex-col text-slate-200">
-            <div class="flex justify-between items-center mb-4">
-                <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center">
-                        <i class="fa-solid fa-clipboard-user"></i>
-                    </div>
-                    <div>
-                        <h3 class="font-bold text-white">Rekap Absen Online</h3>
-                        <p class="text-xs text-zinc-400">Data sinkron dari Google Sheet</p>
-                    </div>
-                </div>
-                <button onclick="closeModal('modal-rekap')" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-zinc-700">
-                    <i class="fa-solid fa-xmark text-sm"></i>
-                </button>
-            </div>
-
+        <!-- Top Header Mobile -->
+        <header class="w-full bg-slate-900/70 backdrop-blur-md text-white px-4 pt-5 pb-5 rounded-b-[2rem] shadow-lg shrink-0 border-b border-white/10">
             <div class="flex justify-between items-center mb-3">
-                <span id="rekap-count-info" class="text-xs font-bold text-zinc-400">Total Absen: 0</span>
-            </div>
-
-            <!-- Tabel Rekap Absen -->
-            <div id="rekap-list-container" class="overflow-y-auto flex-1 pr-1">
-                <div class="text-center text-zinc-400 text-xs py-8">Memuat rekap absensi...</div>
-            </div>
-
-            <button onclick="closeModal('modal-rekap')" class="w-full bg-zinc-800 text-zinc-200 py-3 rounded-2xl font-bold text-sm hover:bg-zinc-700 transition mt-4">
-                Tutup
-            </button>
-        </div>
-    </div>
-
-    <!-- MODAL: DATA PENGIKUT & REKAP TOTAL -->
-    <div id="modal-data-santri" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-zinc-900/80 backdrop-blur-md border border-zinc-800/70 w-full max-w-md rounded-[2rem] p-6 shadow-2xl max-h-[85vh] flex flex-col text-slate-200">
-            <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center">
-                        <i class="fa-solid fa-database"></i>
+                    <div class="bg-white/20 p-2.5 rounded-2xl backdrop-blur-md shadow-inner ring-1 ring-white/30">
+                        <i class="fa-solid fa-graduation-cap text-lg text-white"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-white">Database Seluruh Pengikut</h3>
-                        <p class="text-xs text-zinc-400">Newbie, Advance, & Pro</p>
+                        <h1 class="text-base font-extrabold tracking-tight leading-none text-white">iMTQL</h1>
+                        <p class="text-[10px] text-indigo-200 font-medium mt-1">Sistem Absensi & Manajemen Santri</p>
                     </div>
                 </div>
-                <button onclick="closeModal('modal-data-santri')" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-zinc-700">
-                    <i class="fa-solid fa-xmark text-sm"></i>
-                </button>
+                <span class="bg-emerald-500/25 border border-emerald-400/40 text-emerald-300 text-[10px] px-2.5 py-1 rounded-full font-semibold flex items-center gap-1.5 backdrop-blur-md">
+                    <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span> Live API
+                </span>
             </div>
 
-            <!-- Search & Filter Kelas -->
-            <div class="space-y-2.5 mb-3">
-                <input type="text" id="search-database" oninput="renderDatabaseSantri()" placeholder="Cari nama, NIP, atau Nomor Induk..." class="w-full px-4 py-2 rounded-2xl bg-zinc-950/50 border border-zinc-800 text-xs text-white focus:outline-none focus:border-zinc-500">
-                <div class="flex space-x-2">
-                    <button onclick="filterDatabase('Semua')" id="btn-filter-semua" class="flex-1 py-1.5 rounded-xl text-xs font-bold bg-zinc-100 text-zinc-950 transition">Semua</button>
-                    <button onclick="filterDatabase('Newbie')" id="btn-filter-Newbie" class="flex-1 py-1.5 rounded-xl text-xs font-bold bg-zinc-800 text-zinc-300 transition">Newbie</button>
-                    <button onclick="filterDatabase('Advance')" id="btn-filter-Advance" class="flex-1 py-1.5 rounded-xl text-xs font-bold bg-zinc-800 text-zinc-300 transition">Advance</button>
-                    <button onclick="filterDatabase('Pro')" id="btn-filter-Pro" class="flex-1 py-1.5 rounded-xl text-xs font-bold bg-zinc-800 text-zinc-300 transition">Pro</button>
+            <!-- Date & Status Bar -->
+            <div class="flex justify-between items-center bg-white/10 backdrop-blur-md rounded-2xl px-3.5 py-2 border border-white/15 text-xs font-medium text-indigo-50 shadow-inner">
+                <div class="flex items-center gap-2">
+                    <i class="fa-regular fa-calendar text-indigo-200"></i>
+                    <span id="currentDate">Rabu, 23 Sep 2026</span>
+                </div>
+                <div class="flex items-center gap-1.5">
+                    <i class="fa-solid fa-database text-indigo-200 text-[10px]"></i>
+                    <span>Sheets Connected</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Content Area -->
+        <main class="w-full flex-grow px-4 py-4 space-y-4">
+            
+            <!-- Alert Notification -->
+            <div id="alertBox" class="hidden p-3 rounded-2xl text-xs font-medium transition-all shadow-sm"></div>
+
+            <!-- Stats Grid (2 Kolom) -->
+            <div class="grid grid-cols-2 gap-3">
+                <div class="bg-slate-900/80 backdrop-blur-md p-4 rounded-2xl shadow-md border border-white/15 flex flex-col justify-between hover:bg-slate-900/90 transition">
+                    <div class="text-slate-300 text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5">
+                        <i class="fa-solid fa-users text-indigo-400 text-xs"></i> Total Santri
+                    </div>
+                    <div id="totalSantriCount" class="text-2xl font-black text-white mt-2">0</div>
+                </div>
+
+                <div onclick="openMasukTodayModal()" class="bg-slate-900/80 backdrop-blur-md p-4 rounded-2xl shadow-md border border-white/15 hover:border-emerald-400/50 hover:bg-slate-900/90 transition cursor-pointer flex flex-col justify-between group">
+                    <div class="flex justify-between items-center">
+                        <div class="text-slate-300 text-[11px] font-bold uppercase tracking-wider flex items-center gap-1.5">
+                            <i class="fa-solid fa-user-check text-emerald-400 text-xs"></i> Hadir
+                        </div>
+                        <i class="fa-solid fa-chevron-right text-[11px] text-slate-400 group-hover:translate-x-0.5 transition"></i>
+                    </div>
+                    <div id="hadirCount" class="text-2xl font-black text-emerald-400 mt-2">0</div>
                 </div>
             </div>
 
-            <div id="database-list-container" class="space-y-2.5 overflow-y-auto flex-1 pr-1">
-                <!-- List pengikut database -->
+            <!-- Menu Navigasi Modern -->
+            <div>
+                <h3 class="text-[11px] font-bold uppercase tracking-wider text-indigo-200 mb-2.5 px-1 drop-shadow">Menu Navigasi</h3>
+                <div class="grid grid-cols-2 gap-3">
+                    
+                    <button onclick="openScanModal()" class="bg-slate-900/80 backdrop-blur-md p-4 rounded-2xl shadow-md border border-white/15 hover:border-indigo-400/50 hover:bg-slate-900/90 transition text-left flex flex-col justify-between group">
+                        <div class="w-10 h-10 rounded-xl bg-indigo-500/20 text-indigo-300 flex items-center justify-center text-sm group-hover:scale-110 transition shadow-xs border border-indigo-400/30">
+                            <i class="fa-solid fa-qrcode"></i>
+                        </div>
+                        <div class="mt-3">
+                            <h4 class="font-bold text-xs text-white leading-tight">Scan QR / Absen</h4>
+                            <p class="text-[10px] text-slate-300 mt-0.5">Kamera atau NIS</p>
+                        </div>
+                    </button>
+
+                    <button onclick="openManualAbsenModal()" class="bg-slate-900/80 backdrop-blur-md p-4 rounded-2xl shadow-md border border-white/15 hover:border-indigo-400/50 hover:bg-slate-900/90 transition text-left flex flex-col justify-between group">
+                        <div class="w-10 h-10 rounded-xl bg-blue-500/20 text-blue-300 flex items-center justify-center text-sm group-hover:scale-110 transition shadow-xs border border-blue-400/30">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </div>
+                        <div class="mt-3">
+                            <h4 class="font-bold text-xs text-white leading-tight">Absen Manual</h4>
+                            <p class="text-[10px] text-slate-300 mt-0.5">Sakit, Izin, Alpa</p>
+                        </div>
+                    </button>
+
+                    <button onclick="openRekapModal()" class="bg-slate-900/80 backdrop-blur-md p-4 rounded-2xl shadow-md border border-white/15 hover:border-indigo-400/50 hover:bg-slate-900/90 transition text-left flex flex-col justify-between group">
+                        <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-300 flex items-center justify-center text-sm group-hover:scale-110 transition shadow-xs border border-emerald-400/30">
+                            <i class="fa-solid fa-clipboard-user"></i>
+                        </div>
+                        <div class="mt-3">
+                            <h4 class="font-bold text-xs text-white leading-tight">Rekap Absen</h4>
+                            <p class="text-[10px] text-slate-300 mt-0.5">Kelola & Riwayat</p>
+                        </div>
+                    </button>
+
+                    <button onclick="openAddStudentModal()" class="bg-slate-900/80 backdrop-blur-md p-4 rounded-2xl shadow-md border border-white/15 hover:border-indigo-400/50 hover:bg-slate-900/90 transition text-left flex flex-col justify-between group">
+                        <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-300 flex items-center justify-center text-sm group-hover:scale-110 transition shadow-xs border border-amber-400/30">
+                            <i class="fa-solid fa-user-plus"></i>
+                        </div>
+                        <div class="mt-3">
+                            <h4 class="font-bold text-xs text-white leading-tight">Tambah Santri</h4>
+                            <p class="text-[10px] text-slate-300 mt-0.5">Daftar baru</p>
+                        </div>
+                    </button>
+
+                </div>
+
+                <button onclick="openDataModal()" class="w-full mt-3 bg-slate-900/80 backdrop-blur-md p-4 rounded-2xl shadow-md border border-white/15 hover:border-indigo-400/50 hover:bg-slate-900/90 transition flex items-center justify-between group">
+                    <div class="flex items-center space-x-3.5">
+                        <div class="w-10 h-10 rounded-xl bg-violet-500/20 text-violet-300 flex items-center justify-center text-sm group-hover:scale-110 transition shadow-xs border border-violet-400/30">
+                            <i class="fa-solid fa-database"></i>
+                        </div>
+                        <div class="text-left">
+                            <h4 class="font-bold text-xs text-white leading-tight">Data Santri & Rekap Total</h4>
+                            <p class="text-[10px] text-slate-300 mt-0.5">Kelola database lengkap santri</p>
+                        </div>
+                    </div>
+                    <i class="fa-solid fa-chevron-right text-slate-400 text-xs pr-1 group-hover:translate-x-0.5 transition"></i>
+                </button>
             </div>
 
-            <div class="pt-3 border-t border-zinc-800/50 mt-2 flex justify-between items-center">
-                <span id="database-count-info" class="text-xs font-bold text-zinc-400">Total: 0 Pengikut</span>
-                <button onclick="openAddSantriModal(); closeModal('modal-data-santri');" class="bg-zinc-800 text-zinc-200 px-3 py-2 rounded-xl text-xs font-bold hover:bg-zinc-700 transition">
-                    + Tambah Pengikut
-                </button>
+            <!-- Santri Terbaru Section -->
+            <div class="pt-1 pb-3">
+                <div class="flex justify-between items-center mb-2 px-1">
+                    <h3 class="text-[11px] font-bold uppercase tracking-wider text-indigo-200 drop-shadow">Santri Terbaru</h3>
+                    <button onclick="openDataModal()" class="text-[11px] font-bold text-indigo-300 hover:underline">Lihat Semua &rarr;</button>
+                </div>
+                <div id="recentSantriList" class="space-y-2">
+                    <div class="text-center py-6 bg-slate-900/80 backdrop-blur-md rounded-2xl border border-white/15 text-slate-300 text-xs shadow-sm">
+                        Memuat data...
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- Fixed Bottom Action Bar -->
+        <footer class="w-full px-4 mt-4">
+            <button onclick="exportToExcel()" class="w-full py-3.5 bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white rounded-2xl text-xs font-bold shadow-lg shadow-emerald-900/30 transition flex items-center justify-center gap-2 border border-emerald-400/30">
+                <i class="fa-solid fa-file-excel text-sm"></i> Download Excel Full Tabel
+            </button>
+        </footer>
+
+    </div>
+
+    <!-- MODAL CONTAINER -->
+    <div id="appModal" class="fixed inset-0 bg-slate-950/70 backdrop-blur-sm hidden items-center justify-center p-4 z-50 overflow-y-auto">
+        <div class="bg-slate-900 text-slate-100 rounded-3xl shadow-2xl w-full max-w-sm max-h-[85vh] flex flex-col overflow-hidden my-auto transform transition-all border border-white/20">
+            <div class="bg-gradient-to-r from-indigo-900 to-violet-900 px-5 py-4 text-white flex justify-between items-center shrink-0 border-b border-white/10">
+                <h3 id="modalTitle" class="font-bold text-xs tracking-wide">Judul Modal</h3>
+                <button onclick="closeModal()" class="text-indigo-200 hover:text-white p-1 text-base transition"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div id="modalBody" class="p-4 overflow-y-auto flex-grow space-y-3 relative" style="overflow: visible !important;">
+                <!-- Dynamic Content -->
             </div>
         </div>
     </div>
 
-    <!-- JavaScript Logika Aplikasi dengan API Google Sheet Baru -->
+    <!-- JavaScript App Logic -->
     <script>
-        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbx52zq74Izr96Bsh1l4Fo5YSK73YrOJfiAs1IHxKmBHc8x0ASWs6vPlTghcV51bdBAz/exec";
+        let globalData = { totalSantri: 0, hadirHariIni: 0, students: [], absenHistory: [], hadirTodayList: [] };
+        let html5QrCode = null;
 
-        let santriList = [];
-        let absensiList = [];
-        let currentFilterKelas = 'Semua';
+        window.onload = function() {
+            const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
+            document.getElementById('currentDate').innerText = new Date().toLocaleDateString('id-ID', options);
+            loadDashboard();
+        };
 
-        document.getElementById('current-date').innerText = new Date().toLocaleDateString('id-ID', {
-            weekday: 'long', day: 'numeric', month: 'short', year: 'numeric'
-        });
-
-        // 1. Ambil data dari Google Sheets secara berkala (Auto-Sync)
-        async function fetchDatabases() {
-            try {
-                let response = await fetch(`${WEB_APP_URL}?action=getData`);
-                let result = await response.json();
-                
-                santriList = result.santri || [];
-                absensiList = result.absensi || [];
-                
-                updateDashboard();
-                
-                // Update modal view if opened
-                if(document.getElementById('modal-data-santri') && !document.getElementById('modal-data-santri').classList.contains('hidden')) {
-                    renderDatabaseSantri();
-                }
-                if(document.getElementById('modal-rekap') && !document.getElementById('modal-rekap').classList.contains('hidden')) {
-                    renderRekapAbsen();
-                }
-            } catch (error) {
-                console.error("Gagal menyinkronkan data:", error);
-            }
+        function loadDashboard() {
+            google.script.run
+                .withSuccessHandler(renderDashboard)
+                .withFailureHandler(err => showAlert(err.message, 'error'))
+                .getDashboardData();
         }
 
-        // Panggil pertama kali & set sinkronisasi otomatis tiap 5 detik
-        fetchDatabases();
-        setInterval(fetchDatabases, 5000);
+        function renderDashboard(data) {
+            globalData = data;
+            document.getElementById('totalSantriCount').innerText = data.totalSantri;
+            document.getElementById('hadirCount').innerText = data.hadirHariIni;
 
-        function updateDashboard() {
-            const totalSantri = santriList.length;
-            const NewbieSantri = santriList.filter(s => s.kelas === 'Newbie');
-            const AdvanceSantri = santriList.filter(s => s.kelas === 'Advance');
-            const ProSantri = santriList.filter(s => s.kelas === 'Pro');
+            const recentContainer = document.getElementById('recentSantriList');
+            if (data.students.length === 0) {
+                recentContainer.innerHTML = `<div class="text-center py-6 bg-slate-900/80 rounded-2xl border border-white/15 text-slate-300 text-xs shadow-sm">Belum ada data santri</div>`;
+                return;
+            }
 
-            const NewbieCount = NewbieSantri.length;
-            const AdvanceCount = AdvanceSantri.length;
-            const ProCount = ProSantri.length;
-
-            document.getElementById('stat-total-santri').innerText = totalSantri;
-            document.getElementById('stat-Newbie').innerText = NewbieCount;
-            document.getElementById('stat-Advance').innerText = AdvanceCount;
-            document.getElementById('stat-Pro').innerText = ProCount;
-
-            document.getElementById('modal-count-Newbie').innerText = NewbieCount + ' Pengikut';
-            document.getElementById('modal-count-Advance').innerText = AdvanceCount + ' Pengikut';
-            document.getElementById('modal-count-Pro').innerText = ProCount + ' Pengikut';
-
-            // Hadir breakdown
-            const hadirList = absensiList.filter(a => a.status === 'Hadir');
-            const hadirNewbie = hadirList.filter(a => NewbieSantri.some(s => s.nip.toString() === a.nip.toString())).length;
-            const hadirAdvance = hadirList.filter(a => AdvanceSantri.some(s => s.nip.toString() === a.nip.toString())).length;
-            const hadirPro = hadirList.filter(a => ProSantri.some(s => s.nip.toString() === a.nip.toString())).length;
-            const totalHadir = hadirList.length;
-            const tidakHadir = totalSantri - totalHadir;
-
-            document.getElementById('stat-hadir-hari-ini').innerText = totalHadir;
-            document.getElementById('stat-hadir-Newbie').innerText = hadirNewbie;
-            document.getElementById('stat-hadir-Advance').innerText = hadirAdvance;
-            document.getElementById('stat-hadir-Pro').innerText = hadirPro;
-            document.getElementById('stat-tidak-hadir').innerText = tidakHadir < 0 ? 0 : tidakHadir;
-
-            document.getElementById('modal-hadir-Newbie').innerText = hadirNewbie + ' Pengikut';
-            document.getElementById('modal-hadir-Advance').innerText = hadirAdvance + ' Pengikut';
-            document.getElementById('modal-hadir-Pro').innerText = hadirPro + ' Pengikut';
-            document.getElementById('modal-tidak-hadir').innerText = (tidakHadir < 0 ? 0 : tidakHadir) + ' Pengikut';
-
-            const recentContainer = document.getElementById('recent-santri-list');
-            if (santriList.length === 0) {
-                recentContainer.innerHTML = '<div class="bg-zinc-950/40 backdrop-blur-sm p-4 rounded-2xl border border-zinc-800/50 text-center text-zinc-400 text-xs py-6">Belum ada pengikut terdaftar di Google Sheet.</div>';
-            } else {
-                recentContainer.innerHTML = santriList.slice(-3).reverse().map(s => `
-                    <div class="bg-zinc-950/40 backdrop-blur-sm p-3.5 rounded-2xl border border-zinc-800/50 flex justify-between items-center">
+            let html = '';
+            data.students.slice(0, 3).forEach((item, index) => {
+                html += `
+                    <div class="bg-slate-900/80 backdrop-blur-md p-3.5 rounded-2xl shadow-sm border border-white/15 flex justify-between items-center hover:bg-slate-900/90 transition">
                         <div class="flex items-center space-x-3">
-                            <div class="w-9 h-9 rounded-xl bg-zinc-800 text-zinc-300 flex items-center justify-center font-bold text-xs">
-                                ${s.nama.substring(0,2).toUpperCase()}
+                            <div class="bg-indigo-500/20 text-indigo-300 font-bold text-xs w-8 h-8 rounded-xl flex items-center justify-center shrink-0 shadow-xs border border-indigo-400/30">
+                                ${index + 1}
                             </div>
-                            <div>
-                                <h4 class="font-bold text-xs text-white">${s.nama}</h4>
-                                <p class="text-[10px] text-zinc-400">NIP: ${s.nip} • Kelas: ${s.kelas}</p>
+                            <div class="min-w-0">
+                                <h4 class="font-bold text-xs text-white truncate">${escapeHtml(item.nama)}</h4>
+                                <p class="text-[10px] text-slate-300 mt-0.5">NIS: ${escapeHtml(item.nis)}</p>
                             </div>
                         </div>
-                        <span class="px-2.5 py-1 bg-zinc-800 text-zinc-300 rounded-lg text-[10px] font-bold">${s.kelas}</span>
+                        <span class="text-[10px] bg-indigo-500/20 text-indigo-300 px-2.5 py-1 rounded-xl font-semibold shrink-0 border border-indigo-400/30">malam</span>
                     </div>
-                `).join('');
-            }
-        }
-
-        function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
-
-        function openClassBreakdownModal() { openModal('modal-class-breakdown'); }
-        function openHadirBreakdownModal() { openModal('modal-hadir-breakdown'); }
-        function openAddSantriModal() { openModal('modal-add-santri'); }
-        function openScanModal() { openModal('modal-scan'); }
-        function openManualModal() { 
-            document.getElementById('manual-input-search').value = '';
-            document.getElementById('manual-keterangan').value = '';
-            document.getElementById('autocomplete-list').classList.add('hidden');
-            openModal('modal-manual'); 
-        }
-        function openRekapModal() { renderRekapAbsen(); openModal('modal-rekap'); }
-        function openDataSantriModal() { renderDatabaseSantri(); openModal('modal-data-santri'); }
-
-        // Autocomplete pencarian anggota
-        function filterAutocomplete() {
-            const keyword = document.getElementById('manual-input-search').value.toLowerCase().trim();
-            const container = document.getElementById('autocomplete-list');
-
-            if (keyword === '') {
-                container.classList.add('hidden');
-                return;
-            }
-
-            const filtered = santriList.filter(s => s.nama.toLowerCase().includes(keyword) || s.nip.toString().includes(keyword) || s.kelas.toLowerCase().includes(keyword));
-            
-            if (filtered.length > 0) {
-                container.innerHTML = filtered.map(s => `
-                    <div onclick="selectSantri('${s.nip}', '${s.nama}', '${s.kelas}')" class="p-3 hover:bg-zinc-900 cursor-pointer text-xs border-b border-zinc-800 last:border-none">
-                        <div class="font-bold text-white">${s.nip} - ${s.nama}</div>
-                        <div class="text-[10px] text-zinc-400">Kelas: ${s.kelas} • WA: ${s.whatsapp}</div>
-                    </div>
-                `).join('');
-                container.classList.remove('hidden');
-            } else {
-                container.innerHTML = '<div class="p-3 text-xs text-zinc-400 text-center">Pengikut tidak ditemukan</div>';
-                container.classList.remove('hidden');
-            }
-        }
-
-        function selectSantri(nip, nama, kelas) {
-            document.getElementById('manual-input-search').value = `${nip} - ${nama} (${kelas})`;
-            document.getElementById('autocomplete-list').classList.add('hidden');
-        }
-
-        window.addEventListener('click', function(e) {
-            const container = document.getElementById('modal-manual');
-            const searchInput = document.getElementById('manual-input-search');
-            const list = document.getElementById('autocomplete-list');
-            if (container && !container.contains(e.target) && e.target !== searchInput) {
-                if (list) list.classList.add('hidden');
-            }
-        });
-
-        // Tambah Pengikut ke Google Sheet
-        async function handleTambahSantri(e) {
-            e.preventDefault();
-            const nip = document.getElementById('input-nis').value.trim();
-            const nama = document.getElementById('input-nama').value.trim();
-            const kelas = document.getElementById('input-kelas').value;
-            const whatsapp = document.getElementById('input-whatsapp').value.trim();
-
-            if (santriList.some(s => s.nip.toString() === nip)) {
-                alert('NIP & Nomor Induk Pengikut sudah terdaftar!');
-                return;
-            }
-
-            try {
-                await fetch(WEB_APP_URL, {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ action: 'tambahPengikut', nip, nama, kelas, whatsapp })
-                });
-
-                closeModal('modal-add-santri');
-                document.getElementById('form-add-santri').reset();
-                setTimeout(fetchDatabases, 1500);
-                alert('Pengikut berhasil didaftarkan ke Google Sheet!');
-            } catch (err) {
-                alert('Gagal terhubung ke Google Sheet.');
-            }
-        }
-
-        // Proses Absen via Input NIP / Scan
-        async function prosesAbsenNIS() {
-            const nip = document.getElementById('scan-nis-input').value.trim();
-            if (!nip) return;
-
-            const santri = santriList.find(s => s.nip.toString() === nip);
-            if (!santri) {
-                alert('Pengikut dengan NIP tersebut tidak ditemukan di database online!');
-                return;
-            }
-
-            const waktuSekarang = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-
-            try {
-                await fetch(WEB_APP_URL, {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ action: 'simpanAbsen', nip: santri.nip, nama: santri.nama, kelas: santri.kelas, status: 'Hadir', waktu: waktuSekarang, keterangan: 'Scan QR / NIP' })
-                });
-
-                document.getElementById('scan-nis-input').value = '';
-                closeModal('modal-scan');
-                setTimeout(fetchDatabases, 1500);
-                alert(`Absensi Berhasil Dicatat: ${santri.nama} (Hadir)`);
-            } catch (err) {
-                alert('Gagal mengirim data absensi.');
-            }
-        }
-
-        // Proses Absen Manual
-        async function handleAbsenManual(e) {
-            e.preventDefault();
-            const inputVal = document.getElementById('manual-input-search').value.trim();
-            const status = document.getElementById('manual-status').value;
-            const keterangan = document.getElementById('manual-keterangan').value.trim();
-
-            let santri = santriList.find(s => inputVal.includes(s.nip) || s.nama.toLowerCase() === inputVal.toLowerCase() || s.nip.toString() === inputVal);
-
-            if (!santri) {
-                alert('Pengikut tidak ditemukan!');
-                return;
-            }
-
-            const waktuSekarang = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-
-            try {
-                await fetch(WEB_APP_URL, {
-                    method: "POST",
-                    mode: "no-cors",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ action: 'simpanAbsen', nip: santri.nip, nama: santri.nama, kelas: santri.kelas, status, waktu: waktuSekarang, keterangan })
-                });
-
-                closeModal('modal-manual');
-                setTimeout(fetchDatabases, 1500);
-                alert(`Absen ${status} untuk ${santri.nama} berhasil dicatat online!`);
-            } catch (err) {
-                alert('Gagal mengirim data absensi.');
-            }
-        }
-
-        function renderRekapAbsen() {
-            const container = document.getElementById('rekap-list-container');
-            document.getElementById('rekap-count-info').innerText = `Total Absen: ${absensiList.length}`;
-
-            if (absensiList.length === 0) {
-                container.innerHTML = '<div class="text-center text-zinc-400 text-xs py-8">Belum ada data absensi hari ini.</div>';
-                return;
-            }
-
-            let tableHTML = `
-                <div class="overflow-x-auto rounded-2xl border border-zinc-800/50 bg-zinc-950/50 backdrop-blur-sm shadow-sm">
-                    <table class="w-full text-left border-collapse">
-                        <thead>
-                            <tr class="bg-zinc-900/70 text-[10px] font-bold text-zinc-400 uppercase tracking-wider border-b border-zinc-800/50">
-                                <th class="py-3 px-3">Pengikut & NIP</th>
-                                <th class="py-3 px-3">Kelas</th>
-                                <th class="py-3 px-3">Status</th>
-                                <th class="py-3 px-3">Waktu</th>
-                                <th class="py-3 px-3 text-center">Aksi</th>
-                            </tr>
-                        </thead>
-                        <tbody class="text-xs divide-y divide-zinc-900/50">
-            `;
-
-            tableHTML += absensiList.map((a) => {
-                let badgeColor = 'bg-zinc-800 text-zinc-300';
-                if (a.status === 'Sakit') badgeColor = 'bg-amber-950/80 text-amber-400 border border-amber-900/50';
-                else if (a.status === 'Izin') badgeColor = 'bg-blue-950/80 text-blue-400 border border-blue-900/50';
-                else if (a.status === 'Alpa') badgeColor = 'bg-rose-950/80 text-rose-400 border border-rose-900/50';
-                else if (a.status === 'Hadir') badgeColor = 'bg-emerald-950/80 text-emerald-400 border border-emerald-900/50';
-
-                return `
-                    <tr class="hover:bg-zinc-900/30 transition">
-                        <td class="py-3 px-3">
-                            <div class="font-bold text-white">${a.nama}</div>
-                            <div class="text-[10px] text-zinc-400">NIP: ${a.nip}</div>
-                            ${a.keterangan ? `<div class="text-[9px] text-zinc-300 italic mt-0.5">${a.keterangan}</div>` : ''}
-                        </td>
-                        <td class="py-3 px-3 font-medium text-zinc-300">${a.kelas}</td>
-                        <td class="py-3 px-3">
-                            <span class="px-2.5 py-1 rounded-md text-[9px] font-bold ${badgeColor}">${a.status}</span>
-                        </td>
-                        <td class="py-3 px-3 text-zinc-300 font-medium">${a.waktu}</td>
-                        <td class="py-3 px-3 text-center">
-                            <button onclick="hapusAbsen('${a.nip}')" class="text-zinc-400 hover:text-rose-400 p-1.5 transition">
-                                <i class="fa-solid fa-trash-can text-xs"></i>
-                            </button>
-                        </td>
-                    </tr>
                 `;
-            }).join('');
-
-            tableHTML += `
-                        </tbody>
-                    </table>
-                </div>
-            `;
-
-            container.innerHTML = tableHTML;
+            });
+            recentContainer.innerHTML = html;
         }
 
-        async function hapusAbsen(nip) {
-            if (confirm('Hapus data absen ini?')) {
-                try {
-                    await fetch(WEB_APP_URL, {
-                        method: "POST",
-                        mode: "no-cors",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ action: 'hapusAbsen', nip })
-                    });
-                    setTimeout(fetchDatabases, 1500);
-                } catch(err) {
-                    alert('Gagal menghapus absen.');
-                }
+        function filterAutocomplete(inputId, suggestionId, hiddenNisId, notifId = null) {
+            const inputVal = document.getElementById(inputId).value;
+            const query = String(inputVal || "").toLowerCase().trim();
+            const suggestionsBox = document.getElementById(suggestionId);
+            const hiddenNis = document.getElementById(hiddenNisId);
+
+            hiddenNis.value = '';
+
+            if (!query) {
+                suggestionsBox.classList.add('hidden');
+                suggestionsBox.innerHTML = '';
+                if(notifId) document.getElementById(notifId).classList.add('hidden');
+                return;
             }
-        }
 
-        function filterDatabase(kelas) {
-            currentFilterKelas = kelas;
-            ['semua', 'Newbie', 'Advance', 'Pro'].forEach(k => {
-                const btn = document.getElementById(`btn-filter-${k}`);
-                if (btn) {
-                    if (k.toLowerCase() === kelas.toLowerCase() || (k === 'semua' && kelas === 'Semua')) {
-                        btn.className = 'flex-1 py-1.5 rounded-xl text-xs font-bold bg-zinc-100 text-zinc-950 transition';
-                    } else {
-                        btn.className = 'flex-1 py-1.5 rounded-xl text-xs font-bold bg-zinc-800 text-zinc-300 transition';
-                    }
-                }
+            const filtered = globalData.students.filter(s => {
+                const nama = String(s.nama || "").toLowerCase();
+                const nis = String(s.nis || "").toLowerCase();
+                return nama.includes(query) || nis.includes(query);
             });
-            renderDatabaseSantri();
-        }
-
-        function renderDatabaseSantri() {
-            const searchKeyword = document.getElementById('search-database').value.toLowerCase();
-            const container = document.getElementById('database-list-container');
-
-            let filtered = santriList.filter(s => {
-                const matchClass = currentFilterKelas === 'Semua' || s.kelas.toLowerCase() === currentFilterKelas.toLowerCase();
-                const matchSearch = s.nama.toLowerCase().includes(searchKeyword) || s.nip.toString().includes(searchKeyword) || s.whatsapp.toString().includes(searchKeyword);
-                return matchClass && matchSearch;
-            });
-
-            document.getElementById('database-count-info').innerText = `Total: ${filtered.length} Pengikut`;
 
             if (filtered.length === 0) {
-                container.innerHTML = '<div class="text-center text-zinc-400 text-xs py-8">Tidak ada pengikut yang ditemukan.</div>';
+                suggestionsBox.innerHTML = `<div class="p-3 text-xs text-slate-400 text-center">Santri tidak ditemukan</div>`;
+                suggestionsBox.classList.remove('hidden');
+                if(notifId) {
+                    const nBox = document.getElementById(notifId);
+                    nBox.className = "p-3 rounded-2xl text-xs border bg-rose-900/50 border-rose-700 text-rose-200 font-medium flex items-center gap-2";
+                    nBox.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-400"></i><span>NIS / Nama tidak terdaftar.</span>`;
+                    nBox.classList.remove('hidden');
+                }
                 return;
             }
 
-            container.innerHTML = filtered.map(s => `
-                <div class="bg-zinc-950/50 backdrop-blur-sm p-3.5 rounded-2xl border border-zinc-800/50 flex justify-between items-center">
-                    <div>
-                        <h4 class="font-bold text-xs text-white">${s.nama}</h4>
-                        <p class="text-[10px] text-zinc-400 mt-0.5">NIP: ${s.nip} • Kelas: ${s.kelas} • WA: ${s.whatsapp}</p>
+            const exactMatch = filtered.find(s => String(s.nis).toLowerCase() === query || String(s.nama).toLowerCase() === query);
+            if (exactMatch) {
+                hiddenNis.value = exactMatch.nis;
+                if(notifId) showMatchNotification(notifId, exactMatch);
+            } else if (filtered.length === 1) {
+                hiddenNis.value = filtered[0].nis;
+                if(notifId) showMatchNotification(notifId, filtered[0]);
+            } else {
+                if(notifId) document.getElementById(notifId).classList.add('hidden');
+            }
+
+            let html = '';
+            filtered.forEach(item => {
+                html += `
+                    <div onclick="selectSantri('${inputId}', '${suggestionId}', '${hiddenNisId}', '${escapeQuote(item.nama)}', '${escapeQuote(item.nis)}', '${escapeQuote(item.kelas)}', '${notifId}')" 
+                         class="p-3 hover:bg-slate-800 cursor-pointer border-b border-slate-800 last:border-none flex justify-between items-center text-xs bg-slate-900 text-slate-200">
+                        <div>
+                            <span class="font-bold text-white block">${escapeHtml(item.nama)}</span>
+                            <span class="text-[10px] text-slate-400">NIS: ${escapeHtml(item.nis)} &bull; Kelas: ${escapeHtml(item.kelas)}</span>
+                        </div>
+                        <i class="fa-solid fa-check text-xs text-indigo-400"></i>
                     </div>
-                    <button onclick="hapusSantri('${s.nip}')" class="text-zinc-400 hover:text-rose-400 p-2">
-                        <i class="fa-solid fa-trash-can text-xs"></i>
-                    </button>
-                </div>
-            `).join('');
+                `;
+            });
+            suggestionsBox.innerHTML = html;
+            suggestionsBox.classList.remove('hidden');
         }
 
-        async function hapusSantri(nip) {
-            if (confirm('Yakin ingin menghapus pengikut ini dari database online?')) {
-                try {
-                    await fetch(WEB_APP_URL, {
-                        method: "POST",
-                        mode: "no-cors",
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ action: 'hapusPengikut', nip })
-                    });
-                    setTimeout(fetchDatabases, 1500);
-                    alert('Pengikut berhasil dihapus dari Google Sheet.');
-                } catch(err) {
-                    alert('Gagal menghapus data.');
+        function showMatchNotification(notifId, santri) {
+            const nBox = document.getElementById(notifId);
+            if (!nBox) return;
+            nBox.className = "p-3 rounded-2xl text-xs border bg-emerald-900/50 border-emerald-700 text-emerald-200 font-medium flex items-center gap-2.5 animate-pulse";
+            nBox.innerHTML = `
+                <i class="fa-solid fa-circle-check text-emerald-400 shrink-0"></i>
+                <div class="min-w-0 truncate">
+                    <strong class="font-bold">Terdaftar!</strong> <span>${escapeHtml(santri.nama)} (${escapeHtml(santri.nis)})</span>
+                </div>
+            `;
+            nBox.classList.remove('hidden');
+        }
+
+        function selectSantri(inputId, suggestionId, hiddenNisId, nama, nis, kelas, notifId = null) {
+            document.getElementById(inputId).value = `${nama} (NIS: ${nis})`;
+            document.getElementById(hiddenNisId).value = nis;
+            document.getElementById(suggestionId).classList.add('hidden');
+            if (notifId) {
+                showMatchNotification(notifId, { nama, nis, kelas });
+            }
+        }
+
+        function resolveNis(inputId, hiddenNisId) {
+            let nisVal = document.getElementById(hiddenNisId).value;
+            const query = document.getElementById(inputId).value.trim();
+
+            if (!nisVal && query) {
+                const found = globalData.students.find(s => 
+                    String(s.nis).toLowerCase() === query.toLowerCase() || 
+                    String(s.nama).toLowerCase() === query.toLowerCase()
+                );
+                if (found) {
+                    nisVal = found.nis;
+                } else if (globalData.students.length === 1) {
+                    nisVal = globalData.students[0].nis;
                 }
             }
+            return nisVal;
+        }
+
+        function openScanModal() {
+            document.getElementById('modalTitle').innerText = 'Scan QR & Absen Hadir';
+            document.getElementById('modalBody').innerHTML = `
+                <div class="space-y-3.5 py-1">
+                    <div class="flex gap-2 bg-slate-800 p-1 rounded-2xl">
+                        <button type="button" id="btnModeMasuk" onclick="setScanMode('Masuk')" class="flex-1 py-2 rounded-xl text-xs font-bold transition bg-indigo-600 text-white shadow-xs">
+                            <i class="fa-solid fa-right-to-bracket"></i> Absen Masuk
+                        </button>
+                        <button type="button" id="btnModePulang" onclick="setScanMode('Pulang')" class="flex-1 py-2 rounded-xl text-xs font-bold transition text-slate-300 hover:text-white">
+                            <i class="fa-solid fa-right-from-bracket"></i> Absen Pulang
+                        </button>
+                    </div>
+                    <input type="hidden" id="activeScanStatus" value="Masuk">
+
+                    <div class="bg-slate-950 rounded-2xl overflow-hidden relative border border-slate-800 shadow-inner">
+                        <div id="reader" class="w-full"></div>
+                    </div>
+                    
+                    <div id="scanNotification" class="hidden p-3 rounded-2xl text-xs border"></div>
+
+                    <div class="border-t border-slate-800 pt-3">
+                        <p class="text-[11px] font-bold uppercase text-slate-400 mb-1.5">Atau Input Manual (Tanpa QR Code)</p>
+                        <form onsubmit="handleScanSubmit(event)" class="space-y-3">
+                            <input type="hidden" id="selectedScanNis">
+                            <div class="relative">
+                                <input type="text" id="inputSearchScan" oninput="filterAutocomplete('inputSearchScan', 'scanSuggestions', 'selectedScanNis', 'scanNotification')" placeholder="Ketik nama atau NIS..." autocomplete="off" class="w-full px-3.5 py-2.5 bg-slate-800 border border-slate-700 rounded-2xl text-xs text-white font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                <div id="scanSuggestions" class="absolute left-0 right-0 top-full mt-1 bg-slate-900 border border-slate-700 rounded-2xl shadow-xl max-h-40 overflow-y-auto z-50 hidden"></div>
+                            </div>
+                            <button type="submit" id="submitScanBtn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-xs font-bold shadow-md shadow-indigo-900/50 transition">Kirim Absen Masuk</button>
+                        </form>
+                    </div>
+                </div>
+            `;
+            openModalElement();
+
+            setTimeout(() => {
+                initCameraScanner();
+            }, 300);
+        }
+
+        function setScanMode(mode) {
+            document.getElementById('activeScanStatus').value = mode;
+            const btnMasuk = document.getElementById('btnModeMasuk');
+            const btnPulang = document.getElementById('btnModePulang');
+            const submitBtn = document.getElementById('submitScanBtn');
+
+            if (mode === 'Masuk') {
+                btnMasuk.className = "flex-1 py-2 rounded-xl text-xs font-bold transition bg-indigo-600 text-white shadow-xs";
+                btnPulang.className = "flex-1 py-2 rounded-xl text-xs font-bold transition text-slate-300 hover:text-white";
+                submitBtn.innerText = "Kirim Absen Masuk";
+                submitBtn.className = "w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-xs font-bold shadow-md shadow-indigo-900/50 transition";
+            } else {
+                btnPulang.className = "flex-1 py-2 rounded-xl text-xs font-bold transition bg-violet-600 text-white shadow-xs";
+                btnMasuk.className = "flex-1 py-2 rounded-xl text-xs font-bold transition text-slate-300 hover:text-white";
+                submitBtn.innerText = "Kirim Absen Pulang";
+                submitBtn.className = "w-full py-3 bg-violet-600 hover:bg-violet-700 text-white rounded-2xl text-xs font-bold shadow-md shadow-violet-900/50 transition";
+            }
+        }
+
+        function initCameraScanner() {
+            if (html5QrCode) {
+                try { html5QrCode.stop(); } catch(e){}
+            }
+            html5QrCode = new Html5Qrcode("reader");
+            const config = { fps: 10, qrbox: { width: 190, height: 190 } };
+            
+            html5QrCode.start(
+                { facingMode: "environment" }, 
+                config, 
+                (decodedText) => {
+                    handleQrScanResult(decodedText.trim());
+                },
+                (errorMessage) => {}
+            ).catch(err => {
+                console.warn("Kamera tidak aktif:", err);
+                const readerBox = document.getElementById('reader');
+                if (readerBox) {
+                    readerBox.innerHTML = `
+                        <div class="p-6 text-center text-slate-400 text-xs bg-slate-950">
+                            <i class="fa-solid fa-camera-slash text-xl mb-1.5 text-rose-400"></i>
+                            <p>Kamera tidak aktif. Gunakan input manual.</p>
+                        </div>
+                    `;
+                }
+            });
+        }
+
+        function handleQrScanResult(scannedText) {
+            const found = globalData.students.find(s => 
+                String(s.nis).trim().toLowerCase() === scannedText.toLowerCase() ||
+                String(s.nama).trim().toLowerCase() === scannedText.toLowerCase()
+            );
+
+            const nBox = document.getElementById('scanNotification');
+            if (found) {
+                document.getElementById('selectedScanNis').value = found.nis;
+                document.getElementById('inputSearchScan').value = `${found.nama} (NIS: ${found.nis})`;
+                showMatchNotification('scanNotification', found);
+
+                if (html5QrCode) {
+                    try { html5QrCode.stop(); } catch(e){}
+                }
+            } else {
+                nBox.className = "p-3 rounded-2xl text-xs border bg-rose-900/50 border-rose-700 text-rose-200 font-medium flex items-center gap-2";
+                nBox.innerHTML = `<i class="fa-solid fa-circle-xmark text-rose-400"></i><span>QR Code "${escapeHtml(scannedText)}" tidak terdaftar!</span>`;
+                nBox.classList.remove('hidden');
+            }
+        }
+
+        function handleScanSubmit(e) {
+            e.preventDefault();
+            const nis = resolveNis('inputSearchScan', 'selectedScanNis');
+            const status = document.getElementById('activeScanStatus').value;
+            if (!nis) {
+                showAlert('Santri tidak ditemukan! Masukkan NIS atau Nama yang valid.', 'error');
+                return;
+            }
+            closeModal();
+            google.script.run
+                .withSuccessHandler(res => {
+                    if(res.success) { showAlert(res.message, 'success'); loadDashboard(); }
+                    else { showAlert(res.message, 'error'); }
+                })
+                .withFailureHandler(err => showAlert(err.message, 'error'))
+                .submitAbsen(nis, status);
+        }
+
+        function openManualAbsenModal() {
+            document.getElementById('modalTitle').innerText = 'Absen Manual';
+            document.getElementById('modalBody').innerHTML = `
+                <form onsubmit="handleManualAbsen(event)" class="space-y-3.5">
+                    <input type="hidden" id="selectedManualNis">
+                    <div class="relative">
+                        <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Cari Nama atau NIS Santri</label>
+                        <input type="text" id="inputSearchManual" oninput="filterAutocomplete('inputSearchManual', 'manualSuggestions', 'selectedManualNis', 'manualNotification')" placeholder="Ketik nama atau NIS..." autocomplete="off" class="w-full px-3.5 py-2.5 bg-slate-800 border border-slate-700 rounded-2xl text-xs text-white font-semibold focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        <div id="manualSuggestions" class="absolute left-0 right-0 top-full mt-1 bg-slate-900 border border-slate-700 rounded-2xl shadow-xl max-h-40 overflow-y-auto z-50 hidden"></div>
+                    </div>
+
+                    <div id="manualNotification" class="hidden p-3 rounded-2xl text-xs border"></div>
+
+                    <div>
+                        <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Status Keterangan</label>
+                        <select id="manualStatus" class="w-full px-3.5 py-2.5 bg-slate-800 border border-slate-700 rounded-2xl text-xs text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none font-semibold">
+                            <option value="Sakit">Sakit</option>
+                            <option value="Izin">Izin</option>
+                            <option value="Alpa">Alpa</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-2xl text-xs font-bold shadow-md shadow-blue-900/50 transition mt-2">Simpan Absen Manual</button>
+                </form>
+            `;
+            openModalElement();
+        }
+
+        function handleManualAbsen(e) {
+            e.preventDefault();
+            const nis = resolveNis('inputSearchManual', 'selectedManualNis');
+            const status = document.getElementById('manualStatus').value;
+            if (!nis) {
+                showAlert('Santri tidak ditemukan! Masukkan NIS atau Nama yang valid.', 'error');
+                return;
+            }
+            closeModal();
+            google.script.run
+                .withSuccessHandler(res => {
+                    if(res.success) { showAlert(res.message, 'success'); loadDashboard(); }
+                    else { showAlert(res.message, 'error'); }
+                })
+                .withFailureHandler(err => showAlert(err.message, 'error'))
+                .submitAbsen(nis, status);
+        }
+
+        function openMasukTodayModal() {
+            document.getElementById('modalTitle').innerText = 'Daftar Hadir Hari Ini (WIB)';
+            let html = `<div class="space-y-2.5">`;
+            if (globalData.hadirTodayList.length === 0) {
+                html += `<div class="text-center py-8 text-slate-400 text-xs">Belum ada santri yang absen hadir hari ini.</div>`;
+            } else {
+                globalData.hadirTodayList.forEach((item, index) => {
+                    html += `
+                        <div class="bg-emerald-950/40 p-3 rounded-2xl border border-emerald-800/60 flex justify-between items-center text-xs">
+                            <div class="flex items-center gap-2.5 min-w-0">
+                                <div class="w-7 h-7 rounded-xl bg-emerald-600 text-white font-bold flex items-center justify-center text-[11px] shrink-0">
+                                    ${index + 1}
+                                </div>
+                                <div class="min-w-0">
+                                    <span class="font-bold text-white block truncate">${escapeHtml(item.nama)}</span>
+                                    <span class="text-[10px] text-slate-300">NIS: ${escapeHtml(item.nis)} &bull; Kelas: ${escapeHtml(item.kelas)}</span>
+                                    <span class="text-[9px] text-indigo-300 font-semibold block mt-0.5"><i class="fa-regular fa-clock"></i> ${escapeHtml(item.waktu)} WIB</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-1.5 shrink-0">
+                                <button onclick="editAbsenPrompt(${item.rowId}, '${escapeQuote(item.status)}')" class="px-2 py-1 bg-amber-950/60 text-amber-300 rounded-xl text-[10px] font-semibold border border-amber-800/50"><i class="fa-solid fa-pen"></i></button>
+                                <button onclick="deleteAbsenItem(${item.rowId})" class="px-2 py-1 bg-rose-950/60 text-rose-300 rounded-xl text-[10px] font-semibold border border-rose-800/50"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            html += `</div>`;
+            document.getElementById('modalBody').innerHTML = html;
+            openModalElement();
+        }
+
+        function openAddStudentModal() {
+            document.getElementById('modalTitle').innerText = 'Tambah Data Santri Baru';
+            document.getElementById('modalBody').innerHTML = `
+                <form onsubmit="handleSaveStudent(event)" class="space-y-3.5">
+                    <input type="hidden" id="editRowId">
+                    <div>
+                        <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Nama Lengkap</label>
+                        <input type="text" id="inputNama" required class="w-full px-3.5 py-2.5 bg-slate-800 border border-slate-700 rounded-2xl text-xs text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Nomor Induk Santri (NIS)</label>
+                        <input type="text" id="inputNis" required class="w-full px-3.5 py-2.5 bg-slate-800 border border-slate-700 rounded-2xl text-xs text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">Kelas</label>
+                        <input type="text" id="inputKelas" required class="w-full px-3.5 py-2.5 bg-slate-800 border border-slate-700 rounded-2xl text-xs text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <div>
+                        <label class="block text-[11px] font-bold uppercase text-slate-400 mb-1">No Whatsapp</label>
+                        <input type="text" id="inputWhatsapp" placeholder="08xxxxxxxxxx" required class="w-full px-3.5 py-2.5 bg-slate-800 border border-slate-700 rounded-2xl text-xs text-white focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+                    <button type="submit" id="submitBtn" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white rounded-2xl text-xs font-bold shadow-md shadow-indigo-900/50 transition mt-3">Simpan Santri</button>
+                </form>
+            `;
+            openModalElement();
+        }
+
+        function handleSaveStudent(e) {
+            e.preventDefault();
+            const rowId = document.getElementById('editRowId').value;
+            const data = {
+                nama: document.getElementById('inputNama').value,
+                nis: document.getElementById('inputNis').value,
+                kelas: document.getElementById('inputKelas').value,
+                whatsapp: document.getElementById('inputWhatsapp').value
+            };
+            const btn = document.getElementById('submitBtn');
+            btn.disabled = true;
+            btn.innerText = 'Menyimpan...';
+
+            if (!rowId) {
+                google.script.run
+                    .withSuccessHandler(res => { closeModal(); showAlert(res.message, 'success'); loadDashboard(); })
+                    .withFailureHandler(err => { btn.disabled = false; showAlert(err.message, 'error'); })
+                    .addStudent(data);
+            } else {
+                google.script.run
+                    .withSuccessHandler(res => { closeModal(); showAlert(res.message, 'success'); loadDashboard(); })
+                    .withFailureHandler(err => { btn.disabled = false; showAlert(err.message, 'error'); })
+                    .updateStudent(parseInt(rowId), data);
+            }
+        }
+
+        function openRekapModal() {
+            document.getElementById('modalTitle').innerText = 'Rekap & Riwayat Absen (WIB)';
+            let html = `<div class="space-y-2.5">`;
+            if (globalData.absenHistory.length === 0) {
+                html += `<div class="text-center py-8 text-slate-400 text-xs">Belum ada riwayat absensi</div>`;
+            } else {
+                globalData.absenHistory.forEach(item => {
+                    let badgeColor = item.status === 'Hadir' || item.status === 'Masuk' ? 'bg-emerald-950 text-emerald-300 border-emerald-800' : 'bg-rose-950 text-rose-300 border-rose-800';
+                    html += `
+                        <div class="bg-slate-800/80 p-3 rounded-2xl border border-slate-700 flex justify-between items-center text-xs text-slate-200">
+                            <div class="min-w-0 pr-2">
+                                <span class="font-bold text-white block truncate">${escapeHtml(item.nama)}</span>
+                                <span class="text-[10px] text-slate-400">Kelas ${escapeHtml(item.kelas)} &bull; NIS: ${escapeHtml(item.nis)}</span>
+                                <span class="text-[9px] text-indigo-300 font-semibold block mt-0.5"><i class="fa-regular fa-clock"></i> ${escapeHtml(item.waktu)} WIB</span>
+                            </div>
+                            <div class="flex items-center gap-1.5 shrink-0">
+                                <span class="px-2 py-0.5 rounded-xl border font-bold text-[10px] ${badgeColor}">${item.status}</span>
+                                <button onclick="editAbsenPrompt(${item.rowId}, '${escapeQuote(item.status)}')" class="w-7 h-7 bg-amber-950/60 text-amber-300 rounded-xl flex items-center justify-center font-semibold border border-amber-800/50"><i class="fa-solid fa-pen text-[10px]"></i></button>
+                                <button onclick="deleteAbsenItem(${item.rowId})" class="w-7 h-7 bg-rose-950/60 text-rose-300 rounded-xl flex items-center justify-center font-semibold border border-rose-800/50"><i class="fa-solid fa-trash text-[10px]"></i></button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            html += `</div>`;
+            document.getElementById('modalBody').innerHTML = html;
+            openModalElement();
+        }
+
+        function openDataModal() {
+            document.getElementById('modalTitle').innerText = 'Data Seluruh Santri';
+            let html = `
+                <div class="mb-3 sticky top-0 bg-slate-900 pb-1">
+                    <input type="text" id="searchFilter" onkeyup="filterModalList()" placeholder="Cari nama atau NIS..." class="w-full px-3.5 py-2.5 bg-slate-800 border border-slate-700 text-white rounded-2xl text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500">
+                </div>
+                <div id="modalSantriList" class="space-y-2.5">
+            `;
+            if (globalData.students.length === 0) {
+                html += `<div class="text-center py-8 text-slate-400 text-xs">Belum ada data santri</div>`;
+            } else {
+                globalData.students.forEach(item => {
+                    html += `
+                        <div class="santri-item bg-slate-800/80 p-3 rounded-2xl border border-slate-700 flex justify-between items-center text-xs text-slate-200" data-keyword="${escapeHtml(item.nama.toLowerCase())} ${escapeHtml(item.nis)}">
+                            <div class="min-w-0 pr-2">
+                                <span class="font-bold text-white block truncate">${escapeHtml(item.nama)}</span>
+                                <span class="text-[10px] text-slate-400 truncate">NIS: ${escapeHtml(item.nis)} &bull; Kelas ${escapeHtml(item.kelas)} &bull; WA: ${escapeHtml(item.whatsapp)}</span>
+                            </div>
+                            <div class="flex gap-1.5 shrink-0">
+                                <button onclick="editStudentPrompt(${item.rowId}, '${escapeQuote(item.nama)}', '${escapeQuote(item.nis)}', '${escapeQuote(item.kelas)}', '${escapeQuote(item.whatsapp)}')" class="w-7 h-7 bg-amber-950/60 text-amber-300 rounded-xl flex items-center justify-center border border-amber-800/50 hover:bg-amber-900"><i class="fa-solid fa-pen text-[10px]"></i></button>
+                                <button onclick="deleteStudentRecord(${item.rowId})" class="w-7 h-7 bg-rose-950/60 text-rose-300 rounded-xl flex items-center justify-center border border-rose-800/50 hover:bg-rose-900"><i class="fa-solid fa-trash text-[10px]"></i></button>
+                            </div>
+                        </div>
+                    `;
+                });
+            }
+            html += `</div>`;
+            document.getElementById('modalBody').innerHTML = html;
+            openModalElement();
+        }
+
+        function filterModalList() {
+            const keyword = document.getElementById('searchFilter').value.toLowerCase();
+            const items = document.querySelectorAll('.santri-item');
+            items.forEach(el => {
+                const text = el.getAttribute('data-keyword');
+                if (text.includes(keyword)) {
+                    el.style.display = 'flex';
+                } else {
+                    el.style.display = 'none';
+                }
+            });
+        }
+
+        function editStudentPrompt(rowId, nama, nis, kelas, whatsapp) {
+            closeModal();
+            openAddStudentModal();
+            document.getElementById('modalTitle').innerText = 'Edit Data Santri';
+            document.getElementById('editRowId').value = rowId;
+            document.getElementById('inputNama').value = nama;
+            document.getElementById('inputNis').value = nis;
+            document.getElementById('inputKelas').value = kelas;
+            document.getElementById('inputWhatsapp').value = whatsapp;
+        }
+
+        function deleteStudentRecord(rowId) {
+            if (confirm('Yakin ingin menghapus data santri ini?')) {
+                google.script.run
+                    .withSuccessHandler(res => { closeModal(); showAlert(res.message, 'success'); loadDashboard(); })
+                    .withFailureHandler(err => showAlert(err.message, 'error'))
+                    .deleteStudent(rowId);
+            }
+        }
+
+        function exportToExcel() {
+            if (globalData.students.length === 0) {
+                showAlert('Tidak ada data santri untuk di-download!', 'error');
+                return;
+            }
+            let csvContent = "No,Nama,NIS,Kelas,No Whatsapp\n";
+            globalData.students.forEach((item, index) => {
+                let row = [
+                    index + 1,
+                    `"${item.nama.replace(/"/g, '""')}"`,
+                    `"${item.nis.replace(/"/g, '""')}"`,
+                    `"${item.kelas.replace(/"/g, '""')}"`,
+                    `"${item.whatsapp.replace(/"/g, '""')}"`
+                ];
+                csvContent += row.join(",") + "\n";
+            });
+            const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `iMTQL_Database_Santri_${new Date().toISOString().slice(0,10)}.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            showAlert('File berhasil di-download!', 'success');
+        }
+
+        function openModalElement() {
+            const m = document.getElementById('appModal');
+            m.classList.remove('hidden');
+            m.classList.add('flex');
+        }
+        function closeModal() {
+            if (html5QrCode) {
+                try { html5QrCode.stop(); } catch(e){}
+                html5QrCode = null;
+            }
+            const m = document.getElementById('appModal');
+            m.classList.remove('flex');
+            m.classList.add('hidden');
+        }
+        function showAlert(msg, type) {
+            const box = document.getElementById('alertBox');
+            box.className = `p-3 rounded-2xl text-xs font-medium transition-all shadow-sm ${type === 'success' ? 'bg-emerald-950/80 text-emerald-200 border border-emerald-800' : 'bg-rose-950/80 text-rose-200 border border-rose-800'}`;
+            box.innerText = msg;
+            box.classList.remove('hidden');
+            setTimeout(() => box.classList.add('hidden'), 4000);
+        }
+        function escapeHtml(text) {
+            return text.toString().replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+        function escapeQuote(text) {
+            return text.toString().replace(/'/g, "\\'");
         }
     </script>
 </body>
