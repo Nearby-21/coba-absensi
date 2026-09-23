@@ -5,707 +5,806 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>iMTQL - Sistem Absensi & Manajemen Santri</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/html5-qrcode"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'] },
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background: #0b0f19; }
+        .mobile-container {
+            max-width: 440px;
+            margin: 0 auto;
+            min-height: 100vh;
+            background: #f8fafc;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+    </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased pb-12">
+<body class="text-slate-800 antialiased flex justify-center items-center min-h-screen">
 
-    <!-- HEADER / BANNER -->
-    <div class="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-700 text-white p-5 rounded-b-3xl shadow-lg">
-        <div class="max-w-md mx-auto">
-            <div class="flex justify-between items-center mb-3">
+    <!-- Container Utama Seluler -->
+    <div class="mobile-container w-full">
+        
+        <!-- Header / Top Bar -->
+        <div class="bg-gradient-to-r from-indigo-700 via-indigo-600 to-purple-600 text-white px-5 pt-6 pb-6 rounded-b-[2.5rem] shadow-xl relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+            
+            <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center space-x-3">
-                    <div class="bg-white/20 p-2.5 rounded-xl backdrop-blur-sm">
-                        <i class="fa-solid fa-mosque text-xl"></i>
+                    <div class="w-11 h-11 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/20 shadow-inner">
+                        <i class="fa-solid fa-mosque text-xl text-white"></i>
                     </div>
                     <div>
-                        <h1 class="text-xl font-bold tracking-wide">iMTQL</h1>
-                        <p class="text-xs text-blue-100">Sistem Absensi & Manajemen Santri</p>
+                        <h1 class="text-xl font-extrabold tracking-tight">iMTQL</h1>
+                        <p class="text-xs text-indigo-100 font-medium">Sistem Absensi & Manajemen Santri</p>
                     </div>
                 </div>
-                <div class="bg-emerald-500/20 text-emerald-300 px-3 py-1.5 rounded-xl font-medium border border-emerald-400/30 text-xs flex items-center space-x-1.5">
+                <div class="flex items-center space-x-2 bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
                     <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span>GitHub Hosted</span>
+                    <span class="text-[11px] font-semibold tracking-wide text-emerald-100">Sheets API</span>
                 </div>
             </div>
 
-            <div class="flex justify-between items-center mt-4 bg-white/10 backdrop-blur-md p-3 rounded-2xl text-xs">
-                <div id="currentDate" class="flex items-center space-x-2 font-medium">
-                    <i class="fa-regular fa-calendar-days"></i> <span>Memuat tanggal...</span>
+            <!-- Tanggal & Info Live -->
+            <div class="flex justify-between items-center bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-white/15 text-xs">
+                <div class="flex items-center space-x-2">
+                    <i class="fa-regular fa-calendar-days text-indigo-200"></i>
+                    <span id="current-date" class="font-medium text-white">Rabu, 23 Sep 2026</span>
                 </div>
-                <div class="text-blue-100 font-medium">
-                    <i class="fa-solid fa-database mr-1"></i> Realtime Sheets API
+                <div class="flex items-center space-x-1.5 text-indigo-100">
+                    <i class="fa-solid fa-cloud-arrow-up text-[11px]"></i>
+                    <span class="text-[11px]">Sinkron Live</span>
                 </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- KONTEN UTAMA -->
-    <div class="max-w-md mx-auto px-4 mt-5 space-y-4">
-        <!-- STATISTIK -->
-        <div class="grid grid-cols-2 gap-3">
-            <div class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100">
-                <div class="text-slate-400 text-xs font-medium mb-1 flex items-center space-x-1.5">
-                    <i class="fa-solid fa-users text-indigo-500"></i>
-                    <span>Total Santri</span>
-                </div>
-                <div id="statTotalSantri" class="text-2xl font-bold text-slate-800">0</div>
-            </div>
-            <button onclick="openHadirHariIniModal()" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 hover:border-emerald-500 hover:shadow-md transition text-left group cursor-pointer">
-                <div class="text-slate-400 text-xs font-medium mb-1 flex items-center justify-between">
-                    <span class="flex items-center space-x-1.5"><i class="fa-solid fa-user-check text-emerald-500"></i><span>Hadir Hari Ini</span></span>
-                    <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-emerald-500 text-xs"></i>
-                </div>
-                <div id="statHadirHariIni" class="text-2xl font-bold text-slate-800">0</div>
-            </button>
-        </div>
-
-        <div class="text-xs font-bold text-slate-400 uppercase tracking-wider px-1 pt-2">Menu Navigasi</div>
-        
-        <!-- MENU GRID -->
-        <div class="grid grid-cols-2 gap-3">
-            <button onclick="openScanModal()" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 hover:border-indigo-500 hover:shadow-md transition text-left group cursor-pointer">
-                <div class="bg-purple-50 w-10 h-10 rounded-xl flex items-center justify-center text-purple-600 mb-3 group-hover:bg-purple-600 group-hover:text-white transition">
-                    <i class="fa-solid fa-qrcode text-lg"></i>
-                </div>
-                <div class="font-bold text-slate-700 text-sm">Scan QR / Absen</div>
-                <div class="text-xs text-slate-400 mt-0.5">Scan kamera atau NIS</div>
-            </button>
-
-            <button onclick="openAbsenManualModal()" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 hover:border-indigo-500 hover:shadow-md transition text-left group cursor-pointer">
-                <div class="bg-blue-50 w-10 h-10 rounded-xl flex items-center justify-center text-blue-600 mb-3 group-hover:bg-blue-600 group-hover:text-white transition">
-                    <i class="fa-solid fa-pen-to-square text-lg"></i>
-                </div>
-                <div class="font-bold text-slate-700 text-sm">Absen Manual</div>
-                <div class="text-xs text-slate-400 mt-0.5">Sakit, Izin, atau Alpa</div>
-            </button>
-
-            <button onclick="openRekapModal()" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 hover:border-indigo-500 hover:shadow-md transition text-left group cursor-pointer">
-                <div class="bg-emerald-50 w-10 h-10 rounded-xl flex items-center justify-center text-emerald-600 mb-3 group-hover:bg-emerald-600 group-hover:text-white transition">
-                    <i class="fa-solid fa-chart-pie text-lg"></i>
-                </div>
-                <div class="font-bold text-slate-700 text-sm">Rekap Absen</div>
-                <div class="text-xs text-slate-400 mt-0.5">Kelola & Hapus Double</div>
-            </button>
-
-            <button onclick="openModal('modalTambahSantri')" class="bg-white p-4 rounded-2xl shadow-sm border border-slate-100 hover:border-indigo-500 hover:shadow-md transition text-left group cursor-pointer">
-                <div class="bg-amber-50 w-10 h-10 rounded-xl flex items-center justify-center text-amber-600 mb-3 group-hover:bg-amber-600 group-hover:text-white transition">
-                    <i class="fa-solid fa-user-plus text-lg"></i>
-                </div>
-                <div class="font-bold text-slate-700 text-sm">Tambah Santri</div>
-                <div class="text-xs text-slate-400 mt-0.5">Daftarkan santri baru</div>
-            </button>
-        </div>
-
-        <button onclick="openDataSantriModal()" class="w-full bg-white p-4 rounded-2xl shadow-sm border border-slate-100 hover:border-indigo-500 hover:shadow-md transition flex items-center justify-between group cursor-pointer">
-            <div class="flex items-center space-x-3">
-                <div class="bg-indigo-50 w-10 h-10 rounded-xl flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition">
-                    <i class="fa-solid fa-address-book text-lg"></i>
-                </div>
-                <div class="text-left">
-                    <div class="font-bold text-slate-700 text-sm">Data Santri & Rekap Total</div>
-                    <div class="text-xs text-slate-400">Kelola database lengkap seluruh santri</div>
-                </div>
-            </div>
-            <i class="fa-solid fa-chevron-right text-slate-300 group-hover:text-indigo-500 transition"></i>
-        </button>
-
-        <div class="pt-2">
-            <div class="flex justify-between items-center mb-3">
-                <div class="text-xs font-bold text-slate-400 uppercase tracking-wider">Santri Terbaru</div>
-                <button onclick="openDataSantriModal()" class="text-xs font-semibold text-indigo-600 hover:underline">Lihat Semua →</button>
-            </div>
-            <div id="recentSantriList" class="space-y-2">
-                <div class="bg-white p-3.5 rounded-2xl border border-slate-100 text-center text-xs text-slate-400">Memuat data...</div>
             </div>
         </div>
-    </div>
 
-    <!-- MODAL: SCAN QR / INPUT NIS DENGAN PREVIEW & PILIHAN MASUK/PULANG -->
-    <div id="modalScan" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center">
-                <h3 class="font-bold text-slate-800"><i class="fa-solid fa-qrcode text-indigo-600 mr-2"></i> Scan QR / Input NIS</h3>
-                <button onclick="closeModal('modalScan')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            
-            <div id="reader" class="w-full rounded-2xl overflow-hidden bg-slate-100 border border-slate-200 min-h-[180px]"></div>
+        <!-- Konten Utama -->
+        <div class="px-5 mt-4 pb-28 flex-1 space-y-4">
 
-            <div class="relative flex py-1 items-center">
-                <div class="flex-grow border-t border-slate-200"></div>
-                <span class="flex-shrink mx-4 text-slate-400 text-xs">Atau Input NIS Manual</span>
-                <div class="flex-grow border-t border-slate-200"></div>
-            </div>
+            <!-- Statistik Kartu (Total Santri & Hadir Hari Ini) -->
+            <div class="grid grid-cols-2 gap-3.5">
+                
+                <!-- Kartu Total Santri (Pembagian Ibtida, Tsanawi, 'Aaliy) -->
+                <div onclick="openClassBreakdownModal()" class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md transition cursor-pointer relative group">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Santri</span>
+                        <div class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition">
+                            <i class="fa-solid fa-users text-xs"></i>
+                        </div>
+                    </div>
+                    <div class="flex items-baseline space-x-2">
+                        <span id="stat-total-santri" class="text-3xl font-extrabold text-slate-900">0</span>
+                        <span class="text-[10px] text-slate-400 font-semibold">Santri</span>
+                    </div>
 
-            <div class="flex space-x-2">
-                <input type="text" id="inputNisScan" placeholder="Masukkan NIS" class="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
-                <button type="button" onclick="checkNisAndShowPreview()" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2.5 rounded-xl font-medium text-sm transition cursor-pointer">Cek</button>
-            </div>
-
-            <!-- BOX KETERANGAN SANTRI & PILIHAN MASUK / PULANG -->
-            <div id="santriPreviewBox" class="hidden bg-slate-50 border border-slate-200 rounded-2xl p-3.5 space-y-3 text-left">
-                <div class="text-xs text-indigo-600 font-bold uppercase tracking-wider flex items-center space-x-1.5">
-                    <i class="fa-solid fa-circle-check"></i> <span>Santri Ditemukan:</span>
+                    <!-- Rincian 3 Kelas -->
+                    <div class="mt-3 pt-2.5 border-t border-slate-100 grid grid-cols-3 gap-1 text-center">
+                        <div class="bg-slate-50 rounded-lg p-1">
+                            <div class="text-[9px] text-slate-400 font-semibold">Ibtida</div>
+                            <div id="stat-ibtida" class="text-xs font-bold text-indigo-600">0</div>
+                        </div>
+                        <div class="bg-slate-50 rounded-lg p-1">
+                            <div class="text-[9px] text-slate-400 font-semibold">Tsanawi</div>
+                            <div id="stat-tsanawi" class="text-xs font-bold text-indigo-600">0</div>
+                        </div>
+                        <div class="bg-slate-50 rounded-lg p-1">
+                            <div class="text-[9px] text-slate-400 font-semibold">'Aaliy</div>
+                            <div id="stat-aaliy" class="text-xs font-bold text-indigo-600">0</div>
+                        </div>
+                    </div>
                 </div>
-                <div>
-                    <div id="previewNama" class="font-bold text-slate-800 text-base">-</div>
-                    <div class="text-xs text-slate-500 mt-0.5">NIS: <span id="previewNis" class="font-medium text-slate-700">-</span> | Kelas: <span id="previewKet" class="font-medium text-slate-700">-</span></div>
+
+                <!-- Kartu Hadir Hari Ini -->
+                <div onclick="openRekapModal()" class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md transition cursor-pointer flex flex-col justify-between">
+                    <div>
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Hadir Hari Ini</span>
+                            <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                                <i class="fa-solid fa-user-check text-xs"></i>
+                            </div>
+                        </div>
+                        <div class="flex items-baseline space-x-2">
+                            <span id="stat-hadir-hari-ini" class="text-3xl font-extrabold text-slate-900">0</span>
+                            <span class="text-[10px] text-emerald-600 font-bold">Santri</span>
+                        </div>
+                    </div>
+                    <div class="mt-3 pt-2 text-[11px] font-semibold text-indigo-600 flex items-center justify-between">
+                        <span>Lihat Detail</span>
+                        <i class="fa-solid fa-chevron-right text-[10px]"></i>
+                    </div>
                 </div>
-                <div class="grid grid-cols-2 gap-2 pt-1">
-                    <button type="button" onclick="submitAbsenFinal('Masuk')" class="bg-emerald-600 hover:bg-emerald-700 text-white py-2.5 rounded-xl font-medium text-xs transition shadow-md shadow-emerald-500/20 flex items-center justify-center space-x-1.5 cursor-pointer">
-                        <i class="fa-solid fa-right-to-bracket"></i> <span>Absen Masuk</span>
+
+            </div>
+
+            <!-- Menu Navigasi -->
+            <div class="space-y-2.5">
+                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 px-1">Menu Navigasi</h2>
+
+                <div class="grid grid-cols-2 gap-3.5">
+                    <button onclick="openScanModal()" class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 hover:border-indigo-200 text-left transition group">
+                        <div class="w-10 h-10 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center mb-3 group-hover:scale-110 transition duration-300">
+                            <i class="fa-solid fa-qrcode text-base"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-sm">Scan QR / Absen</h3>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Kamera atau NIS</p>
                     </button>
-                    <button type="button" onclick="submitAbsenFinal('Pulang')" class="bg-blue-600 hover:bg-blue-700 text-white py-2.5 rounded-xl font-medium text-xs transition shadow-md shadow-blue-500/20 flex items-center justify-center space-x-1.5 cursor-pointer">
-                        <i class="fa-solid fa-right-from-bracket"></i> <span>Absen Pulang</span>
+
+                    <button onclick="openManualModal()" class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 hover:border-indigo-200 text-left transition group">
+                        <div class="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-3 group-hover:scale-110 transition duration-300">
+                            <i class="fa-solid fa-pen-to-square text-base"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-sm">Absen Manual</h3>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Sakit, Izin, atau Alpa</p>
+                    </button>
+
+                    <button onclick="openRekapModal()" class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 hover:border-indigo-200 text-left transition group">
+                        <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-3 group-hover:scale-110 transition duration-300">
+                            <i class="fa-solid fa-clipboard-user text-base"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-sm">Rekap Absen</h3>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Kelola & Hapus Double</p>
+                    </button>
+
+                    <button onclick="openAddSantriModal()" class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 hover:border-indigo-200 text-left transition group">
+                        <div class="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mb-3 group-hover:scale-110 transition duration-300">
+                            <i class="fa-solid fa-user-plus text-base"></i>
+                        </div>
+                        <h3 class="font-bold text-slate-900 text-sm">Tambah Santri</h3>
+                        <p class="text-[11px] text-slate-400 mt-0.5">Daftarkan santri baru</p>
                     </button>
                 </div>
+
+                <button onclick="openDataSantriModal()" class="w-full bg-white p-4 rounded-3xl shadow-sm border border-slate-100 hover:border-indigo-200 flex items-center justify-between transition group text-left">
+                    <div class="flex items-center space-x-3.5">
+                        <div class="w-11 h-11 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition duration-300">
+                            <i class="fa-solid fa-database text-base"></i>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-slate-900 text-sm">Data Santri & Rekap Total</h3>
+                            <p class="text-[11px] text-slate-400 mt-0.5">Kelola database lengkap Ibtida, Tsanawi, & 'Aaliy</p>
+                        </div>
+                    </div>
+                    <div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition">
+                        <i class="fa-solid fa-chevron-right text-xs"></i>
+                    </div>
+                </button>
             </div>
+
+            <!-- Santri Terbaru -->
+            <div class="space-y-2.5">
+                <div class="flex justify-between items-center px-1">
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Santri Terbaru</h2>
+                    <button onclick="openDataSantriModal()" class="text-xs font-bold text-indigo-600 hover:underline">Lihat Semua →</button>
+                </div>
+
+                <div id="recent-santri-list" class="space-y-2">
+                    <div class="bg-white p-4 rounded-2xl border border-slate-100 text-center text-slate-400 text-xs py-6">
+                        Memuat data santri...
+                    </div>
+                </div>
+            </div>
+
         </div>
+
+        <!-- Bottom Navigation Bar -->
+        <div class="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur-lg border-t border-slate-100 px-6 py-3 flex justify-around items-center z-20">
+            <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="flex flex-col items-center text-indigo-600 space-y-1">
+                <i class="fa-solid fa-house text-lg"></i>
+                <span class="text-[10px] font-bold">Beranda</span>
+            </button>
+            <button onclick="openScanModal()" class="flex flex-col items-center text-slate-400 hover:text-indigo-600 space-y-1 transition">
+                <i class="fa-solid fa-qrcode text-lg"></i>
+                <span class="text-[10px] font-medium">Scan</span>
+            </button>
+            <button onclick="openAddSantriModal()" class="w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center shadow-lg shadow-indigo-500/30 -mt-5 hover:scale-105 transition">
+                <i class="fa-solid fa-plus text-lg"></i>
+            </button>
+            <button onclick="openRekapModal()" class="flex flex-col items-center text-slate-400 hover:text-indigo-600 space-y-1 transition">
+                <i class="fa-solid fa-clipboard-user text-lg"></i>
+                <span class="text-[10px] font-medium">Rekap</span>
+            </button>
+            <button onclick="openDataSantriModal()" class="flex flex-col items-center text-slate-400 hover:text-indigo-600 space-y-1 transition">
+                <i class="fa-solid fa-database text-lg"></i>
+                <span class="text-[10px] font-medium">Data</span>
+            </button>
+        </div>
+
     </div>
 
-    <!-- MODAL: HADIR HARI INI -->
-    <div id="modalHadirHariIni" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
-            <div class="flex justify-between items-center">
-                <h3 class="font-bold text-slate-800"><i class="fa-solid fa-user-check text-emerald-600 mr-2"></i> Daftar Hadir (Masuk) Hari Ini</h3>
-                <button onclick="closeModal('modalHadirHariIni')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+    <!-- MODAL: RINCIAN KELAS -->
+    <div id="modal-class-breakdown" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-[2rem] p-6 shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900">Rincian Total Santri</h3>
+                        <p class="text-xs text-slate-400">Pembagian Berdasarkan Jenjang Kelas</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('modal-class-breakdown')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
             </div>
-            <div id="hadirHariIniList" class="overflow-y-auto space-y-2 flex-1 pr-1"></div>
-        </div>
-    </div>
 
-    <!-- MODAL: REKAP HARIAN -->
-    <div id="modalRekap" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
-            <div class="flex justify-between items-center">
-                <h3 class="font-bold text-slate-800"><i class="fa-solid fa-chart-pie text-emerald-600 mr-2"></i> Rekap Absensi Harian</h3>
-                <button onclick="closeModal('modalRekap')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <p class="text-xs text-slate-400">Kelola, ubah status, atau hapus absen hari ini.</p>
-            <div id="rekapHarianList" class="overflow-y-auto space-y-2 flex-1 pr-1"></div>
-        </div>
-    </div>
+            <div class="space-y-3 my-4">
+                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-xs">IB</div>
+                        <div>
+                            <div class="font-bold text-sm text-slate-800">Kelas Ibtida</div>
+                            <div class="text-[11px] text-slate-400">Tingkat Dasar</div>
+                        </div>
+                    </div>
+                    <span id="modal-count-ibtida" class="font-extrabold text-indigo-600 text-base">0 Santri</span>
+                </div>
 
-    <!-- MODAL: EDIT ABSEN -->
-    <div id="modalEditAbsen" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center">
-                <h3 class="font-bold text-slate-800"><i class="fa-solid fa-pen text-indigo-600 mr-2"></i> Edit Status Absen</h3>
-                <button onclick="closeModal('modalEditAbsen')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <input type="hidden" id="editIdAbsen">
-            <div class="space-y-3">
-                <div>
-                    <label class="text-xs font-semibold text-slate-600 mb-1 block">Nama Santri</label>
-                    <input type="text" id="editNamaAbsen" disabled class="w-full bg-slate-100 border border-slate-200 rounded-xl px-3 py-2.5 text-sm text-slate-500">
+                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs">TS</div>
+                        <div>
+                            <div class="font-bold text-sm text-slate-800">Kelas Tsanawi</div>
+                            <div class="text-[11px] text-slate-400">Tingkat Menengah</div>
+                        </div>
+                    </div>
+                    <span id="modal-count-tsanawi" class="font-extrabold text-blue-600 text-base">0 Santri</span>
                 </div>
-                <div>
-                    <label class="text-xs font-semibold text-slate-600 mb-1 block">Status Kehadiran</label>
-                    <select id="editStatusAbsen" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
-                        <option value="Masuk">Masuk</option>
-                        <option value="Pulang">Pulang</option>
-                        <option value="Sakit">Sakit</option>
-                        <option value="Izin">Izin</option>
-                        <option value="Alpa">Alpa</option>
-                    </select>
-                </div>
-                <button onclick="submitEditAbsen()" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white py-3 rounded-xl font-medium text-sm transition shadow-lg shadow-indigo-500/20 cursor-pointer">Simpan Perubahan</button>
-            </div>
-        </div>
-    </div>
 
-    <!-- MODAL: ABSEN MANUAL -->
-    <div id="modalAbsenManual" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center">
-                <h3 class="font-bold text-slate-800"><i class="fa-solid fa-pen-to-square text-blue-600 mr-2"></i> Absen Manual</h3>
-                <button onclick="closeModal('modalAbsenManual')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
-            </div>
-            <div class="space-y-3">
-                <div>
-                    <label class="text-xs font-semibold text-slate-600 mb-1 block">Pilih Santri</label>
-                    <select id="selectSantriManual" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
-                        <option value="">-- Pilih Santri --</option>
-                    </select>
+                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 flex justify-between items-center">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-xs">AL</div>
+                        <div>
+                            <div class="font-bold text-sm text-slate-800">Kelas 'Aaliy</div>
+                            <div class="text-[11px] text-slate-400">Tingkat Lanjutan / Atas</div>
+                        </div>
+                    </div>
+                    <span id="modal-count-aaliy" class="font-extrabold text-purple-600 text-base">0 Santri</span>
                 </div>
-                <div>
-                    <label class="text-xs font-semibold text-slate-600 mb-1 block">Status Keterangan</label>
-                    <select id="selectStatusManual" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
-                        <option value="Masuk">Masuk</option>
-                        <option value="Pulang">Pulang</option>
-                        <option value="Sakit">Sakit</option>
-                        <option value="Izin">Izin</option>
-                        <option value="Alpa">Alpa</option>
-                    </select>
-                </div>
-                <button onclick="submitAbsenManualData()" class="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-medium text-sm transition shadow-lg shadow-blue-500/20 cursor-pointer">Simpan Absen</button>
             </div>
+
+            <button onclick="closeModal('modal-class-breakdown'); openDataSantriModal();" class="w-full bg-indigo-600 text-white py-3 rounded-2xl font-bold text-sm hover:bg-indigo-700 transition shadow-lg shadow-indigo-500/25">
+                Kelola Seluruh Data Santri
+            </button>
         </div>
     </div>
 
     <!-- MODAL: TAMBAH SANTRI -->
-    <div id="modalTambahSantri" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center">
-                <h3 class="font-bold text-slate-800"><i class="fa-solid fa-user-plus text-amber-600 mr-2"></i> Tambah Santri</h3>
-                <button onclick="closeModal('modalTambahSantri')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+    <div id="modal-add-santri" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-[2rem] p-6 shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                        <i class="fa-solid fa-user-plus"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900">Tambah Santri Baru</h3>
+                        <p class="text-xs text-slate-400">Daftarkan santri ke database</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('modal-add-santri')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
             </div>
+
+            <form id="form-add-santri" onsubmit="handleTambahSantri(event)" class="space-y-3.5">
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Nomor Induk Santri (NIS)</label>
+                    <input type="text" id="input-nis" required placeholder="Contoh: 2026001" class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-indigo-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap Santri</label>
+                    <input type="text" id="input-nama" required placeholder="Contoh: Ahmad Fauzan" class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-indigo-600">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Jenjang Kelas</label>
+                    <select id="input-kelas" required class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-indigo-600">
+                        <option value="Ibtida">Ibtida (Dasar)</option>
+                        <option value="Tsanawi">Tsanawi (Menengah)</option>
+                        <option value="'Aaliy">'Aaliy (Lanjutan)</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Kamar / Asrama</label>
+                    <input type="text" id="input-asrama" required placeholder="Contoh: Asrama Al-Ghazali 03" class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-indigo-600">
+                </div>
+
+                <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-2xl font-bold text-sm hover:bg-indigo-700 transition shadow-lg shadow-indigo-500/25 mt-2">
+                    Simpan Santri Baru
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <!-- MODAL: SCAN QR / ABSEN -->
+    <div id="modal-scan" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-[2rem] p-6 shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center">
+                        <i class="fa-solid fa-qrcode"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900">Scan QR / Absen</h3>
+                        <p class="text-xs text-slate-400">Arahkan kamera ke kartu santri</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('modal-scan')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <div class="bg-slate-900 rounded-2xl h-48 flex flex-col items-center justify-center relative overflow-hidden mb-4 border border-slate-800">
+                <div class="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:2rem_2rem] opacity-30"></div>
+                <div class="w-32 h-32 border-2 border-indigo-500 rounded-2xl relative flex items-center justify-center animate-pulse">
+                    <div class="absolute w-full h-0.5 bg-emerald-400 shadow-[0_0_10px_#10b981] animate-bounce"></div>
+                    <i class="fa-solid fa-camera text-slate-600 text-3xl"></i>
+                </div>
+                <span class="text-[11px] text-slate-400 mt-3 font-medium z-10">Kamera Scanner Aktif...</span>
+            </div>
+
             <div class="space-y-3">
-                <div>
-                    <label class="text-xs font-semibold text-slate-600 mb-1 block">NIS</label>
-                    <input type="number" id="addNis" placeholder="Contoh: 1004" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+                <div class="relative">
+                    <input type="text" id="scan-nis-input" placeholder="Atau ketik NIS santri di sini..." class="w-full pl-4 pr-12 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-indigo-600">
+                    <button onclick="prosesAbsenNIS()" class="absolute right-1.5 top-1.5 bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-indigo-700 transition">
+                        Absen
+                    </button>
                 </div>
-                <div>
-                    <label class="text-xs font-semibold text-slate-600 mb-1 block">Nama Lengkap</label>
-                    <input type="text" id="addNama" placeholder="Nama Santri" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
-                </div>
-                <div>
-                    <label class="text-xs font-semibold text-slate-600 mb-1 block">Kelas / Keterangan</label>
-                    <input type="text" id="addKeterangan" placeholder="Contoh: 'Aaliy" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
-                </div>
-                <button onclick="submitTambahSantri()" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-xl font-medium text-sm transition shadow-lg shadow-amber-500/20 cursor-pointer">Tambah Santri</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL: DATA SANTRI -->
-    <div id="modalDataSantri" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-3xl p-5 shadow-2xl space-y-4 max-h-[85vh] flex flex-col">
-            <div class="flex justify-between items-center">
-                <h3 class="font-bold text-slate-800"><i class="fa-solid fa-address-book text-indigo-600 mr-2"></i> Database Santri</h3>
-                <button onclick="closeModal('modalDataSantri')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+    <!-- MODAL: ABSEN MANUAL (Dropdown Hanya Muncul Saat Diketik) -->
+    <div id="modal-manual" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-sm rounded-[2rem] p-6 shadow-2xl">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900">Absen Manual</h3>
+                        <p class="text-xs text-slate-400">Sakit, Izin, atau Alpa</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('modal-manual')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
             </div>
-            <div id="databaseSantriList" class="overflow-y-auto space-y-2 flex-1 pr-1"></div>
+
+            <form onsubmit="handleAbsenManual(event)" class="space-y-3.5">
+                <div class="relative">
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Cari / Ketik Nama atau NIS Santri</label>
+                    <input type="text" id="manual-input-search" autocomplete="off" oninput="filterAutocomplete()" placeholder="Ketik nama atau NIS santri..." class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-indigo-600">
+                    
+                    <!-- Custom Dropdown Suggestions (Hanya Muncul Saat Ada Ketikan) -->
+                    <div id="autocomplete-list" class="absolute left-0 right-0 mt-1 bg-white border border-slate-100 rounded-2xl shadow-xl max-h-48 overflow-y-auto z-30 hidden">
+                        <!-- Populated by JS -->
+                    </div>
+                </div>
+
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Status Kehadiran</label>
+                    <select id="manual-status" required class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-indigo-600">
+                        <option value="Sakit">Sakit</option>
+                        <option value="Izin">Izin</option>
+                        <option value="Alpa">Alpa</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-slate-600 mb-1">Keterangan / Catatan</label>
+                    <input type="text" id="manual-keterangan" placeholder="Contoh: Surat dokter terlampir" class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-indigo-600">
+                </div>
+
+                <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-2xl font-bold text-sm hover:bg-indigo-700 transition shadow-lg shadow-indigo-500/25 mt-2">
+                    Simpan Absen
+                </button>
+            </form>
         </div>
     </div>
 
-    <!-- MODAL: EDIT SANTRI -->
-    <div id="modalEditSantri" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-3xl p-5 shadow-2xl space-y-4">
-            <div class="flex justify-between items-center">
-                <h3 class="font-bold text-slate-800"><i class="fa-solid fa-user-pen text-amber-600 mr-2"></i> Edit Data Santri</h3>
-                <button onclick="closeModal('modalEditSantri')" class="text-slate-400 hover:text-slate-600"><i class="fa-solid fa-xmark text-lg"></i></button>
+    <!-- MODAL: REKAP ABSEN & HAPUS DOUBLE -->
+    <div id="modal-rekap" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-[2rem] p-6 shadow-2xl max-h-[85vh] flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                        <i class="fa-solid fa-clipboard-user"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900">Rekap Absen Hari Ini</h3>
+                        <p class="text-xs text-slate-400">Kelola & Bersihkan Absen Double</p>
+                    </div>
+                </div>
+                <button onclick="closeModal('modal-rekap')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
             </div>
-            <input type="hidden" id="editNisSantri">
-            <div class="space-y-3">
-                <div>
-                    <label class="text-xs font-semibold text-slate-600 mb-1 block">Nama Lengkap</label>
-                    <input type="text" id="editNamaSantri" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+
+            <div class="flex justify-between items-center mb-3">
+                <span id="rekap-count-info" class="text-xs font-bold text-slate-500">Total Absen: 0</span>
+                <button onclick="hapusAbsenDouble()" class="bg-rose-50 text-rose-600 px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-rose-100 transition flex items-center space-x-1.5">
+                    <i class="fa-solid fa-broom"></i>
+                    <span>Hapus Double</span>
+                </button>
+            </div>
+
+            <div id="rekap-list-container" class="space-y-2.5 overflow-y-auto flex-1 pr-1">
+                <div class="text-center text-slate-400 text-xs py-8">Belum ada data absensi hari ini.</div>
+            </div>
+
+            <button onclick="closeModal('modal-rekap')" class="w-full bg-slate-100 text-slate-700 py-3 rounded-2xl font-bold text-sm hover:bg-slate-200 transition mt-4">
+                Tutup
+            </button>
+        </div>
+    </div>
+
+    <!-- MODAL: DATA SANTRI & REKAP TOTAL -->
+    <div id="modal-data-santri" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white w-full max-w-md rounded-[2rem] p-6 shadow-2xl max-h-[85vh] flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+                <div class="flex items-center space-x-3">
+                    <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                        <i class="fa-solid fa-database"></i>
+                    </div>
+                    <div>
+                        <h3 class="font-bold text-slate-900">Database Seluruh Santri</h3>
+                        <p class="text-xs text-slate-400">Ibtida, Tsanawi, & 'Aaliy</p>
+                    </div>
                 </div>
-                <div>
-                    <label class="text-xs font-semibold text-slate-600 mb-1 block">Kelas / Keterangan</label>
-                    <input type="text" id="editKetSantri" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:border-indigo-500">
+                <button onclick="closeModal('modal-data-santri')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200">
+                    <i class="fa-solid fa-xmark text-sm"></i>
+                </button>
+            </div>
+
+            <!-- Search & Filter Kelas -->
+            <div class="space-y-2.5 mb-3">
+                <input type="text" id="search-database" oninput="renderDatabaseSantri()" placeholder="Cari nama atau NIS santri..." class="w-full px-4 py-2 rounded-2xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:border-indigo-600">
+                <div class="flex space-x-2">
+                    <button onclick="filterDatabase('Semua')" id="btn-filter-semua" class="flex-1 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 text-white transition">Semua</button>
+                    <button onclick="filterDatabase('Ibtida')" id="btn-filter-ibtida" class="flex-1 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 transition">Ibtida</button>
+                    <button onclick="filterDatabase('Tsanawi')" id="btn-filter-tsanawi" class="flex-1 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 transition">Tsanawi</button>
+                    <button onclick="filterDatabase('Aaliy')" id="btn-filter-aaliy" class="flex-1 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 transition">'Aaliy</button>
                 </div>
-                <button onclick="submitEditSantri()" class="w-full bg-amber-600 hover:bg-amber-700 text-white py-3 rounded-xl font-medium text-sm transition shadow-lg shadow-amber-500/20 cursor-pointer">Simpan Perubahan</button>
+            </div>
+
+            <div id="database-list-container" class="space-y-2.5 overflow-y-auto flex-1 pr-1">
+                <!-- List santri database -->
+            </div>
+
+            <div class="pt-3 border-t border-slate-100 mt-2 flex justify-between items-center">
+                <span id="database-count-info" class="text-xs font-bold text-slate-500">Total: 0 Santri</span>
+                <button onclick="openAddSantriModal(); closeModal('modal-data-santri');" class="bg-indigo-50 text-indigo-600 px-3 py-2 rounded-xl text-xs font-bold hover:bg-indigo-100 transition">
+                    + Tambah Santri
+                </button>
             </div>
         </div>
     </div>
 
-    <!-- LOGIKA JAVASCRIPT FETCH API -->
+    <!-- JavaScript Logika Aplikasi -->
     <script>
-        const GAS_URL = "https://script.google.com/macros/s/AKfycbw8ZNyKvPFxdUDeJpUE8oCFpG3SIcViph_xXV07NUwX8qH5akzcG3QVaNeKV5dDpzNwMQ/exec";
+        let santriList = JSON.parse(localStorage.getItem('imtql_santri')) || [
+            { nis: '2026001', nama: 'Ahmad Fauzan', kelas: 'Ibtida', asrama: 'Al-Ghazali 01' },
+            { nis: '2026002', nama: 'Muhammad Zidan', kelas: 'Tsanawi', asrama: 'An-Nawawi 02' },
+            { nis: '2026003', nama: 'Fatimah Az-Zahra', kelas: "'Aaliy", asrama: 'Fatimah 03' },
+            { nis: '2026004', nama: 'Rizki Ramadhan', kelas: 'Ibtida', asrama: 'Al-Ghazali 02' },
+            { nis: '2026005', nama: 'Siti Aisyah', kelas: 'Tsanawi', asrama: 'Fatimah 01' }
+        ];
 
-        let allSantri = [];
-        let allAbsensi = [];
-        let html5QrCode = null;
-        let activeScannedNis = null;
+        let absensiList = JSON.parse(localStorage.getItem('imtql_absensi')) || [
+            { nis: '2026001', nama: 'Ahmad Fauzan', kelas: 'Ibtida', status: 'Hadir', waktu: '07:15', keterangan: '' }
+        ];
 
-        function getLocalDateString() {
-            let d = new Date();
-            let year = d.getFullYear();
-            let month = String(d.getMonth() + 1).padStart(2, '0');
-            let day = String(d.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
+        let currentFilterKelas = 'Semua';
 
-        async function callApi(action, data = {}) {
-            try {
-                // Menambahkan parameter &t= agar browser tidak melakukan cache pada GET request
-                let url = GAS_URL + "?action=" + action + "&t=" + new Date().getTime();
-                for (let key in data) {
-                    url += `&${key}=` + encodeURIComponent(data[key]);
-                }
-
-                let response = await fetch(url);
-                let result = await response.json();
-                return result;
-            } catch (err) {
-                console.error("Gagal terhubung ke API GAS:", err);
-                throw err;
-            }
-        }
-
-        document.addEventListener("DOMContentLoaded", () => {
-            const options = { weekday: 'long', year: 'numeric', month: 'short', day: 'numeric' };
-            document.getElementById('currentDate').innerHTML = `<i class="fa-regular fa-calendar-days"></i> <span>${new Date().toLocaleDateString('id-ID', options)}</span>`;
-            fetchData();
+        document.getElementById('current-date').innerText = new Date().toLocaleDateString('id-ID', {
+            weekday: 'long', day: 'numeric', month: 'short', year: 'numeric'
         });
 
-        async function fetchData() {
-            try {
-                allSantri = await callApi('getSantri');
-                allAbsensi = await callApi('getAbsensi');
-                let stats = await callApi('getStats', { clientDate: getLocalDateString() });
-
-                document.getElementById('statTotalSantri').innerText = stats.totalSantri;
-                document.getElementById('statHadirHariIni').innerText = stats.hadirHariIni;
-
-                renderRecentSantri();
-                populateSelectSantri();
-            } catch (err) {
-                console.error("Gagal memuat data:", err);
-            }
+        function saveData() {
+            localStorage.setItem('imtql_santri', JSON.stringify(santriList));
+            localStorage.setItem('imtql_absensi', JSON.stringify(absensiList));
+            updateDashboard();
         }
 
-        function renderRecentSantri() {
-            const container = document.getElementById('recentSantriList');
-            if(allSantri.length === 0) {
-                container.innerHTML = `<div class="bg-white p-3.5 rounded-2xl border border-slate-100 text-center text-xs text-slate-400">Belum ada data santri</div>`;
-                return;
-            }
-            let html = '';
-            let recent = allSantri.slice(-3).reverse();
-            recent.forEach(s => {
-                html += `
-                <div class="bg-white p-3.5 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm">
-                    <div>
-                        <div class="font-bold text-slate-700 text-sm">${s.Nama}</div>
-                        <div class="text-xs text-slate-400">NIS: ${s.NIS}</div>
+        function updateDashboard() {
+            const total = santriList.length;
+            const ibtidaCount = santriList.filter(s => s.kelas === 'Ibtida').length;
+            const tsanawiCount = santriList.filter(s => s.kelas === 'Tsanawi').length;
+            const aaliyCount = santriList.filter(s => s.kelas === "'Aaliy" || s.kelas === 'Aaliy').length;
+
+            document.getElementById('stat-total-santri').innerText = total;
+            document.getElementById('stat-ibtida').innerText = ibtidaCount;
+            document.getElementById('stat-tsanawi').innerText = tsanawiCount;
+            document.getElementById('stat-aaliy').innerText = aaliyCount;
+
+            document.getElementById('modal-count-ibtida').innerText = ibtidaCount + ' Santri';
+            document.getElementById('modal-count-tsanawi').innerText = tsanawiCount + ' Santri';
+            document.getElementById('modal-count-aaliy').innerText = aaliyCount + ' Santri';
+
+            const hadirHariIni = absensiList.filter(a => a.status === 'Hadir').length;
+            document.getElementById('stat-hadir-hari-ini').innerText = hadirHariIni;
+
+            const recentContainer = document.getElementById('recent-santri-list');
+            if (santriList.length === 0) {
+                recentContainer.innerHTML = '<div class="bg-white p-4 rounded-2xl border border-slate-100 text-center text-slate-400 text-xs py-6">Belum ada santri terdaftar.</div>';
+            } else {
+                recentContainer.innerHTML = santriList.slice(-3).reverse().map(s => `
+                    <div class="bg-white p-3.5 rounded-2xl border border-slate-100 flex justify-between items-center">
+                        <div class="flex items-center space-x-3">
+                            <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-xs">
+                                ${s.nama.substring(0,2).toUpperCase()}
+                            </div>
+                            <div>
+                                <h4 class="font-bold text-xs text-slate-900">${s.nama}</h4>
+                                <p class="text-[10px] text-slate-400">NIS: ${s.nis} • Kelas: ${s.kelas}</p>
+                            </div>
+                        </div>
+                        <span class="px-2.5 py-1 bg-indigo-50 text-indigo-600 rounded-lg text-[10px] font-bold">${s.kelas}</span>
                     </div>
-                    <span class="bg-slate-100 text-slate-600 text-xs px-2.5 py-1 rounded-full font-medium">${s.Keterangan || 'Aktif'}</span>
-                </div>`;
-            });
-            container.innerHTML = html;
-        }
-
-        function populateSelectSantri() {
-            const select = document.getElementById('selectSantriManual');
-            let html = '<option value="">-- Pilih Santri --</option>';
-            allSantri.forEach(s => {
-                html += `<option value="${s.NIS}">${s.NIS} - ${s.Nama}</option>`;
-            });
-            select.innerHTML = html;
+                `).join('');
+            }
         }
 
         function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
-        
-        function closeModal(id) { 
-            document.getElementById(id).classList.add('hidden'); 
-            if(id === 'modalScan') {
-                document.getElementById('santriPreviewBox').classList.add('hidden');
-                document.getElementById('inputNisScan').value = "";
-                activeScannedNis = null;
-                if(html5QrCode) {
-                    html5QrCode.stop().then(() => {
-                        html5QrCode.clear();
-                        html5QrCode = null;
-                    }).catch(() => {
-                        html5QrCode = null;
-                    });
-                }
+        function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+        function openClassBreakdownModal() { openModal('modal-class-breakdown'); }
+        function openAddSantriModal() { openModal('modal-add-santri'); }
+        function openScanModal() { openModal('modal-scan'); }
+        function openManualModal() { 
+            document.getElementById('manual-input-search').value = '';
+            document.getElementById('manual-keterangan').value = '';
+            document.getElementById('autocomplete-list').classList.add('hidden');
+            openModal('modal-manual'); 
+            updateDashboard(); 
+        }
+        function openRekapModal() { renderRekapAbsen(); openModal('modal-rekap'); }
+        function openDataSantriModal() { renderDatabaseSantri(); openModal('modal-data-santri'); }
+
+        // Logika Autocomplete: Hanya Muncul Saat Diketik (Tidak Muncul Saat Fokus Kosong)
+        function filterAutocomplete() {
+            const keyword = document.getElementById('manual-input-search').value.toLowerCase().trim();
+            const container = document.getElementById('autocomplete-list');
+
+            if (keyword === '') {
+                container.classList.add('hidden');
+                return;
+            }
+
+            const filtered = santriList.filter(s => s.nama.toLowerCase().includes(keyword) || s.nis.includes(keyword) || s.kelas.toLowerCase().includes(keyword));
+            
+            if (filtered.length > 0) {
+                container.innerHTML = filtered.map(s => `
+                    <div onclick="selectSantri('${s.nis}', '${s.nama}', '${s.kelas}')" class="p-3 hover:bg-indigo-50 cursor-pointer text-xs border-b border-slate-50 last:border-none">
+                        <div class="font-bold text-slate-800">${s.nis} - ${s.nama}</div>
+                        <div class="text-[10px] text-slate-400">Kelas: ${s.kelas} • Asrama: ${s.asrama}</div>
+                    </div>
+                `).join('');
+                container.classList.remove('hidden');
+            } else {
+                container.innerHTML = '<div class="p-3 text-xs text-slate-400 text-center">Santri tidak ditemukan</div>';
+                container.classList.remove('hidden');
             }
         }
 
-        function openScanModal() {
-            openModal('modalScan');
-            document.getElementById('santriPreviewBox').classList.add('hidden');
-            setTimeout(() => {
-                if (!html5QrCode) {
-                    html5QrCode = new Html5Qrcode("reader");
-                }
-                html5QrCode.start(
-                    { facingMode: "environment" },
-                    { fps: 10, qrbox: { width: 180, height: 180 } },
-                    (decodedText) => {
-                        handleScanResult(decodedText);
-                    },
-                    () => {}
-                ).catch(err => {
-                    console.log("Kamera tidak aktif:", err);
-                    document.getElementById('reader').innerHTML = `<div class="p-4 text-center text-xs text-slate-400 flex flex-col items-center justify-center h-full"><i class="fa-solid fa-camera-slash text-lg mb-1 text-slate-300"></i>Kamera tidak tersedia. Gunakan input NIS manual.</div>`;
+        function selectSantri(nis, nama, kelas) {
+            document.getElementById('manual-input-search').value = `${nis} - ${nama} (${kelas})`;
+            document.getElementById('autocomplete-list').classList.add('hidden');
+        }
+
+        window.addEventListener('click', function(e) {
+            const container = document.getElementById('modal-manual');
+            const searchInput = document.getElementById('manual-input-search');
+            const list = document.getElementById('autocomplete-list');
+            if (container && !container.contains(e.target) && e.target !== searchInput) {
+                if (list) list.classList.add('hidden');
+            }
+        });
+
+        function handleTambahSantri(e) {
+            e.preventDefault();
+            const nis = document.getElementById('input-nis').value.trim();
+            const nama = document.getElementById('input-nama').value.trim();
+            const kelas = document.getElementById('input-kelas').value;
+            const asrama = document.getElementById('input-asrama').value.trim();
+
+            if (santriList.some(s => s.nis === nis)) {
+                alert('NIS sudah terdaftar dalam sistem!');
+                return;
+            }
+
+            santriList.push({ nis, nama, kelas, asrama });
+            saveData();
+            closeModal('modal-add-santri');
+            document.getElementById('form-add-santri').reset();
+            alert('Santri berhasil didaftarkan!');
+        }
+
+        function prosesAbsenNIS() {
+            const nis = document.getElementById('scan-nis-input').value.trim();
+            if (!nis) return;
+
+            const santri = santriList.find(s => s.nis === nis);
+            if (!santri) {
+                alert('Santri dengan NIS tersebut tidak ditemukan!');
+                return;
+            }
+
+            const alreadyAbsen = absensiList.find(a => a.nis === nis);
+            const waktuSekarang = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+
+            if (alreadyAbsen) {
+                alreadyAbsen.status = 'Hadir';
+                alreadyAbsen.waktu = waktuSekarang;
+            } else {
+                absensiList.push({
+                    nis: santri.nis,
+                    nama: santri.nama,
+                    kelas: santri.kelas,
+                    status: 'Hadir',
+                    waktu: waktuSekarang,
+                    keterangan: 'Scan QR / NIS'
                 });
-            }, 300);
+            }
+
+            saveData();
+            document.getElementById('scan-nis-input').value = '';
+            closeModal('modal-scan');
+            alert(`Absensi Berhasil: ${santri.nama} (Hadir)`);
         }
 
-        async function handleScanResult(nis) {
-            let cleanNis = String(nis).trim();
-            if(!allSantri || allSantri.length === 0) {
-                allSantri = await callApi('getSantri');
-            }
-            let santri = allSantri.find(s => String(s.NIS).trim() === cleanNis);
-            if(!santri) {
-                alert("Santri dengan NIS " + cleanNis + " tidak ditemukan di database!");
-                return;
-            }
-            showSantriPreview(santri);
-        }
+        function handleAbsenManual(e) {
+            e.preventDefault();
+            const inputVal = document.getElementById('manual-input-search').value.trim();
+            const status = document.getElementById('manual-status').value;
+            const keterangan = document.getElementById('manual-keterangan').value.trim();
 
-        async function checkNisAndShowPreview() {
-            let inputEl = document.getElementById('inputNisScan');
-            let nis = inputEl ? inputEl.value.trim() : "";
-            
-            if(!nis) {
-                alert("Masukkan NIS terlebih dahulu!");
+            let santri = santriList.find(s => inputVal.includes(s.nis) || s.nama.toLowerCase() === inputVal.toLowerCase() || s.nis === inputVal);
+
+            if (!santri) {
+                alert('Santri tidak ditemukan! Silakan pilih dari daftar atau pastikan NIS/Nama benar.');
                 return;
             }
 
-            if(!allSantri || allSantri.length === 0) {
-                allSantri = await callApi('getSantri');
+            const waktuSekarang = new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+            const existing = absensiList.find(a => a.nis === santri.nis);
+
+            if (existing) {
+                existing.status = status;
+                existing.waktu = waktuSekarang;
+                existing.keterangan = keterangan;
+            } else {
+                absensiList.push({
+                    nis: santri.nis,
+                    nama: santri.nama,
+                    kelas: santri.kelas,
+                    status,
+                    waktu: waktuSekarang,
+                    keterangan
+                });
             }
 
-            let cleanNis = String(nis).trim();
-            let santri = allSantri.find(s => String(s.NIS).trim() === cleanNis);
-            
-            if(!santri) {
-                alert("Santri dengan NIS " + cleanNis + " tidak ditemukan di database!");
-                document.getElementById('santriPreviewBox').classList.add('hidden');
+            saveData();
+            closeModal('modal-manual');
+            alert(`Absen ${status} untuk ${santri.nama} berhasil dicatat!`);
+        }
+
+        function renderRekapAbsen() {
+            const container = document.getElementById('rekap-list-container');
+            document.getElementById('rekap-count-info').innerText = `Total Absen: ${absensiList.length}`;
+
+            if (absensiList.length === 0) {
+                container.innerHTML = '<div class="text-center text-slate-400 text-xs py-8">Belum ada data absensi hari ini.</div>';
                 return;
             }
 
-            showSantriPreview(santri);
-        }
+            container.innerHTML = absensiList.map((a, index) => {
+                let badgeColor = 'bg-emerald-50 text-emerald-600';
+                if (a.status === 'Sakit') badgeColor = 'bg-amber-50 text-amber-600';
+                else if (a.status === 'Izin') badgeColor = 'bg-blue-50 text-blue-600';
+                else if (a.status === 'Alpa') badgeColor = 'bg-rose-50 text-rose-600';
 
-        function showSantriPreview(santri) {
-            activeScannedNis = santri.NIS;
-            document.getElementById('previewNama').innerText = santri.Nama;
-            document.getElementById('previewNis').innerText = santri.NIS;
-            document.getElementById('previewKet').innerText = santri.Keterangan || '-';
-            document.getElementById('santriPreviewBox').classList.remove('hidden');
-        }
-
-        async function submitAbsenFinal(status) {
-            if(!activeScannedNis) return alert("Pilih santri terlebih dahulu!");
-            let santri = allSantri.find(s => String(s.NIS).trim() === String(activeScannedNis).trim());
-            if(!santri) return alert("Data santri tidak valid!");
-
-            closeModal('modalScan');
-            await recordAbsen(santri.NIS, santri.Nama, status, status);
-        }
-
-        async function submitAbsenManualData() {
-            let nis = document.getElementById('selectSantriManual').value;
-            let status = document.getElementById('selectStatusManual').value;
-            if(!nis) return alert("Pilih santri terlebih dahulu!");
-            
-            if(!allSantri || allSantri.length === 0) {
-                allSantri = await callApi('getSantri');
-            }
-
-            let cleanNis = String(nis).trim();
-            let santri = allSantri.find(s => String(s.NIS).trim() === cleanNis);
-            if(!santri) {
-                alert("Santri tidak ditemukan!");
-                return;
-            }
-            closeModal('modalAbsenManual');
-            await recordAbsen(santri.NIS, santri.Nama, status, status);
-        }
-
-        async function submitTambahSantri() {
-            let nis = document.getElementById('addNis').value.trim();
-            let nama = document.getElementById('addNama').value.trim();
-            let ket = document.getElementById('addKeterangan').value.trim();
-            if(!nis || !nama) return alert("NIS dan Nama wajib diisi!");
-
-            try {
-                let result = await callApi('addSantri', { nis, nama, keterangan: ket });
-                if(result.status === "success") {
-                    alert("Santri berhasil ditambahkan!");
-                    closeModal('modalTambahSantri');
-                    document.getElementById('addNis').value = "";
-                    document.getElementById('addNama').value = "";
-                    document.getElementById('addKeterangan').value = "";
-                    await fetchData();
-                } else {
-                    alert("Gagal: " + result.message);
-                }
-            } catch(err) {
-                alert("Gagal menambah santri: " + err);
-            }
-        }
-
-        async function recordAbsen(nis, nama, status, keterangan) {
-            let today = getLocalDateString();
-            try {
-                let res = await callApi('absen', { tanggal: today, nis, nama, status, keterangan });
-                if (res && res.status === "success") {
-                    alert(`Berhasil mencatat absen ${status}: ${nama}`);
-                    // Tunggu 1 detik agar Google Sheets sempat menulis data, lalu ambil data terbaru
-                    setTimeout(async () => {
-                        await fetchData();
-                    }, 1000);
-                } else {
-                    alert("Gagal mencatat ke Sheet: " + (res ? res.message : "Kesalahan server"));
-                }
-            } catch(err) {
-                alert("Gagal terhubung ke server: " + err);
-            }
-        }
-
-        function openHadirHariIniModal() {
-            openModal('modalHadirHariIni');
-            const container = document.getElementById('hadirHariIniList');
-            let today = getLocalDateString();
-            
-            let todayHadir = allAbsensi.filter(a => {
-                if(!a.Tanggal || !a.Status) return false;
-                let t = String(a.Tanggal).substring(0, 10);
-                let statusClean = String(a.Status).trim().toLowerCase();
-                return t === today && (statusClean === 'masuk' || statusClean === 'hadir');
-            });
-
-            if(todayHadir.length === 0) {
-                container.innerHTML = `<div class="p-4 text-center text-xs text-slate-400">Belum ada santri yang absen masuk hari ini.</div>`;
-                return;
-            }
-
-            let html = '';
-            todayHadir.forEach(a => {
-                html += `
-                <div class="bg-white p-3 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm">
-                    <div>
-                        <div class="font-bold text-slate-700 text-sm">${a.Nama} <span class="text-xs text-slate-400">(${a.NIS})</span></div>
-                        <div class="text-xs text-emerald-600 font-medium mt-0.5">Absen ${a.Status}</div>
-                    </div>
-                    <span class="bg-emerald-50 text-emerald-600 text-xs px-2.5 py-1 rounded-full font-medium border border-emerald-200">${a.Status}</span>
-                </div>`;
-            });
-            container.innerHTML = html;
-        }
-
-        function openRekapModal() {
-            openModal('modalRekap');
-            const container = document.getElementById('rekapHarianList');
-            let today = getLocalDateString();
-            let todayAbsen = allAbsensi.filter(a => {
-                if(!a.Tanggal) return false;
-                let t = String(a.Tanggal).substring(0, 10);
-                return t === today;
-            });
-
-            if(todayAbsen.length === 0) {
-                container.innerHTML = `<div class="p-4 text-center text-xs text-slate-400">Belum ada absensi hari ini.</div>`;
-                return;
-            }
-
-            let html = '';
-            todayAbsen.forEach(a => {
-                let badgeColor = String(a.Status).trim().toLowerCase() === 'masuk' ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-blue-50 text-blue-600 border-blue-200';
-                html += `
-                <div class="bg-white p-3 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm">
-                    <div>
-                        <div class="font-bold text-slate-700 text-sm">${a.Nama} <span class="text-xs text-slate-400">(${a.NIS})</span></div>
-                        <div class="flex items-center space-x-2 mt-1">
-                            <span class="text-xs px-2 py-0.5 rounded-md border font-medium ${badgeColor}">${a.Status}</span>
+                return `
+                    <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 flex justify-between items-center">
+                        <div>
+                            <div class="flex items-center space-x-2">
+                                <h4 class="font-bold text-xs text-slate-900">${a.nama}</h4>
+                                <span class="px-2 py-0.5 rounded-md text-[9px] font-bold ${badgeColor}">${a.status}</span>
+                            </div>
+                            <p class="text-[10px] text-slate-400 mt-0.5">NIS: ${a.nis} • Kelas: ${a.kelas} • Pukul ${a.waktu}</p>
+                            ${a.keterangan ? `<p class="text-[10px] text-indigo-600 mt-1 italic">Catatan: ${a.keterangan}</p>` : ''}
                         </div>
-                    </div>
-                    <div class="flex space-x-1">
-                        <button onclick="openEditAbsen('${a.ID}', '${a.Nama}', '${a.Status}')" class="bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white p-2 rounded-xl transition text-xs" title="Edit">
-                            <i class="fa-solid fa-pen"></i>
-                        </button>
-                        <button onclick="deleteAbsen('${a.ID}')" class="bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white p-2 rounded-xl transition text-xs" title="Hapus">
-                            <i class="fa-solid fa-trash"></i>
+                        <button onclick="hapusAbsenItem(${index})" class="text-slate-400 hover:text-rose-600 p-2">
+                            <i class="fa-solid fa-trash-can text-xs"></i>
                         </button>
                     </div>
-                </div>`;
+                `;
+            }).join('');
+        }
+
+        function hapusAbsenItem(index) {
+            absensiList.splice(index, 1);
+            saveData();
+            renderRekapAbsen();
+        }
+
+        function hapusAbsenDouble() {
+            const uniqueMap = new Map();
+            absensiList.forEach(item => {
+                uniqueMap.set(item.nis, item);
             });
-            container.innerHTML = html;
+            absensiList = Array.from(uniqueMap.values());
+            saveData();
+            renderRekapAbsen();
+            alert('Data absen double berhasil dibersihkan!');
         }
 
-        function openEditAbsen(id, nama, status) {
-            document.getElementById('editIdAbsen').value = id;
-            document.getElementById('editNamaAbsen').value = nama;
-            document.getElementById('editStatusAbsen').value = status.trim();
-            openModal('modalEditAbsen');
+        function filterDatabase(kelas) {
+            currentFilterKelas = kelas;
+            ['semua', 'ibtida', 'tsanawi', 'aaliy'].forEach(k => {
+                const btn = document.getElementById(`btn-filter-${k}`);
+                if (btn) {
+                    if (k.toLowerCase() === kelas.toLowerCase() || (k === 'semua' && kelas === 'Semua')) {
+                        btn.className = 'flex-1 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 text-white transition';
+                    } else {
+                        btn.className = 'flex-1 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 transition';
+                    }
+                }
+            });
+            renderDatabaseSantri();
         }
 
-        async function submitEditAbsen() {
-            let id = document.getElementById('editIdAbsen').value;
-            let status = document.getElementById('editStatusAbsen').value;
-            try {
-                let res = await callApi('updateAbsen', { idAbsen: id, status, keterangan: status });
-                alert("Absen berhasil diperbarui!");
-                closeModal('modalEditAbsen');
-                await fetchData();
-                openRekapModal();
-            } catch(err) {
-                alert("Gagal memperbarui absen: " + err);
-            }
-        }
+        function renderDatabaseSantri() {
+            const searchKeyword = document.getElementById('search-database').value.toLowerCase();
+            const container = document.getElementById('database-list-container');
 
-        async function deleteAbsen(idAbsen) {
-            if(!confirm("Yakin ingin menghapus data absen ini?")) return;
-            try {
-                let res = await callApi('deleteAbsen', { idAbsen });
-                alert("Data berhasil dihapus!");
-                await fetchData();
-                openRekapModal();
-            } catch(err) {
-                alert("Gagal menghapus data: " + err);
-            }
-        }
+            let filtered = santriList.filter(s => {
+                const matchClass = currentFilterKelas === 'Semua' || s.kelas.toLowerCase() === currentFilterKelas.toLowerCase();
+                const matchSearch = s.nama.toLowerCase().includes(searchKeyword) || s.nis.includes(searchKeyword) || s.asrama.toLowerCase().includes(searchKeyword);
+                return matchClass && matchSearch;
+            });
 
-        function openDataSantriModal() {
-            openModal('modalDataSantri');
-            const container = document.getElementById('databaseSantriList');
-            if(allSantri.length === 0) {
-                container.innerHTML = `<div class="p-4 text-center text-xs text-slate-400">Belum ada data santri.</div>`;
+            document.getElementById('database-count-info').innerText = `Total: ${filtered.length} Santri`;
+
+            if (filtered.length === 0) {
+                container.innerHTML = '<div class="text-center text-slate-400 text-xs py-8">Tidak ada santri yang ditemukan.</div>';
                 return;
             }
-            let html = '';
-            allSantri.forEach(s => {
-                html += `
-                <div class="bg-white p-3.5 rounded-2xl border border-slate-100 flex justify-between items-center shadow-sm">
+
+            container.innerHTML = filtered.map(s => `
+                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 flex justify-between items-center">
                     <div>
-                        <div class="font-bold text-slate-700 text-sm">${s.Nama}</div>
-                        <div class="text-xs text-slate-400">NIS: ${s.NIS} | ${s.Keterangan || '-'}</div>
+                        <h4 class="font-bold text-xs text-slate-900">${s.nama}</h4>
+                        <p class="text-[10px] text-slate-400 mt-0.5">NIS: ${s.nis} • Kelas: ${s.kelas} • ${s.asrama}</p>
                     </div>
-                    <div class="flex space-x-1">
-                        <button onclick="openEditSantri('${s.NIS}', '${s.Nama}', '${s.Keterangan || ''}')" class="bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white p-2.5 rounded-xl transition text-xs" title="Edit">
-                            <i class="fa-solid fa-pen"></i>
-                        </button>
-                        <button onclick="deleteSantri('${s.NIS}')" class="bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white p-2.5 rounded-xl transition text-xs" title="Hapus">
-                            <i class="fa-solid fa-trash"></i>
-                        </button>
-                    </div>
-                </div>`;
-            });
-            container.innerHTML = html;
+                    <button onclick="hapusSantri('${s.nis}')" class="text-slate-400 hover:text-rose-600 p-2">
+                        <i class="fa-solid fa-trash-can text-xs"></i>
+                    </button>
+                </div>
+            `).join('');
         }
 
-        function openEditSantri(nis, nama, ket) {
-            document.getElementById('editNisSantri').value = nis;
-            document.getElementById('editNamaSantri').value = nama;
-            document.getElementById('editKetSantri').value = ket;
-            openModal('modalEditSantri');
-        }
-
-        async function submitEditSantri() {
-            let nis = document.getElementById('editNisSantri').value;
-            let nama = document.getElementById('editNamaSantri').value;
-            let ket = document.getElementById('editKetSantri').value;
-            try {
-                let res = await callApi('updateSantri', { nis, nama, keterangan: ket });
-                alert("Data santri berhasil diperbarui!");
-                closeModal('modalEditSantri');
-                await fetchData();
-                openDataSantriModal();
-            } catch(err) {
-                alert("Gagal memperbarui santri: " + err);
+        function hapusSantri(nis) {
+            if (confirm('Yakin ingin menghapus santri ini dari database?')) {
+                santriList = santriList.filter(s => s.nis !== nis);
+                saveData();
+                renderDatabaseSantri();
             }
         }
 
-        async function deleteSantri(nis) {
-            if(!confirm("Yakin ingin menghapus santri ini dari database?")) return;
-            try {
-                let res = await callApi('deleteSantri', { nis });
-                alert("Santri berhasil dihapus!");
-                await fetchData();
-                openDataSantriModal();
-            } catch(err) {
-                alert("Gagal menghapus santri: " + err);
-            }
-        }
+        updateDashboard();
     </script>
 </body>
 </html>
