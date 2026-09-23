@@ -17,53 +17,54 @@
         }
     </script>
     <style>
-        body { background: #0b0f19; }
+        body { background: #050505; }
         .mobile-container {
             max-width: 440px;
             margin: 0 auto;
             min-height: 100vh;
-            background: #f8fafc;
-            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.7);
+            background: #0f1115;
+            color: #e2e8f0;
+            box-shadow: 0 25px 60px -15px rgba(0, 0, 0, 0.9);
             position: relative;
             display: flex;
             flex-direction: column;
         }
     </style>
 </head>
-<body class="text-slate-800 antialiased flex justify-center items-center min-h-screen">
+<body class="text-slate-200 antialiased flex justify-center items-center min-h-screen">
 
     <!-- Container Utama Seluler -->
-    <div class="mobile-container w-full">
+    <div class="mobile-container w-full border-x border-zinc-800">
         
-        <!-- Header / Top Bar -->
-        <div class="bg-gradient-to-r from-indigo-700 via-indigo-600 to-purple-600 text-white px-5 pt-6 pb-6 rounded-b-[2.5rem] shadow-xl relative overflow-hidden">
-            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-white/10 rounded-full blur-2xl pointer-events-none"></div>
+        <!-- Header / Top Bar (Tema Dark Gothic) -->
+        <div class="bg-gradient-to-r from-zinc-900 via-zinc-950 to-black text-slate-100 px-5 pt-6 pb-6 rounded-b-[2.5rem] shadow-2xl relative overflow-hidden border-b border-zinc-800">
+            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-zinc-800/20 rounded-full blur-2xl pointer-events-none"></div>
             
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center space-x-3">
-                    <div class="w-11 h-11 bg-white/20 backdrop-blur-md rounded-2xl flex items-center justify-center border border-white/20 shadow-inner">
-                        <i class="fa-solid fa-mosque text-xl text-white"></i>
+                    <div class="w-11 h-11 bg-zinc-800/80 backdrop-blur-md rounded-2xl flex items-center justify-center border border-zinc-700 shadow-inner text-zinc-300">
+                        <i class="fa-solid fa-skull text-lg"></i>
                     </div>
                     <div>
-                        <h1 class="text-xl font-extrabold tracking-tight">iMTQL</h1>
-                        <p class="text-xs text-indigo-100 font-medium">Sistem Absensi & Manajemen Santri</p>
+                        <h1 class="text-xl font-extrabold tracking-tight text-white">iMTQL</h1>
+                        <p class="text-xs text-zinc-400 font-medium">Dark Gothic Edition</p>
                     </div>
                 </div>
-                <div class="flex items-center space-x-2 bg-black/20 backdrop-blur-md px-3 py-1.5 rounded-full border border-white/10">
-                    <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-                    <span class="text-[11px] font-semibold tracking-wide text-emerald-100">Sheets API</span>
+                <div class="flex items-center space-x-2 bg-zinc-900/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-zinc-800">
+                    <span class="w-2 h-2 rounded-full bg-zinc-400 animate-pulse"></span>
+                    <span class="text-[11px] font-semibold tracking-wide text-zinc-300">Prototype</span>
                 </div>
             </div>
 
             <!-- Tanggal & Info Live -->
-            <div class="flex justify-between items-center bg-white/10 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-white/15 text-xs">
+            <div class="flex justify-between items-center bg-zinc-900/60 backdrop-blur-md px-4 py-2.5 rounded-2xl border border-zinc-800/80 text-xs">
                 <div class="flex items-center space-x-2">
-                    <i class="fa-regular fa-calendar-days text-indigo-200"></i>
-                    <span id="current-date" class="font-medium text-white">Rabu, 23 Sep 2026</span>
+                    <i class="fa-regular fa-calendar-days text-zinc-400"></i>
+                    <span id="current-date" class="font-medium text-zinc-200">Rabu, 23 Sep 2026</span>
                 </div>
-                <div class="flex items-center space-x-1.5 text-indigo-100">
+                <div class="flex items-center space-x-1.5 text-zinc-400">
                     <i class="fa-solid fa-cloud-arrow-up text-[11px]"></i>
-                    <span class="text-[11px]">Sinkron Live</span>
+                    <span class="text-[11px]">Sync Active</span>
                 </div>
             </div>
         </div>
@@ -71,69 +72,69 @@
         <!-- Konten Utama -->
         <div class="px-5 mt-4 pb-28 flex-1 space-y-4">
 
-            <!-- Statistik Kartu (Total Santri & Hadir Hari Ini) -->
+            <!-- Statistik Kartu -->
             <div class="grid grid-cols-2 gap-3.5">
                 
                 <!-- Kartu Total Santri -->
-                <div onclick="openClassBreakdownModal()" class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md transition cursor-pointer relative group">
+                <div onclick="openClassBreakdownModal()" class="bg-zinc-900/90 p-4 rounded-3xl shadow-lg border border-zinc-800 hover:border-zinc-700 transition cursor-pointer relative group">
                     <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Santri</span>
-                        <div class="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition">
+                        <span class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Total Santri</span>
+                        <div class="w-8 h-8 rounded-xl bg-zinc-800 text-zinc-300 flex items-center justify-center group-hover:bg-zinc-700 transition">
                             <i class="fa-solid fa-users text-xs"></i>
                         </div>
                     </div>
                     <div class="flex items-baseline space-x-2">
-                        <span id="stat-total-santri" class="text-3xl font-extrabold text-slate-900">0</span>
-                        <span class="text-[10px] text-slate-400 font-semibold">Santri</span>
+                        <span id="stat-total-santri" class="text-3xl font-extrabold text-white">0</span>
+                        <span class="text-[10px] text-zinc-400 font-semibold">Santri</span>
                     </div>
 
                     <!-- Rincian 3 Kelas -->
-                    <div class="mt-3 pt-2.5 border-t border-slate-100 grid grid-cols-3 gap-1 text-center">
-                        <div class="bg-slate-50 rounded-lg p-1">
-                            <div class="text-[9px] text-slate-400 font-semibold">Ibtida</div>
-                            <div id="stat-ibtida" class="text-xs font-bold text-indigo-600">0</div>
+                    <div class="mt-3 pt-2.5 border-t border-zinc-800 grid grid-cols-3 gap-1 text-center">
+                        <div class="bg-zinc-950/50 rounded-lg p-1">
+                            <div class="text-[9px] text-zinc-500 font-semibold">Ibtida</div>
+                            <div id="stat-ibtida" class="text-xs font-bold text-zinc-300">0</div>
                         </div>
-                        <div class="bg-slate-50 rounded-lg p-1">
-                            <div class="text-[9px] text-slate-400 font-semibold">Tsanawi</div>
-                            <div id="stat-tsanawi" class="text-xs font-bold text-indigo-600">0</div>
+                        <div class="bg-zinc-950/50 rounded-lg p-1">
+                            <div class="text-[9px] text-zinc-500 font-semibold">Tsanawi</div>
+                            <div id="stat-tsanawi" class="text-xs font-bold text-zinc-300">0</div>
                         </div>
-                        <div class="bg-slate-50 rounded-lg p-1">
-                            <div class="text-[9px] text-slate-400 font-semibold">'Aaliy</div>
-                            <div id="stat-aaliy" class="text-xs font-bold text-indigo-600">0</div>
+                        <div class="bg-zinc-950/50 rounded-lg p-1">
+                            <div class="text-[9px] text-zinc-500 font-semibold">'Aaliy</div>
+                            <div id="stat-aaliy" class="text-xs font-bold text-zinc-300">0</div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Kartu Hadir Hari Ini -->
-                <div onclick="openHadirBreakdownModal()" class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md transition cursor-pointer relative group">
+                <div onclick="openHadirBreakdownModal()" class="bg-zinc-900/90 p-4 rounded-3xl shadow-lg border border-zinc-800 hover:border-zinc-700 transition cursor-pointer relative group">
                     <div class="flex justify-between items-start mb-2">
-                        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Hadir Hari Ini</span>
-                        <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center group-hover:bg-emerald-600 group-hover:text-white transition">
+                        <span class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Hadir Hari Ini</span>
+                        <div class="w-8 h-8 rounded-xl bg-zinc-800 text-zinc-300 flex items-center justify-center group-hover:bg-zinc-700 transition">
                             <i class="fa-solid fa-user-check text-xs"></i>
                         </div>
                     </div>
                     <div class="flex items-baseline space-x-2">
-                        <span id="stat-hadir-hari-ini" class="text-3xl font-extrabold text-slate-900">0</span>
-                        <span class="text-[10px] text-emerald-600 font-bold">Santri</span>
+                        <span id="stat-hadir-hari-ini" class="text-3xl font-extrabold text-white">0</span>
+                        <span class="text-[10px] text-zinc-400 font-bold">Santri</span>
                     </div>
 
-                    <!-- Rincian Hadir Per Kelas & Tidak Hadir -->
-                    <div class="mt-3 pt-2.5 border-t border-slate-100 grid grid-cols-4 gap-1 text-center">
-                        <div class="bg-slate-50 rounded-lg p-1">
-                            <div class="text-[9px] text-slate-400 font-semibold">Ibtida</div>
-                            <div id="stat-hadir-ibtida" class="text-xs font-bold text-emerald-600">0</div>
+                    <!-- Rincian Hadir & Tidak Hadir -->
+                    <div class="mt-3 pt-2.5 border-t border-zinc-800 grid grid-cols-4 gap-1 text-center">
+                        <div class="bg-zinc-950/50 rounded-lg p-1">
+                            <div class="text-[9px] text-zinc-500 font-semibold">Ibtida</div>
+                            <div id="stat-hadir-ibtida" class="text-xs font-bold text-zinc-300">0</div>
                         </div>
-                        <div class="bg-slate-50 rounded-lg p-1">
-                            <div class="text-[9px] text-slate-400 font-semibold">Tsanawi</div>
-                            <div id="stat-hadir-tsanawi" class="text-xs font-bold text-emerald-600">0</div>
+                        <div class="bg-zinc-950/50 rounded-lg p-1">
+                            <div class="text-[9px] text-zinc-500 font-semibold">Tsanawi</div>
+                            <div id="stat-hadir-tsanawi" class="text-xs font-bold text-zinc-300">0</div>
                         </div>
-                        <div class="bg-slate-50 rounded-lg p-1">
-                            <div class="text-[9px] text-slate-400 font-semibold">'Aaliy</div>
-                            <div id="stat-hadir-aaliy" class="text-xs font-bold text-emerald-600">0</div>
+                        <div class="bg-zinc-950/50 rounded-lg p-1">
+                            <div class="text-[9px] text-zinc-500 font-semibold">'Aaliy</div>
+                            <div id="stat-hadir-aaliy" class="text-xs font-bold text-zinc-300">0</div>
                         </div>
-                        <div class="bg-rose-50 rounded-lg p-1">
-                            <div class="text-[9px] text-rose-400 font-semibold">Absen</div>
-                            <div id="stat-tidak-hadir" class="text-xs font-bold text-rose-600">0</div>
+                        <div class="bg-zinc-950/50 rounded-lg p-1">
+                            <div class="text-[9px] text-rose-500 font-semibold">Absen</div>
+                            <div id="stat-tidak-hadir" class="text-xs font-bold text-rose-400">0</div>
                         </div>
                     </div>
                 </div>
@@ -142,53 +143,53 @@
 
             <!-- Menu Navigasi -->
             <div class="space-y-2.5">
-                <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400 px-1">Menu Navigasi</h2>
+                <h2 class="text-xs font-bold uppercase tracking-wider text-zinc-500 px-1">Menu Navigasi</h2>
 
                 <div class="grid grid-cols-2 gap-3.5">
-                    <button onclick="openScanModal()" class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 hover:border-indigo-200 text-left transition group">
-                        <div class="w-10 h-10 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center mb-3 group-hover:scale-110 transition duration-300">
+                    <button onclick="openScanModal()" class="bg-zinc-900/90 p-4 rounded-3xl shadow-lg border border-zinc-800 hover:border-zinc-700 text-left transition group">
+                        <div class="w-10 h-10 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center mb-3 group-hover:scale-110 transition duration-300">
                             <i class="fa-solid fa-qrcode text-base"></i>
                         </div>
-                        <h3 class="font-bold text-slate-900 text-sm">Scan QR / Absen</h3>
-                        <p class="text-[11px] text-slate-400 mt-0.5">Kamera atau NIS</p>
+                        <h3 class="font-bold text-zinc-100 text-sm">Scan QR / Absen</h3>
+                        <p class="text-[11px] text-zinc-500 mt-0.5">Kamera atau NIS</p>
                     </button>
 
-                    <button onclick="openManualModal()" class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 hover:border-indigo-200 text-left transition group">
-                        <div class="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center mb-3 group-hover:scale-110 transition duration-300">
+                    <button onclick="openManualModal()" class="bg-zinc-900/90 p-4 rounded-3xl shadow-lg border border-zinc-800 hover:border-zinc-700 text-left transition group">
+                        <div class="w-10 h-10 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center mb-3 group-hover:scale-110 transition duration-300">
                             <i class="fa-solid fa-pen-to-square text-base"></i>
                         </div>
-                        <h3 class="font-bold text-slate-900 text-sm">Absen Manual</h3>
-                        <p class="text-[11px] text-slate-400 mt-0.5">Sakit, Izin, atau Alpa</p>
+                        <h3 class="font-bold text-zinc-100 text-sm">Absen Manual</h3>
+                        <p class="text-[11px] text-zinc-500 mt-0.5">Sakit, Izin, atau Alpa</p>
                     </button>
 
-                    <button onclick="openRekapModal()" class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 hover:border-indigo-200 text-left transition group">
-                        <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center mb-3 group-hover:scale-110 transition duration-300">
+                    <button onclick="openRekapModal()" class="bg-zinc-900/90 p-4 rounded-3xl shadow-lg border border-zinc-800 hover:border-zinc-700 text-left transition group">
+                        <div class="w-10 h-10 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center mb-3 group-hover:scale-110 transition duration-300">
                             <i class="fa-solid fa-clipboard-user text-base"></i>
                         </div>
-                        <h3 class="font-bold text-slate-900 text-sm">Rekap Absen</h3>
-                        <p class="text-[11px] text-slate-400 mt-0.5">Kelola & Hapus Double</p>
+                        <h3 class="font-bold text-zinc-100 text-sm">Rekap Absen</h3>
+                        <p class="text-[11px] text-zinc-500 mt-0.5">Tabel & Hapus Double</p>
                     </button>
 
-                    <button onclick="openAddSantriModal()" class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 hover:border-indigo-200 text-left transition group">
-                        <div class="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center mb-3 group-hover:scale-110 transition duration-300">
+                    <button onclick="openAddSantriModal()" class="bg-zinc-900/90 p-4 rounded-3xl shadow-lg border border-zinc-800 hover:border-zinc-700 text-left transition group">
+                        <div class="w-10 h-10 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center mb-3 group-hover:scale-110 transition duration-300">
                             <i class="fa-solid fa-user-plus text-base"></i>
                         </div>
-                        <h3 class="font-bold text-slate-900 text-sm">Tambah Santri</h3>
-                        <p class="text-[11px] text-slate-400 mt-0.5">Daftarkan santri baru</p>
+                        <h3 class="font-bold text-zinc-100 text-sm">Tambah Santri</h3>
+                        <p class="text-[11px] text-zinc-500 mt-0.5">Daftarkan santri baru</p>
                     </button>
                 </div>
 
-                <button onclick="openDataSantriModal()" class="w-full bg-white p-4 rounded-3xl shadow-sm border border-slate-100 hover:border-indigo-200 flex items-center justify-between transition group text-left">
+                <button onclick="openDataSantriModal()" class="w-full bg-zinc-900/90 p-4 rounded-3xl shadow-lg border border-zinc-800 hover:border-zinc-700 flex items-center justify-between transition group text-left">
                     <div class="flex items-center space-x-3.5">
-                        <div class="w-11 h-11 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center group-hover:bg-indigo-600 group-hover:text-white transition duration-300">
+                        <div class="w-11 h-11 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center group-hover:bg-zinc-700 transition duration-300">
                             <i class="fa-solid fa-database text-base"></i>
                         </div>
                         <div>
-                            <h3 class="font-bold text-slate-900 text-sm">Data Santri & Rekap Total</h3>
-                            <p class="text-[11px] text-slate-400 mt-0.5">Kelola database lengkap Ibtida, Tsanawi, & 'Aaliy</p>
+                            <h3 class="font-bold text-zinc-100 text-sm">Data Santri & Rekap Total</h3>
+                            <p class="text-[11px] text-zinc-500 mt-0.5">Kelola database lengkap Ibtida, Tsanawi, & 'Aaliy</p>
                         </div>
                     </div>
-                    <div class="w-8 h-8 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 group-hover:bg-indigo-50 group-hover:text-indigo-600 transition">
+                    <div class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 group-hover:bg-zinc-700 transition">
                         <i class="fa-solid fa-chevron-right text-xs"></i>
                     </div>
                 </button>
@@ -197,12 +198,12 @@
             <!-- Santri Terbaru -->
             <div class="space-y-2.5">
                 <div class="flex justify-between items-center px-1">
-                    <h2 class="text-xs font-bold uppercase tracking-wider text-slate-400">Santri Terbaru</h2>
-                    <button onclick="openDataSantriModal()" class="text-xs font-bold text-indigo-600 hover:underline">Lihat Semua →</button>
+                    <h2 class="text-xs font-bold uppercase tracking-wider text-zinc-500">Santri Terbaru</h2>
+                    <button onclick="openDataSantriModal()" class="text-xs font-bold text-zinc-400 hover:underline">Lihat Semua →</button>
                 </div>
 
                 <div id="recent-santri-list" class="space-y-2">
-                    <div class="bg-white p-4 rounded-2xl border border-slate-100 text-center text-slate-400 text-xs py-6">
+                    <div class="bg-zinc-900/90 p-4 rounded-2xl border border-zinc-800 text-center text-zinc-500 text-xs py-6">
                         Memuat data santri...
                     </div>
                 </div>
@@ -211,23 +212,23 @@
         </div>
 
         <!-- Bottom Navigation Bar -->
-        <div class="absolute bottom-0 left-0 right-0 bg-white/90 backdrop-blur-lg border-t border-slate-100 px-6 py-3 flex justify-around items-center z-20">
-            <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="flex flex-col items-center text-indigo-600 space-y-1">
+        <div class="absolute bottom-0 left-0 right-0 bg-zinc-950/90 backdrop-blur-lg border-t border-zinc-800 px-6 py-3 flex justify-around items-center z-20">
+            <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="flex flex-col items-center text-zinc-200 space-y-1">
                 <i class="fa-solid fa-house text-lg"></i>
                 <span class="text-[10px] font-bold">Beranda</span>
             </button>
-            <button onclick="openScanModal()" class="flex flex-col items-center text-slate-400 hover:text-indigo-600 space-y-1 transition">
+            <button onclick="openScanModal()" class="flex flex-col items-center text-zinc-500 hover:text-zinc-200 space-y-1 transition">
                 <i class="fa-solid fa-qrcode text-lg"></i>
                 <span class="text-[10px] font-medium">Scan</span>
             </button>
-            <button onclick="openAddSantriModal()" class="w-12 h-12 bg-indigo-600 text-white rounded-full flex items-center justify-center shadow-lg shadow-indigo-500/30 -mt-5 hover:scale-105 transition">
-                <i class="fa-solid fa-plus text-lg"></i>
+            <button onclick="openAddSantriModal()" class="w-12 h-12 bg-zinc-200 text-zinc-950 rounded-full flex items-center justify-center shadow-lg shadow-zinc-900/50 -mt-5 hover:scale-105 transition">
+                <i class="fa-solid fa-plus text-lg font-bold"></i>
             </button>
-            <button onclick="openRekapModal()" class="flex flex-col items-center text-slate-400 hover:text-indigo-600 space-y-1 transition">
+            <button onclick="openRekapModal()" class="flex flex-col items-center text-zinc-500 hover:text-zinc-200 space-y-1 transition">
                 <i class="fa-solid fa-clipboard-user text-lg"></i>
                 <span class="text-[10px] font-medium">Rekap</span>
             </button>
-            <button onclick="openDataSantriModal()" class="flex flex-col items-center text-slate-400 hover:text-indigo-600 space-y-1 transition">
+            <button onclick="openDataSantriModal()" class="flex flex-col items-center text-zinc-500 hover:text-zinc-200 space-y-1 transition">
                 <i class="fa-solid fa-database text-lg"></i>
                 <span class="text-[10px] font-medium">Data</span>
             </button>
@@ -236,175 +237,175 @@
     </div>
 
     <!-- MODAL: RINCIAN KELAS (TOTAL SANTRI) -->
-    <div id="modal-class-breakdown" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-[2rem] p-6 shadow-2xl">
+    <div id="modal-class-breakdown" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-800 w-full max-w-sm rounded-[2rem] p-6 shadow-2xl text-slate-200">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                    <div class="w-10 h-10 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center">
                         <i class="fa-solid fa-graduation-cap"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-slate-900">Rincian Total Santri</h3>
-                        <p class="text-xs text-slate-400">Pembagian Berdasarkan Jenjang Kelas</p>
+                        <h3 class="font-bold text-white">Rincian Total Santri</h3>
+                        <p class="text-xs text-zinc-500">Berdasarkan Jenjang Kelas</p>
                     </div>
                 </div>
-                <button onclick="closeModal('modal-class-breakdown')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200">
+                <button onclick="closeModal('modal-class-breakdown')" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-zinc-700">
                     <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
 
             <div class="space-y-3 my-4">
-                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 flex justify-between items-center">
+                <div class="bg-zinc-950 p-3.5 rounded-2xl border border-zinc-800 flex justify-between items-center">
                     <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center font-bold text-xs">IB</div>
+                        <div class="w-8 h-8 rounded-xl bg-zinc-800 text-zinc-300 flex items-center justify-center font-bold text-xs">IB</div>
                         <div>
-                            <div class="font-bold text-sm text-slate-800">Kelas Ibtida</div>
-                            <div class="text-[11px] text-slate-400">Tingkat Dasar</div>
+                            <div class="font-bold text-sm text-white">Kelas Ibtida</div>
+                            <div class="text-[11px] text-zinc-500">Tingkat Dasar</div>
                         </div>
                     </div>
-                    <span id="modal-count-ibtida" class="font-extrabold text-indigo-600 text-base">0 Santri</span>
+                    <span id="modal-count-ibtida" class="font-extrabold text-zinc-300 text-base">0 Santri</span>
                 </div>
 
-                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 flex justify-between items-center">
+                <div class="bg-zinc-950 p-3.5 rounded-2xl border border-zinc-800 flex justify-between items-center">
                     <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center font-bold text-xs">TS</div>
+                        <div class="w-8 h-8 rounded-xl bg-zinc-800 text-zinc-300 flex items-center justify-center font-bold text-xs">TS</div>
                         <div>
-                            <div class="font-bold text-sm text-slate-800">Kelas Tsanawi</div>
-                            <div class="text-[11px] text-slate-400">Tingkat Menengah</div>
+                            <div class="font-bold text-sm text-white">Kelas Tsanawi</div>
+                            <div class="text-[11px] text-zinc-500">Tingkat Menengah</div>
                         </div>
                     </div>
-                    <span id="modal-count-tsanawi" class="font-extrabold text-blue-600 text-base">0 Santri</span>
+                    <span id="modal-count-tsanawi" class="font-extrabold text-zinc-300 text-base">0 Santri</span>
                 </div>
 
-                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 flex justify-between items-center">
+                <div class="bg-zinc-950 p-3.5 rounded-2xl border border-zinc-800 flex justify-between items-center">
                     <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-xl bg-purple-100 text-purple-600 flex items-center justify-center font-bold text-xs">AL</div>
+                        <div class="w-8 h-8 rounded-xl bg-zinc-800 text-zinc-300 flex items-center justify-center font-bold text-xs">AL</div>
                         <div>
-                            <div class="font-bold text-sm text-slate-800">Kelas 'Aaliy</div>
-                            <div class="text-[11px] text-slate-400">Tingkat Lanjutan / Atas</div>
+                            <div class="font-bold text-sm text-white">Kelas 'Aaliy</div>
+                            <div class="text-[11px] text-zinc-500">Tingkat Lanjutan / Atas</div>
                         </div>
                     </div>
-                    <span id="modal-count-aaliy" class="font-extrabold text-purple-600 text-base">0 Santri</span>
+                    <span id="modal-count-aaliy" class="font-extrabold text-zinc-300 text-base">0 Santri</span>
                 </div>
             </div>
 
-            <button onclick="closeModal('modal-class-breakdown'); openDataSantriModal();" class="w-full bg-indigo-600 text-white py-3 rounded-2xl font-bold text-sm hover:bg-indigo-700 transition shadow-lg shadow-indigo-500/25">
+            <button onclick="closeModal('modal-class-breakdown'); openDataSantriModal();" class="w-full bg-zinc-100 text-zinc-950 py-3 rounded-2xl font-bold text-sm hover:bg-white transition shadow-lg">
                 Kelola Seluruh Data Santri
             </button>
         </div>
     </div>
 
     <!-- MODAL: RINCIAN HADIR HARI INI -->
-    <div id="modal-hadir-breakdown" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-[2rem] p-6 shadow-2xl">
+    <div id="modal-hadir-breakdown" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-800 w-full max-w-sm rounded-[2rem] p-6 shadow-2xl text-slate-200">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                    <div class="w-10 h-10 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center">
                         <i class="fa-solid fa-user-check"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-slate-900">Rincian Hadir Hari Ini</h3>
-                        <p class="text-xs text-slate-400">Berdasarkan Kelas & Tidak Hadir</p>
+                        <h3 class="font-bold text-white">Rincian Hadir Hari Ini</h3>
+                        <p class="text-xs text-zinc-500">Berdasarkan Kelas & Tidak Hadir</p>
                     </div>
                 </div>
-                <button onclick="closeModal('modal-hadir-breakdown')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200">
+                <button onclick="closeModal('modal-hadir-breakdown')" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-zinc-700">
                     <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
 
             <div class="space-y-3 my-4">
-                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 flex justify-between items-center">
+                <div class="bg-zinc-950 p-3.5 rounded-2xl border border-zinc-800 flex justify-between items-center">
                     <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs">IB</div>
+                        <div class="w-8 h-8 rounded-xl bg-zinc-800 text-zinc-300 flex items-center justify-center font-bold text-xs">IB</div>
                         <div>
-                            <div class="font-bold text-sm text-slate-800">Hadir Ibtida</div>
-                            <div class="text-[11px] text-slate-400">Tingkat Dasar</div>
+                            <div class="font-bold text-sm text-white">Hadir Ibtida</div>
+                            <div class="text-[11px] text-zinc-500">Tingkat Dasar</div>
                         </div>
                     </div>
-                    <span id="modal-hadir-ibtida" class="font-extrabold text-emerald-600 text-base">0 Santri</span>
+                    <span id="modal-hadir-ibtida" class="font-extrabold text-zinc-300 text-base">0 Santri</span>
                 </div>
 
-                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 flex justify-between items-center">
+                <div class="bg-zinc-950 p-3.5 rounded-2xl border border-zinc-800 flex justify-between items-center">
                     <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs">TS</div>
+                        <div class="w-8 h-8 rounded-xl bg-zinc-800 text-zinc-300 flex items-center justify-center font-bold text-xs">TS</div>
                         <div>
-                            <div class="font-bold text-sm text-slate-800">Hadir Tsanawi</div>
-                            <div class="text-[11px] text-slate-400">Tingkat Menengah</div>
+                            <div class="font-bold text-sm text-white">Hadir Tsanawi</div>
+                            <div class="text-[11px] text-zinc-500">Tingkat Menengah</div>
                         </div>
                     </div>
-                    <span id="modal-hadir-tsanawi" class="font-extrabold text-emerald-600 text-base">0 Santri</span>
+                    <span id="modal-hadir-tsanawi" class="font-extrabold text-zinc-300 text-base">0 Santri</span>
                 </div>
 
-                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 flex justify-between items-center">
+                <div class="bg-zinc-950 p-3.5 rounded-2xl border border-zinc-800 flex justify-between items-center">
                     <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center font-bold text-xs">AL</div>
+                        <div class="w-8 h-8 rounded-xl bg-zinc-800 text-zinc-300 flex items-center justify-center font-bold text-xs">AL</div>
                         <div>
-                            <div class="font-bold text-sm text-slate-800">Hadir 'Aaliy</div>
-                            <div class="text-[11px] text-slate-400">Tingkat Lanjutan / Atas</div>
+                            <div class="font-bold text-sm text-white">Hadir 'Aaliy</div>
+                            <div class="text-[11px] text-zinc-500">Tingkat Lanjutan / Atas</div>
                         </div>
                     </div>
-                    <span id="modal-hadir-aaliy" class="font-extrabold text-emerald-600 text-base">0 Santri</span>
+                    <span id="modal-hadir-aaliy" class="font-extrabold text-zinc-300 text-base">0 Santri</span>
                 </div>
 
-                <div class="bg-rose-50 p-3.5 rounded-2xl border border-rose-100 flex justify-between items-center">
+                <div class="bg-zinc-950 p-3.5 rounded-2xl border border-zinc-800 flex justify-between items-center">
                     <div class="flex items-center space-x-3">
-                        <div class="w-8 h-8 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center font-bold text-xs">TH</div>
+                        <div class="w-8 h-8 rounded-xl bg-rose-950 text-rose-400 flex items-center justify-center font-bold text-xs">TH</div>
                         <div>
-                            <div class="font-bold text-sm text-slate-800">Total Tidak Hadir</div>
-                            <div class="text-[11px] text-rose-400">Belum Absen / Alpa / Sakit / Izin</div>
+                            <div class="font-bold text-sm text-white">Total Tidak Hadir</div>
+                            <div class="text-[11px] text-zinc-500">Belum Absen / Alpa / Sakit</div>
                         </div>
                     </div>
-                    <span id="modal-tidak-hadir" class="font-extrabold text-rose-600 text-base">0 Santri</span>
+                    <span id="modal-tidak-hadir" class="font-extrabold text-rose-400 text-base">0 Santri</span>
                 </div>
             </div>
 
-            <button onclick="closeModal('modal-hadir-breakdown'); openRekapModal();" class="w-full bg-emerald-600 text-white py-3 rounded-2xl font-bold text-sm hover:bg-emerald-700 transition shadow-lg shadow-emerald-500/25">
+            <button onclick="closeModal('modal-hadir-breakdown'); openRekapModal();" class="w-full bg-zinc-100 text-zinc-950 py-3 rounded-2xl font-bold text-sm hover:bg-white transition shadow-lg">
                 Kelola Rekap Absen
             </button>
         </div>
     </div>
 
     <!-- MODAL: TAMBAH SANTRI -->
-    <div id="modal-add-santri" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-[2rem] p-6 shadow-2xl">
+    <div id="modal-add-santri" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-800 w-full max-w-sm rounded-[2rem] p-6 shadow-2xl text-slate-200">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                    <div class="w-10 h-10 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center">
                         <i class="fa-solid fa-user-plus"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-slate-900">Tambah Santri Baru</h3>
-                        <p class="text-xs text-slate-400">Daftarkan santri ke database</p>
+                        <h3 class="font-bold text-white">Tambah Santri Baru</h3>
+                        <p class="text-xs text-zinc-500">Daftarkan santri ke database</p>
                     </div>
                 </div>
-                <button onclick="closeModal('modal-add-santri')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200">
+                <button onclick="closeModal('modal-add-santri')" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-zinc-700">
                     <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
 
             <form id="form-add-santri" onsubmit="handleTambahSantri(event)" class="space-y-3.5">
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1">Nomor Induk Santri (NIS)</label>
-                    <input type="text" id="input-nis" required placeholder="Contoh: 2026001" class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-indigo-600">
+                    <label class="block text-xs font-bold text-zinc-400 mb-1">Nomor Induk Santri (NIS)</label>
+                    <input type="text" id="input-nis" required placeholder="Contoh: 2026001" class="w-full px-4 py-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 text-sm text-white focus:outline-none focus:border-zinc-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1">Nama Lengkap Santri</label>
-                    <input type="text" id="input-nama" required placeholder="Contoh: Ahmad Fauzan" class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-indigo-600">
+                    <label class="block text-xs font-bold text-zinc-400 mb-1">Nama Lengkap Santri</label>
+                    <input type="text" id="input-nama" required placeholder="Contoh: Ahmad Fauzan" class="w-full px-4 py-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 text-sm text-white focus:outline-none focus:border-zinc-500">
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1">Jenjang Kelas</label>
-                    <select id="input-kelas" required class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-indigo-600">
+                    <label class="block text-xs font-bold text-zinc-400 mb-1">Jenjang Kelas</label>
+                    <select id="input-kelas" required class="w-full px-4 py-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 text-sm text-white focus:outline-none focus:border-zinc-500">
                         <option value="Ibtida">Ibtida (Dasar)</option>
                         <option value="Tsanawi">Tsanawi (Menengah)</option>
                         <option value="'Aaliy">'Aaliy (Lanjutan)</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1">Nomor WhatsApp</label>
-                    <input type="text" id="input-whatsapp" required placeholder="Contoh: 081234567890" class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-indigo-600">
+                    <label class="block text-xs font-bold text-zinc-400 mb-1">Nomor WhatsApp</label>
+                    <input type="text" id="input-whatsapp" required placeholder="Contoh: 081234567890" class="w-full px-4 py-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 text-sm text-white focus:outline-none focus:border-zinc-500">
                 </div>
 
-                <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-2xl font-bold text-sm hover:bg-indigo-700 transition shadow-lg shadow-indigo-500/25 mt-2">
+                <button type="submit" class="w-full bg-zinc-100 text-zinc-950 py-3 rounded-2xl font-bold text-sm hover:bg-white transition shadow-lg mt-2">
                     Simpan Santri Baru
                 </button>
             </form>
@@ -412,36 +413,36 @@
     </div>
 
     <!-- MODAL: SCAN QR / ABSEN -->
-    <div id="modal-scan" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-[2rem] p-6 shadow-2xl">
+    <div id="modal-scan" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-800 w-full max-w-sm rounded-[2rem] p-6 shadow-2xl text-slate-200">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-2xl bg-purple-50 text-purple-600 flex items-center justify-center">
+                    <div class="w-10 h-10 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center">
                         <i class="fa-solid fa-qrcode"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-slate-900">Scan QR / Absen</h3>
-                        <p class="text-xs text-slate-400">Arahkan kamera ke kartu santri</p>
+                        <h3 class="font-bold text-white">Scan QR / Absen</h3>
+                        <p class="text-xs text-zinc-500">Arahkan kamera ke kartu santri</p>
                     </div>
                 </div>
-                <button onclick="closeModal('modal-scan')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200">
+                <button onclick="closeModal('modal-scan')" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-zinc-700">
                     <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
 
-            <div class="bg-slate-900 rounded-2xl h-48 flex flex-col items-center justify-center relative overflow-hidden mb-4 border border-slate-800">
-                <div class="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:2rem_2rem] opacity-30"></div>
-                <div class="w-32 h-32 border-2 border-indigo-500 rounded-2xl relative flex items-center justify-center animate-pulse">
-                    <div class="absolute w-full h-0.5 bg-emerald-400 shadow-[0_0_10px_#10b981] animate-bounce"></div>
-                    <i class="fa-solid fa-camera text-slate-600 text-3xl"></i>
+            <div class="bg-black rounded-2xl h-48 flex flex-col items-center justify-center relative overflow-hidden mb-4 border border-zinc-800">
+                <div class="absolute inset-0 bg-[linear-gradient(to_right,#18181b_1px,transparent_1px),linear-gradient(to_bottom,#18181b_1px,transparent_1px)] bg-[size:2rem_2rem] opacity-35"></div>
+                <div class="w-32 h-32 border-2 border-zinc-600 rounded-2xl relative flex items-center justify-center animate-pulse">
+                    <div class="absolute w-full h-0.5 bg-zinc-300 shadow-[0_0_10px_#ffffff] animate-bounce"></div>
+                    <i class="fa-solid fa-camera text-zinc-600 text-3xl"></i>
                 </div>
-                <span class="text-[11px] text-slate-400 mt-3 font-medium z-10">Kamera Scanner Aktif...</span>
+                <span class="text-[11px] text-zinc-400 mt-3 font-medium z-10">Kamera Scanner Aktif...</span>
             </div>
 
             <div class="space-y-3">
                 <div class="relative">
-                    <input type="text" id="scan-nis-input" placeholder="Atau ketik NIS santri di sini..." class="w-full pl-4 pr-12 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-indigo-600">
-                    <button onclick="prosesAbsenNIS()" class="absolute right-1.5 top-1.5 bg-indigo-600 text-white px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-indigo-700 transition">
+                    <input type="text" id="scan-nis-input" placeholder="Atau ketik NIS santri di sini..." class="w-full pl-4 pr-12 py-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 text-sm text-white focus:outline-none focus:border-zinc-500">
+                    <button onclick="prosesAbsenNIS()" class="absolute right-1.5 top-1.5 bg-zinc-100 text-zinc-950 px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-white transition">
                         Absen
                     </button>
                 </div>
@@ -450,117 +451,117 @@
     </div>
 
     <!-- MODAL: ABSEN MANUAL -->
-    <div id="modal-manual" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-sm rounded-[2rem] p-6 shadow-2xl">
+    <div id="modal-manual" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-800 w-full max-w-sm rounded-[2rem] p-6 shadow-2xl text-slate-200">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                    <div class="w-10 h-10 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center">
                         <i class="fa-solid fa-pen-to-square"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-slate-900">Absen Manual</h3>
-                        <p class="text-xs text-slate-400">Sakit, Izin, atau Alpa</p>
+                        <h3 class="font-bold text-white">Absen Manual</h3>
+                        <p class="text-xs text-zinc-500">Sakit, Izin, atau Alpa</p>
                     </div>
                 </div>
-                <button onclick="closeModal('modal-manual')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200">
+                <button onclick="closeModal('modal-manual')" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-zinc-700">
                     <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
 
             <form onsubmit="handleAbsenManual(event)" class="space-y-3.5">
                 <div class="relative">
-                    <label class="block text-xs font-bold text-slate-600 mb-1">Cari / Ketik Nama atau NIS Santri</label>
-                    <input type="text" id="manual-input-search" autocomplete="off" oninput="filterAutocomplete()" placeholder="Ketik nama atau NIS santri..." class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-indigo-600">
+                    <label class="block text-xs font-bold text-zinc-400 mb-1">Cari / Ketik Nama atau NIS Santri</label>
+                    <input type="text" id="manual-input-search" autocomplete="off" oninput="filterAutocomplete()" placeholder="Ketik nama atau NIS santri..." class="w-full px-4 py-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 text-sm text-white focus:outline-none focus:border-zinc-500">
                     
-                    <!-- Custom Dropdown Suggestions -->
-                    <div id="autocomplete-list" class="absolute left-0 right-0 mt-1 bg-white border border-slate-100 rounded-2xl shadow-xl max-h-48 overflow-y-auto z-30 hidden">
+                    <!-- Custom Dropdown (Hanya Muncul Saat Diketik) -->
+                    <div id="autocomplete-list" class="absolute left-0 right-0 mt-1 bg-zinc-950 border border-zinc-800 rounded-2xl shadow-xl max-h-48 overflow-y-auto z-30 hidden">
                         <!-- Populated by JS -->
                     </div>
                 </div>
 
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1">Status Kehadiran</label>
-                    <select id="manual-status" required class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-indigo-600">
-                        <option value="Sakit">Sakit</option>
-                        <option value="Izin">Izin</option>
-                        <option value="Alpa">Alpa</option>
+                    <label class="block text-xs font-bold text-zinc-400 mb-1">Status Kehadiran</label>
+                    <select id="manual-status" required class="w-full px-4 py-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 text-sm text-white focus:outline-none focus:border-zinc-500">
+                        <option value="Sakit" class="bg-zinc-900">Sakit</option>
+                        <option value="Izin" class="bg-zinc-900">Izin</option>
+                        <option value="Alpa" class="bg-zinc-900">Alpa</option>
                     </select>
                 </div>
                 <div>
-                    <label class="block text-xs font-bold text-slate-600 mb-1">Keterangan / Catatan</label>
-                    <input type="text" id="manual-keterangan" placeholder="Contoh: Surat dokter terlampir" class="w-full px-4 py-2.5 rounded-2xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:border-indigo-600">
+                    <label class="block text-xs font-bold text-zinc-400 mb-1">Keterangan / Catatan</label>
+                    <input type="text" id="manual-keterangan" placeholder="Contoh: Surat dokter terlampir" class="w-full px-4 py-2.5 rounded-2xl bg-zinc-950 border border-zinc-800 text-sm text-white focus:outline-none focus:border-zinc-500">
                 </div>
 
-                <button type="submit" class="w-full bg-indigo-600 text-white py-3 rounded-2xl font-bold text-sm hover:bg-indigo-700 transition shadow-lg shadow-indigo-500/25 mt-2">
+                <button type="submit" class="w-full bg-zinc-100 text-zinc-950 py-3 rounded-2xl font-bold text-sm hover:bg-white transition shadow-lg mt-2">
                     Simpan Absen
                 </button>
             </form>
         </div>
     </div>
 
-    <!-- MODAL: REKAP ABSEN (Dalam Bentuk Tabel) & HAPUS DOUBLE -->
-    <div id="modal-rekap" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-lg rounded-[2rem] p-6 shadow-2xl max-h-[85vh] flex flex-col">
+    <!-- MODAL: REKAP ABSEN (Tabel) -->
+    <div id="modal-rekap" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-800 w-full max-w-lg rounded-[2rem] p-6 shadow-2xl max-h-[85vh] flex flex-col text-slate-200">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                    <div class="w-10 h-10 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center">
                         <i class="fa-solid fa-clipboard-user"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-slate-900">Rekap Absen Hari Ini</h3>
-                        <p class="text-xs text-slate-400">Kelola & Bersihkan Absen Double</p>
+                        <h3 class="font-bold text-white">Rekap Absen Hari Ini</h3>
+                        <p class="text-xs text-zinc-500">Kelola & Bersihkan Absen Double</p>
                     </div>
                 </div>
-                <button onclick="closeModal('modal-rekap')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200">
+                <button onclick="closeModal('modal-rekap')" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-zinc-700">
                     <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
 
             <div class="flex justify-between items-center mb-3">
-                <span id="rekap-count-info" class="text-xs font-bold text-slate-500">Total Absen: 0</span>
-                <button onclick="hapusAbsenDouble()" class="bg-rose-50 text-rose-600 px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-rose-100 transition flex items-center space-x-1.5">
+                <span id="rekap-count-info" class="text-xs font-bold text-zinc-400">Total Absen: 0</span>
+                <button onclick="hapusAbsenDouble()" class="bg-rose-950 text-rose-400 border border-rose-900 px-3 py-1.5 rounded-xl text-xs font-bold hover:bg-rose-900 transition flex items-center space-x-1.5">
                     <i class="fa-solid fa-broom"></i>
                     <span>Hapus Double</span>
                 </button>
             </div>
 
-            <!-- Kontainer Tabel Rekap Absen -->
+            <!-- Tabel Rekap Absen -->
             <div id="rekap-list-container" class="overflow-y-auto flex-1 pr-1">
-                <div class="text-center text-slate-400 text-xs py-8">Belum ada data absensi hari ini.</div>
+                <div class="text-center text-zinc-500 text-xs py-8">Belum ada data absensi hari ini.</div>
             </div>
 
-            <button onclick="closeModal('modal-rekap')" class="w-full bg-slate-100 text-slate-700 py-3 rounded-2xl font-bold text-sm hover:bg-slate-200 transition mt-4">
+            <button onclick="closeModal('modal-rekap')" class="w-full bg-zinc-800 text-zinc-200 py-3 rounded-2xl font-bold text-sm hover:bg-zinc-700 transition mt-4">
                 Tutup
             </button>
         </div>
     </div>
 
     <!-- MODAL: DATA SANTRI & REKAP TOTAL -->
-    <div id="modal-data-santri" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-[2rem] p-6 shadow-2xl max-h-[85vh] flex flex-col">
+    <div id="modal-data-santri" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-zinc-900 border border-zinc-800 w-full max-w-md rounded-[2rem] p-6 shadow-2xl max-h-[85vh] flex flex-col text-slate-200">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center space-x-3">
-                    <div class="w-10 h-10 rounded-2xl bg-indigo-50 text-indigo-600 flex items-center justify-center">
+                    <div class="w-10 h-10 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center">
                         <i class="fa-solid fa-database"></i>
                     </div>
                     <div>
-                        <h3 class="font-bold text-slate-900">Database Seluruh Santri</h3>
-                        <p class="text-xs text-slate-400">Ibtida, Tsanawi, & 'Aaliy</p>
+                        <h3 class="font-bold text-white">Database Seluruh Santri</h3>
+                        <p class="text-xs text-zinc-500">Ibtida, Tsanawi, & 'Aaliy</p>
                     </div>
                 </div>
-                <button onclick="closeModal('modal-data-santri')" class="w-8 h-8 rounded-full bg-slate-100 flex items-center justify-center text-slate-500 hover:bg-slate-200">
+                <button onclick="closeModal('modal-data-santri')" class="w-8 h-8 rounded-full bg-zinc-800 flex items-center justify-center text-zinc-400 hover:bg-zinc-700">
                     <i class="fa-solid fa-xmark text-sm"></i>
                 </button>
             </div>
 
             <!-- Search & Filter Kelas -->
             <div class="space-y-2.5 mb-3">
-                <input type="text" id="search-database" oninput="renderDatabaseSantri()" placeholder="Cari nama atau NIS santri..." class="w-full px-4 py-2 rounded-2xl bg-slate-50 border border-slate-200 text-xs focus:outline-none focus:border-indigo-600">
+                <input type="text" id="search-database" oninput="renderDatabaseSantri()" placeholder="Cari nama atau NIS santri..." class="w-full px-4 py-2 rounded-2xl bg-zinc-950 border border-zinc-800 text-xs text-white focus:outline-none focus:border-zinc-500">
                 <div class="flex space-x-2">
-                    <button onclick="filterDatabase('Semua')" id="btn-filter-semua" class="flex-1 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 text-white transition">Semua</button>
-                    <button onclick="filterDatabase('Ibtida')" id="btn-filter-ibtida" class="flex-1 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 transition">Ibtida</button>
-                    <button onclick="filterDatabase('Tsanawi')" id="btn-filter-tsanawi" class="flex-1 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 transition">Tsanawi</button>
-                    <button onclick="filterDatabase('Aaliy')" id="btn-filter-aaliy" class="flex-1 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 transition">'Aaliy</button>
+                    <button onclick="filterDatabase('Semua')" id="btn-filter-semua" class="flex-1 py-1.5 rounded-xl text-xs font-bold bg-zinc-100 text-zinc-950 transition">Semua</button>
+                    <button onclick="filterDatabase('Ibtida')" id="btn-filter-ibtida" class="flex-1 py-1.5 rounded-xl text-xs font-bold bg-zinc-800 text-zinc-400 transition">Ibtida</button>
+                    <button onclick="filterDatabase('Tsanawi')" id="btn-filter-tsanawi" class="flex-1 py-1.5 rounded-xl text-xs font-bold bg-zinc-800 text-zinc-400 transition">Tsanawi</button>
+                    <button onclick="filterDatabase('Aaliy')" id="btn-filter-aaliy" class="flex-1 py-1.5 rounded-xl text-xs font-bold bg-zinc-800 text-zinc-400 transition">'Aaliy</button>
                 </div>
             </div>
 
@@ -568,9 +569,9 @@
                 <!-- List santri database -->
             </div>
 
-            <div class="pt-3 border-t border-slate-100 mt-2 flex justify-between items-center">
-                <span id="database-count-info" class="text-xs font-bold text-slate-500">Total: 0 Santri</span>
-                <button onclick="openAddSantriModal(); closeModal('modal-data-santri');" class="bg-indigo-50 text-indigo-600 px-3 py-2 rounded-xl text-xs font-bold hover:bg-indigo-100 transition">
+            <div class="pt-3 border-t border-zinc-800 mt-2 flex justify-between items-center">
+                <span id="database-count-info" class="text-xs font-bold text-zinc-400">Total: 0 Santri</span>
+                <button onclick="openAddSantriModal(); closeModal('modal-data-santri');" class="bg-zinc-800 text-zinc-200 px-3 py-2 rounded-xl text-xs font-bold hover:bg-zinc-700 transition">
                     + Tambah Santri
                 </button>
             </div>
@@ -643,20 +644,20 @@
 
             const recentContainer = document.getElementById('recent-santri-list');
             if (santriList.length === 0) {
-                recentContainer.innerHTML = '<div class="bg-white p-4 rounded-2xl border border-slate-100 text-center text-slate-400 text-xs py-6">Belum ada santri terdaftar.</div>';
+                recentContainer.innerHTML = '<div class="bg-zinc-900/90 p-4 rounded-2xl border border-zinc-800 text-center text-zinc-500 text-xs py-6">Belum ada santri terdaftar.</div>';
             } else {
                 recentContainer.innerHTML = santriList.slice(-3).reverse().map(s => `
-                    <div class="bg-white p-3.5 rounded-2xl border border-slate-100 flex justify-between items-center">
+                    <div class="bg-zinc-900/90 p-3.5 rounded-2xl border border-zinc-800 flex justify-between items-center">
                         <div class="flex items-center space-x-3">
-                            <div class="w-9 h-9 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center font-bold text-xs">
+                            <div class="w-9 h-9 rounded-xl bg-zinc-800 text-zinc-300 flex items-center justify-center font-bold text-xs">
                                 ${s.nama.substring(0,2).toUpperCase()}
                             </div>
                             <div>
-                                <h4 class="font-bold text-xs text-slate-900">${s.nama}</h4>
-                                <p class="text-[10px] text-slate-400">NIS: ${s.nis} • Kelas: ${s.kelas}</p>
+                                <h4 class="font-bold text-xs text-white">${s.nama}</h4>
+                                <p class="text-[10px] text-zinc-500">NIS: ${s.nis} • Kelas: ${s.kelas}</p>
                             </div>
                         </div>
-                        <span class="px-2.5 py-1 bg-indigo-50 text-indigo-600 rounded-lg text-[10px] font-bold">${s.kelas}</span>
+                        <span class="px-2.5 py-1 bg-zinc-800 text-zinc-300 rounded-lg text-[10px] font-bold">${s.kelas}</span>
                     </div>
                 `).join('');
             }
@@ -693,14 +694,14 @@
             
             if (filtered.length > 0) {
                 container.innerHTML = filtered.map(s => `
-                    <div onclick="selectSantri('${s.nis}', '${s.nama}', '${s.kelas}')" class="p-3 hover:bg-indigo-50 cursor-pointer text-xs border-b border-slate-50 last:border-none">
-                        <div class="font-bold text-slate-800">${s.nis} - ${s.nama}</div>
-                        <div class="text-[10px] text-slate-400">Kelas: ${s.kelas} • WA: ${s.whatsapp}</div>
+                    <div onclick="selectSantri('${s.nis}', '${s.nama}', '${s.kelas}')" class="p-3 hover:bg-zinc-900 cursor-pointer text-xs border-b border-zinc-800 last:border-none">
+                        <div class="font-bold text-white">${s.nis} - ${s.nama}</div>
+                        <div class="text-[10px] text-zinc-500">Kelas: ${s.kelas} • WA: ${s.whatsapp}</div>
                     </div>
                 `).join('');
                 container.classList.remove('hidden');
             } else {
-                container.innerHTML = '<div class="p-3 text-xs text-slate-400 text-center">Santri tidak ditemukan</div>';
+                container.innerHTML = '<div class="p-3 text-xs text-zinc-500 text-center">Santri tidak ditemukan</div>';
                 container.classList.remove('hidden');
             }
         }
@@ -807,21 +808,20 @@
             alert(`Absen ${status} untuk ${santri.nama} berhasil dicatat!`);
         }
 
-        // Render Rekap Absen dalam Bentuk Tabel Modern
         function renderRekapAbsen() {
             const container = document.getElementById('rekap-list-container');
             document.getElementById('rekap-count-info').innerText = `Total Absen: ${absensiList.length}`;
 
             if (absensiList.length === 0) {
-                container.innerHTML = '<div class="text-center text-slate-400 text-xs py-8">Belum ada data absensi hari ini.</div>';
+                container.innerHTML = '<div class="text-center text-zinc-500 text-xs py-8">Belum ada data absensi hari ini.</div>';
                 return;
             }
 
             let tableHTML = `
-                <div class="overflow-x-auto rounded-2xl border border-slate-100 bg-white shadow-sm">
+                <div class="overflow-x-auto rounded-2xl border border-zinc-800 bg-zinc-950 shadow-sm">
                     <table class="w-full text-left border-collapse">
                         <thead>
-                            <tr class="bg-slate-50 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
+                            <tr class="bg-zinc-900 text-[10px] font-bold text-zinc-400 uppercase tracking-wider border-b border-zinc-800">
                                 <th class="py-3 px-3">Santri & NIS</th>
                                 <th class="py-3 px-3">Kelas</th>
                                 <th class="py-3 px-3">Status</th>
@@ -829,29 +829,30 @@
                                 <th class="py-3 px-3 text-center">Aksi</th>
                             </tr>
                         </thead>
-                        <tbody class="text-xs divide-y divide-slate-100">
+                        <tbody class="text-xs divide-y divide-zinc-900">
             `;
 
             tableHTML += absensiList.map((a, index) => {
-                let badgeColor = 'bg-emerald-50 text-emerald-600';
-                if (a.status === 'Sakit') badgeColor = 'bg-amber-50 text-amber-600';
-                else if (a.status === 'Izin') badgeColor = 'bg-blue-50 text-blue-600';
-                else if (a.status === 'Alpa') badgeColor = 'bg-rose-50 text-rose-600';
+                let badgeColor = 'bg-zinc-800 text-zinc-300';
+                if (a.status === 'Sakit') badgeColor = 'bg-amber-950 text-amber-400 border border-amber-900/50';
+                else if (a.status === 'Izin') badgeColor = 'bg-blue-950 text-blue-400 border border-blue-900/50';
+                else if (a.status === 'Alpa') badgeColor = 'bg-rose-950 text-rose-400 border border-rose-900/50';
+                else if (a.status === 'Hadir') badgeColor = 'bg-emerald-950 text-emerald-400 border border-emerald-900/50';
 
                 return `
-                    <tr class="hover:bg-slate-50/50 transition">
+                    <tr class="hover:bg-zinc-900/50 transition">
                         <td class="py-3 px-3">
-                            <div class="font-bold text-slate-900">${a.nama}</div>
-                            <div class="text-[10px] text-slate-400">NIS: ${a.nis}</div>
-                            ${a.keterangan ? `<div class="text-[9px] text-indigo-600 italic mt-0.5">${a.keterangan}</div>` : ''}
+                            <div class="font-bold text-white">${a.nama}</div>
+                            <div class="text-[10px] text-zinc-500">NIS: ${a.nis}</div>
+                            ${a.keterangan ? `<div class="text-[9px] text-zinc-400 italic mt-0.5">${a.keterangan}</div>` : ''}
                         </td>
-                        <td class="py-3 px-3 font-medium text-slate-600">${a.kelas}</td>
+                        <td class="py-3 px-3 font-medium text-zinc-300">${a.kelas}</td>
                         <td class="py-3 px-3">
                             <span class="px-2.5 py-1 rounded-md text-[9px] font-bold ${badgeColor}">${a.status}</span>
                         </td>
-                        <td class="py-3 px-3 text-slate-500 font-medium">${a.waktu}</td>
+                        <td class="py-3 px-3 text-zinc-400 font-medium">${a.waktu}</td>
                         <td class="py-3 px-3 text-center">
-                            <button onclick="hapusAbsenItem(${index})" class="text-slate-400 hover:text-rose-600 p-1.5 transition">
+                            <button onclick="hapusAbsenItem(${index})" class="text-zinc-500 hover:text-rose-400 p-1.5 transition">
                                 <i class="fa-solid fa-trash-can text-xs"></i>
                             </button>
                         </td>
@@ -891,9 +892,9 @@
                 const btn = document.getElementById(`btn-filter-${k}`);
                 if (btn) {
                     if (k.toLowerCase() === kelas.toLowerCase() || (k === 'semua' && kelas === 'Semua')) {
-                        btn.className = 'flex-1 py-1.5 rounded-xl text-xs font-bold bg-indigo-600 text-white transition';
+                        btn.className = 'flex-1 py-1.5 rounded-xl text-xs font-bold bg-zinc-100 text-zinc-950 transition';
                     } else {
-                        btn.className = 'flex-1 py-1.5 rounded-xl text-xs font-bold bg-slate-100 text-slate-600 transition';
+                        btn.className = 'flex-1 py-1.5 rounded-xl text-xs font-bold bg-zinc-800 text-zinc-400 transition';
                     }
                 }
             });
@@ -913,17 +914,17 @@
             document.getElementById('database-count-info').innerText = `Total: ${filtered.length} Santri`;
 
             if (filtered.length === 0) {
-                container.innerHTML = '<div class="text-center text-slate-400 text-xs py-8">Tidak ada santri yang ditemukan.</div>';
+                container.innerHTML = '<div class="text-center text-zinc-500 text-xs py-8">Tidak ada santri yang ditemukan.</div>';
                 return;
             }
 
             container.innerHTML = filtered.map(s => `
-                <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 flex justify-between items-center">
+                <div class="bg-zinc-950 p-3.5 rounded-2xl border border-zinc-800 flex justify-between items-center">
                     <div>
-                        <h4 class="font-bold text-xs text-slate-900">${s.nama}</h4>
-                        <p class="text-[10px] text-slate-400 mt-0.5">NIS: ${s.nis} • Kelas: ${s.kelas} • WA: ${s.whatsapp}</p>
+                        <h4 class="font-bold text-xs text-white">${s.nama}</h4>
+                        <p class="text-[10px] text-zinc-500 mt-0.5">NIS: ${s.nis} • Kelas: ${s.kelas} • WA: ${s.whatsapp}</p>
                     </div>
-                    <button onclick="hapusSantri('${s.nis}')" class="text-slate-400 hover:text-rose-600 p-2">
+                    <button onclick="hapusSantri('${s.nis}')" class="text-zinc-500 hover:text-rose-400 p-2">
                         <i class="fa-solid fa-trash-can text-xs"></i>
                     </button>
                 </div>
