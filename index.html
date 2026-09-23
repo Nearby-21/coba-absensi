@@ -28,6 +28,7 @@
             position: relative;
             display: flex;
             flex-direction: column;
+            overflow: hidden;
         }
     </style>
 </head>
@@ -36,10 +37,14 @@
     <!-- Container Utama Seluler -->
     <div class="mobile-container w-full border-x border-zinc-800">
         
-        <!-- Header / Top Bar (Tema Dark Gothic) -->
-        <div class="bg-gradient-to-r from-zinc-900 via-zinc-950 to-black text-slate-100 px-5 pt-6 pb-6 rounded-b-[2.5rem] shadow-2xl relative overflow-hidden border-b border-zinc-800">
-            <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-zinc-800/20 rounded-full blur-2xl pointer-events-none"></div>
-            
+        <!-- Background Image dengan Overlay -->
+        <div class="absolute inset-0 z-0 pointer-events-none opacity-20 overflow-hidden">
+            <img src="image_4e341e.png" class="w-full h-full object-cover filter grayscale contrast-125" alt="Background Theme">
+        </div>
+        <div class="absolute inset-0 z-0 bg-gradient-to-b from-zinc-950/80 via-zinc-950/90 to-zinc-950 pointer-events-none"></div>
+
+        <!-- Header / Top Bar -->
+        <div class="relative z-10 bg-gradient-to-r from-zinc-900/90 via-zinc-950/90 to-black/90 backdrop-blur-md text-slate-100 px-5 pt-6 pb-6 rounded-b-[2.5rem] shadow-2xl border-b border-zinc-800">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center space-x-3">
                     <div class="w-11 h-11 bg-zinc-800/80 backdrop-blur-md rounded-2xl flex items-center justify-center border border-zinc-700 shadow-inner text-zinc-300">
@@ -52,7 +57,7 @@
                 </div>
                 <div class="flex items-center space-x-2 bg-zinc-900/80 backdrop-blur-md px-3 py-1.5 rounded-full border border-zinc-800">
                     <span class="w-2 h-2 rounded-full bg-zinc-400 animate-pulse"></span>
-                    <span class="text-[11px] font-semibold tracking-wide text-zinc-300">Prototype</span>
+                    <span class="text-[11px] font-semibold tracking-wide text-zinc-300">Active</span>
                 </div>
             </div>
 
@@ -70,13 +75,13 @@
         </div>
 
         <!-- Konten Utama -->
-        <div class="px-5 mt-4 pb-28 flex-1 space-y-4">
+        <div class="relative z-10 px-5 mt-4 pb-28 flex-1 space-y-4">
 
             <!-- Statistik Kartu -->
             <div class="grid grid-cols-2 gap-3.5">
                 
                 <!-- Kartu Total Santri -->
-                <div onclick="openClassBreakdownModal()" class="bg-zinc-900/90 p-4 rounded-3xl shadow-lg border border-zinc-800 hover:border-zinc-700 transition cursor-pointer relative group">
+                <div onclick="openClassBreakdownModal()" class="bg-zinc-900/80 backdrop-blur-md p-4 rounded-3xl shadow-lg border border-zinc-800 hover:border-zinc-700 transition cursor-pointer relative group">
                     <div class="flex justify-between items-start mb-2">
                         <span class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Total Santri</span>
                         <div class="w-8 h-8 rounded-xl bg-zinc-800 text-zinc-300 flex items-center justify-center group-hover:bg-zinc-700 transition">
@@ -106,7 +111,7 @@
                 </div>
 
                 <!-- Kartu Hadir Hari Ini -->
-                <div onclick="openHadirBreakdownModal()" class="bg-zinc-900/90 p-4 rounded-3xl shadow-lg border border-zinc-800 hover:border-zinc-700 transition cursor-pointer relative group">
+                <div onclick="openHadirBreakdownModal()" class="bg-zinc-900/80 backdrop-blur-md p-4 rounded-3xl shadow-lg border border-zinc-800 hover:border-zinc-700 transition cursor-pointer relative group">
                     <div class="flex justify-between items-start mb-2">
                         <span class="text-xs font-bold text-zinc-400 uppercase tracking-wider">Hadir Hari Ini</span>
                         <div class="w-8 h-8 rounded-xl bg-zinc-800 text-zinc-300 flex items-center justify-center group-hover:bg-zinc-700 transition">
@@ -146,7 +151,7 @@
                 <h2 class="text-xs font-bold uppercase tracking-wider text-zinc-500 px-1">Menu Navigasi</h2>
 
                 <div class="grid grid-cols-2 gap-3.5">
-                    <button onclick="openScanModal()" class="bg-zinc-900/90 p-4 rounded-3xl shadow-lg border border-zinc-800 hover:border-zinc-700 text-left transition group">
+                    <button onclick="openScanModal()" class="bg-zinc-900/80 backdrop-blur-md p-4 rounded-3xl shadow-lg border border-zinc-800 hover:border-zinc-700 text-left transition group">
                         <div class="w-10 h-10 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center mb-3 group-hover:scale-110 transition duration-300">
                             <i class="fa-solid fa-qrcode text-base"></i>
                         </div>
@@ -154,7 +159,7 @@
                         <p class="text-[11px] text-zinc-500 mt-0.5">Kamera atau NIS</p>
                     </button>
 
-                    <button onclick="openManualModal()" class="bg-zinc-900/90 p-4 rounded-3xl shadow-lg border border-zinc-800 hover:border-zinc-700 text-left transition group">
+                    <button onclick="openManualModal()" class="bg-zinc-900/80 backdrop-blur-md p-4 rounded-3xl shadow-lg border border-zinc-800 hover:border-zinc-700 text-left transition group">
                         <div class="w-10 h-10 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center mb-3 group-hover:scale-110 transition duration-300">
                             <i class="fa-solid fa-pen-to-square text-base"></i>
                         </div>
@@ -162,7 +167,7 @@
                         <p class="text-[11px] text-zinc-500 mt-0.5">Sakit, Izin, atau Alpa</p>
                     </button>
 
-                    <button onclick="openRekapModal()" class="bg-zinc-900/90 p-4 rounded-3xl shadow-lg border border-zinc-800 hover:border-zinc-700 text-left transition group">
+                    <button onclick="openRekapModal()" class="bg-zinc-900/80 backdrop-blur-md p-4 rounded-3xl shadow-lg border border-zinc-800 hover:border-zinc-700 text-left transition group">
                         <div class="w-10 h-10 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center mb-3 group-hover:scale-110 transition duration-300">
                             <i class="fa-solid fa-clipboard-user text-base"></i>
                         </div>
@@ -170,7 +175,7 @@
                         <p class="text-[11px] text-zinc-500 mt-0.5">Tabel & Hapus Double</p>
                     </button>
 
-                    <button onclick="openAddSantriModal()" class="bg-zinc-900/90 p-4 rounded-3xl shadow-lg border border-zinc-800 hover:border-zinc-700 text-left transition group">
+                    <button onclick="openAddSantriModal()" class="bg-zinc-900/80 backdrop-blur-md p-4 rounded-3xl shadow-lg border border-zinc-800 hover:border-zinc-700 text-left transition group">
                         <div class="w-10 h-10 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center mb-3 group-hover:scale-110 transition duration-300">
                             <i class="fa-solid fa-user-plus text-base"></i>
                         </div>
@@ -179,7 +184,7 @@
                     </button>
                 </div>
 
-                <button onclick="openDataSantriModal()" class="w-full bg-zinc-900/90 p-4 rounded-3xl shadow-lg border border-zinc-800 hover:border-zinc-700 flex items-center justify-between transition group text-left">
+                <button onclick="openDataSantriModal()" class="w-full bg-zinc-900/80 backdrop-blur-md p-4 rounded-3xl shadow-lg border border-zinc-800 hover:border-zinc-700 flex items-center justify-between transition group text-left">
                     <div class="flex items-center space-x-3.5">
                         <div class="w-11 h-11 rounded-2xl bg-zinc-800 text-zinc-300 flex items-center justify-center group-hover:bg-zinc-700 transition duration-300">
                             <i class="fa-solid fa-database text-base"></i>
@@ -203,7 +208,7 @@
                 </div>
 
                 <div id="recent-santri-list" class="space-y-2">
-                    <div class="bg-zinc-900/90 p-4 rounded-2xl border border-zinc-800 text-center text-zinc-500 text-xs py-6">
+                    <div class="bg-zinc-900/80 backdrop-blur-md p-4 rounded-2xl border border-zinc-800 text-center text-zinc-500 text-xs py-6">
                         Memuat data santri...
                     </div>
                 </div>
@@ -212,7 +217,7 @@
         </div>
 
         <!-- Bottom Navigation Bar -->
-        <div class="absolute bottom-0 left-0 right-0 bg-zinc-950/90 backdrop-blur-lg border-t border-zinc-800 px-6 py-3 flex justify-around items-center z-20">
+        <div class="relative z-20 bg-zinc-950/90 backdrop-blur-lg border-t border-zinc-800 px-6 py-3 flex justify-around items-center">
             <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="flex flex-col items-center text-zinc-200 space-y-1">
                 <i class="fa-solid fa-house text-lg"></i>
                 <span class="text-[10px] font-bold">Beranda</span>
@@ -644,10 +649,10 @@
 
             const recentContainer = document.getElementById('recent-santri-list');
             if (santriList.length === 0) {
-                recentContainer.innerHTML = '<div class="bg-zinc-900/90 p-4 rounded-2xl border border-zinc-800 text-center text-zinc-500 text-xs py-6">Belum ada santri terdaftar.</div>';
+                recentContainer.innerHTML = '<div class="bg-zinc-900/80 backdrop-blur-md p-4 rounded-2xl border border-zinc-800 text-center text-zinc-500 text-xs py-6">Belum ada santri terdaftar.</div>';
             } else {
                 recentContainer.innerHTML = santriList.slice(-3).reverse().map(s => `
-                    <div class="bg-zinc-900/90 p-3.5 rounded-2xl border border-zinc-800 flex justify-between items-center">
+                    <div class="bg-zinc-900/80 backdrop-blur-md p-3.5 rounded-2xl border border-zinc-800 flex justify-between items-center">
                         <div class="flex items-center space-x-3">
                             <div class="w-9 h-9 rounded-xl bg-zinc-800 text-zinc-300 flex items-center justify-center font-bold text-xs">
                                 ${s.nama.substring(0,2).toUpperCase()}
