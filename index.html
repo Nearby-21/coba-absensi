@@ -205,7 +205,7 @@
 
     <!-- JavaScript App Logic -->
     <script>
-        // Masukkan URL Deployment Web App Google Apps Script Anda di sini:
+        // URL Web App Google Apps Script terbaru Anda yang baru:
         const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzpNRleLLzV7jB1kXO5quWjHTpJY4GHo_rlnb5QkhsoS_NvQ1wIGk4uq8Ln9dssy34/exec";
 
         let globalData = { totalSantri: 0, hadirHariIni: 0, tidakHadirHariIni: 0, students: [], absenHistory: [], hadirTodayList: [], tidakHadirTodayList: [] };
@@ -217,7 +217,6 @@
             loadDashboard();
         };
 
-        // Fungsi Helper untuk memanggil Backend Google Apps Script via fetch API
         async function callBackend(action, payload = {}) {
             try {
                 const response = await fetch(WEB_APP_URL, {
@@ -234,7 +233,11 @@
         async function loadDashboard() {
             try {
                 const data = await callBackend('getDashboardData');
-                renderDashboard(data);
+                if(data && data.success) {
+                    renderDashboard(data);
+                } else {
+                    showAlert(data.message || "Gagal memuat data", 'error');
+                }
             } catch (err) {
                 showAlert(err.message, 'error');
             }
@@ -939,7 +942,9 @@
             m.classList.add('hidden');
         }
         function showAlert(msg, type) {
-            const box = document.getElementById('alertBox');
+            const box = document.getElementById('callBackend') || document.getElementById('alertBox');
+            // Fallback safety if alertBox is missing
+            if (!box) return;
             box.className = `p-3 rounded-2xl text-xs font-medium transition-all shadow-sm ${type === 'success' ? 'bg-emerald-950/80 text-emerald-200 border border-emerald-800' : 'bg-rose-950/80 text-rose-200 border border-rose-800'}`;
             box.innerText = msg;
             box.classList.remove('hidden');
