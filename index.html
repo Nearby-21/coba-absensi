@@ -74,7 +74,7 @@
             <!-- Statistik Kartu (Total Santri & Hadir Hari Ini) -->
             <div class="grid grid-cols-2 gap-3.5">
                 
-                <!-- Kartu Total Santri (Pembagian Ibtida, Tsanawi, 'Aaliy) -->
+                <!-- Kartu Total Santri -->
                 <div onclick="openClassBreakdownModal()" class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md transition cursor-pointer relative group">
                     <div class="flex justify-between items-start mb-2">
                         <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Total Santri</span>
@@ -104,7 +104,7 @@
                     </div>
                 </div>
 
-                <!-- Kartu Hadir Hari Ini (Serupa Total Santri + Rincian Hadir per Kelas & Tidak Hadir) -->
+                <!-- Kartu Hadir Hari Ini -->
                 <div onclick="openHadirBreakdownModal()" class="bg-white p-4 rounded-3xl shadow-sm border border-slate-100 hover:shadow-md transition cursor-pointer relative group">
                     <div class="flex justify-between items-start mb-2">
                         <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">Hadir Hari Ini</span>
@@ -498,9 +498,9 @@
         </div>
     </div>
 
-    <!-- MODAL: REKAP ABSEN & HAPUS DOUBLE -->
+    <!-- MODAL: REKAP ABSEN (Dalam Bentuk Tabel) & HAPUS DOUBLE -->
     <div id="modal-rekap" class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
-        <div class="bg-white w-full max-w-md rounded-[2rem] p-6 shadow-2xl max-h-[85vh] flex flex-col">
+        <div class="bg-white w-full max-w-lg rounded-[2rem] p-6 shadow-2xl max-h-[85vh] flex flex-col">
             <div class="flex justify-between items-center mb-4">
                 <div class="flex items-center space-x-3">
                     <div class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
@@ -524,7 +524,8 @@
                 </button>
             </div>
 
-            <div id="rekap-list-container" class="space-y-2.5 overflow-y-auto flex-1 pr-1">
+            <!-- Kontainer Tabel Rekap Absen -->
+            <div id="rekap-list-container" class="overflow-y-auto flex-1 pr-1">
                 <div class="text-center text-slate-400 text-xs py-8">Belum ada data absensi hari ini.</div>
             </div>
 
@@ -806,6 +807,7 @@
             alert(`Absen ${status} untuk ${santri.nama} berhasil dicatat!`);
         }
 
+        // Render Rekap Absen dalam Bentuk Tabel Modern
         function renderRekapAbsen() {
             const container = document.getElementById('rekap-list-container');
             document.getElementById('rekap-count-info').innerText = `Total Absen: ${absensiList.length}`;
@@ -815,28 +817,55 @@
                 return;
             }
 
-            container.innerHTML = absensiList.map((a, index) => {
+            let tableHTML = `
+                <div class="overflow-x-auto rounded-2xl border border-slate-100 bg-white shadow-sm">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-slate-50 text-[10px] font-bold text-slate-400 uppercase tracking-wider border-b border-slate-100">
+                                <th class="py-3 px-3">Santri & NIS</th>
+                                <th class="py-3 px-3">Kelas</th>
+                                <th class="py-3 px-3">Status</th>
+                                <th class="py-3 px-3">Waktu</th>
+                                <th class="py-3 px-3 text-center">Aksi</th>
+                            </tr>
+                        </thead>
+                        <tbody class="text-xs divide-y divide-slate-100">
+            `;
+
+            tableHTML += absensiList.map((a, index) => {
                 let badgeColor = 'bg-emerald-50 text-emerald-600';
                 if (a.status === 'Sakit') badgeColor = 'bg-amber-50 text-amber-600';
                 else if (a.status === 'Izin') badgeColor = 'bg-blue-50 text-blue-600';
                 else if (a.status === 'Alpa') badgeColor = 'bg-rose-50 text-rose-600';
 
                 return `
-                    <div class="bg-slate-50 p-3.5 rounded-2xl border border-slate-100 flex justify-between items-center">
-                        <div>
-                            <div class="flex items-center space-x-2">
-                                <h4 class="font-bold text-xs text-slate-900">${a.nama}</h4>
-                                <span class="px-2 py-0.5 rounded-md text-[9px] font-bold ${badgeColor}">${a.status}</span>
-                            </div>
-                            <p class="text-[10px] text-slate-400 mt-0.5">NIS: ${a.nis} • Kelas: ${a.kelas} • Pukul ${a.waktu}</p>
-                            ${a.keterangan ? `<p class="text-[10px] text-indigo-600 mt-1 italic">Catatan: ${a.keterangan}</p>` : ''}
-                        </div>
-                        <button onclick="hapusAbsenItem(${index})" class="text-slate-400 hover:text-rose-600 p-2">
-                            <i class="fa-solid fa-trash-can text-xs"></i>
-                        </button>
-                    </div>
+                    <tr class="hover:bg-slate-50/50 transition">
+                        <td class="py-3 px-3">
+                            <div class="font-bold text-slate-900">${a.nama}</div>
+                            <div class="text-[10px] text-slate-400">NIS: ${a.nis}</div>
+                            ${a.keterangan ? `<div class="text-[9px] text-indigo-600 italic mt-0.5">${a.keterangan}</div>` : ''}
+                        </td>
+                        <td class="py-3 px-3 font-medium text-slate-600">${a.kelas}</td>
+                        <td class="py-3 px-3">
+                            <span class="px-2.5 py-1 rounded-md text-[9px] font-bold ${badgeColor}">${a.status}</span>
+                        </td>
+                        <td class="py-3 px-3 text-slate-500 font-medium">${a.waktu}</td>
+                        <td class="py-3 px-3 text-center">
+                            <button onclick="hapusAbsenItem(${index})" class="text-slate-400 hover:text-rose-600 p-1.5 transition">
+                                <i class="fa-solid fa-trash-can text-xs"></i>
+                            </button>
+                        </td>
+                    </tr>
                 `;
             }).join('');
+
+            tableHTML += `
+                        </tbody>
+                    </table>
+                </div>
+            `;
+
+            container.innerHTML = tableHTML;
         }
 
         function hapusAbsenItem(index) {
